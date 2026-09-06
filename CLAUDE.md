@@ -17,7 +17,9 @@ do site antigo (ver "Sobras do site original" no fim).
   nunca `.html`. `serve.json` replica isso pro `npx serve` local.
 - Analytics da Vercel é injetado por JS ([analytics.js](assets/js/analytics.js)),
   não por tag no HTML.
-- O rodapé ainda diz "Hospedado em Neocities" — texto legado, não é verdade.
+- **O site não está no Neocities.** O domínio `dharlan.world` é próprio e o
+  deploy é Vercel. As menções a Neocities que sobraram são texto legado — ver
+  "Sobras do site original".
 
 ## Rodar localmente
 
@@ -187,13 +189,47 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 
 ## Sobras do site original
 
-Ainda referenciam o dono anterior; corrija junto quando encostar nos arquivos:
+Ainda referenciam o dono anterior ou a hospedagem antiga; corrija junto quando
+encostar nos arquivos:
+
+**Neocities — a palavra fica, os links do perfil antigo não.** O site não está
+mais no Neocities (domínio próprio, deploy na Vercel), mas o texto "Hospedado em
+Neocities" do rodapé é **mantido de propósito**, por gosto/estética. Não
+"corrija" isso:
+
+- [footer.js](assets/js/footer.js) linhas 21 e 70 — `"${anoAtual} dharlan.
+  Hospedado em <a href="/">Neocities</a>"`, nos dois rodapés (o completo e o da
+  index), logo aparece em todas as páginas. O `href` é `/`, não sai do site.
+  **Decisão do dono: fica como está.**
+- A seção `<h2>neocities</h2>` da [links.html](links.html) é lista de sites de
+  outras pessoas, e `assets/img/88x31 banners/neocities.gif` é só o banner.
+  Legítimos, ficam.
+
+Já corrigidos (apontavam pro perfil `neocities.org/site/mozartsempiano`, do dono
+anterior; agora vão pra `https://www.dharlan.world/`):
+[sitemap-data.js:73](assets/js/sitemap-data.js) e [links.html:712](links.html).
+
+**Mozart Mattar** — links pros perfis dele em outros serviços, que continuam
+apontando pra conta errada. **Deixados assim de propósito por enquanto**; só
+mexa se o dono pedir, e nunca troque por `dharlan.world` (são serviços que
+precisam de conta própria):
+
+- [guestbook.html](guestbook.html) linha 66 — o iframe carrega
+  `mozartsempiano.atabook.org`, ou seja, o livro de visitas do dono anterior. A
+  página é **órfã de propósito**: nada no site linka pra `/guestbook/` (não está
+  na navbar nem no `sitemap-data.js`), está efetivamente desativada.
+- [inventario.html](inventario.html) linhas 321 e 1758 — "...mais no letterboxd"
+  e "...mais no backloggd" apontam pras listas do `mozartsempiano`. O conteúdo do
+  `/inventario/` ainda não foi revisado pelo dono.
+
+Resto das sobras:
 
 - `<meta name="author" content="Mozart Mattar" />` em praticamente todo `.html`
 - [meta-tags](assets/json/meta-tags) (template de SEO, não usado por nenhuma página)
 - [.github/FUNDING.yml](.github/FUNDING.yml) → `mozartsempiano`
 - `assets/img/mozartmt-logo-white.png` (logo da index) e
-  `assets/img/mozartsempiano-btn-01.jpg` (botão 88x31 da home)
+  `assets/img/mozartsempiano-btn-01.jpg` (botão 88x31 da home) — só os nomes dos
+  arquivos; o `alt` do logo já foi corrigido pra `dharlan`
 - `assets/pdf/curriculo_mozart_mattar.pdf`
 - `temp/` — pasta de imagens soltas, sem uso no site
 

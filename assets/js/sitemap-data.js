@@ -70,7 +70,7 @@ export const sitemap = [
       { href: "/not_found/", label: "/404" },
     ],
   },
-  { href: "https://neocities.org/site/mozartsempiano", label: "/neocities", external: true },
+  { href: "https://www.dharlan.world/", label: "/neocities", external: true },
 ];
 
 export default sitemap;
