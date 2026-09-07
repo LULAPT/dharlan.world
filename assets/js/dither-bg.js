@@ -24,7 +24,12 @@
 		intensidadeCor: 0.55, // 0 = fundo puro, 1 = cor do tema no talo
 		numCores: 4, // níveis de quantização (menos = mais "retrô")
 		tamanhoPixel: 3, // lado do pixelão, em px de tela
-		raioMouse: 0.55, // alcance da interação com o cursor
+		raioMouse: 0.22, // alcance do empurrão do cursor
+		// Anda junto com o raio: força perto do valor do raio deforma demais e
+		// vira um borrão duro. Manter em torno de 1/4 dele mantém o empurrão
+		// com cara de fumaça em qualquer tamanho.
+		forcaMouse: 0.055, // quanto a fumaça é afastada (0 = desliga o empurrão)
+		inerciaMouse: 0.07, // 0..1 — menor = fumaça acompanha com mais preguiça
 		interacaoMouse: true,
 	};
 
@@ -47,6 +52,7 @@
 	uniform vec3 uCorFundo;
 	uniform vec2 uMouse;
 	uniform float uRaioMouse;
+	uniform float uForcaMouse;
 	uniform float uUsaMouse;
 	uniform float uNumCores;
 	uniform float uTamanhoPixel;
@@ -125,14 +131,25 @@
 		uv -= 0.5;
 		uv.x *= uResolucao.x / uResolucao.y;
 
-		float f = padrao(uv);
-
+		// Empurrão do cursor: em vez de escurecer um círculo (o que é só uma
+		// mancha), desloca a coordenada de amostragem na direção do cursor.
+		// Amostrar mais perto dele faz o desenho parecer afastado — a fumaça
+		// abre espaço em volta do ponteiro.
 		if (uUsaMouse > 0.5) {
 			vec2 mouseNDC = (uMouse / uResolucao - 0.5) * vec2(1.0, -1.0);
 			mouseNDC.x *= uResolucao.x / uResolucao.y;
-			float dist = length(uv - mouseNDC);
-			f -= 0.5 * (1.0 - smoothstep(0.0, uRaioMouse, dist));
+			vec2 desloc = uv - mouseNDC;
+			float dist = length(desloc);
+			if (dist > 0.0001) {
+				float queda = 1.0 - smoothstep(0.0, uRaioMouse, dist);
+				// Sobe do centro pra fora: sem isso o deslocamento é máximo
+				// exatamente sobre o cursor e vira um beliscão feio no meio.
+				float miolo = smoothstep(0.0, uRaioMouse * 0.35, dist);
+				uv -= (desloc / dist) * queda * miolo * uForcaMouse;
+			}
 		}
+
+		float f = padrao(uv);
 
 		vec3 cor = mix(uCorFundo, uCorOnda, clamp(f, 0.0, 1.0));
 
@@ -249,7 +266,7 @@
 		const u = {};
 		[
 			"uResolucao", "uTempo", "uVelocidade", "uFrequencia", "uAmplitude",
-			"uCorOnda", "uCorFundo", "uMouse", "uRaioMouse", "uUsaMouse",
+			"uCorOnda", "uCorFundo", "uMouse", "uRaioMouse", "uForcaMouse", "uUsaMouse",
 			"uNumCores", "uTamanhoPixel",
 		].forEach((n) => (u[n] = gl.getUniformLocation(prog, n)));
 
@@ -259,6 +276,7 @@
 		gl.uniform1f(u.uNumCores, CONFIG.numCores);
 		gl.uniform1f(u.uTamanhoPixel, CONFIG.tamanhoPixel);
 		gl.uniform1f(u.uRaioMouse, CONFIG.raioMouse);
+		gl.uniform1f(u.uForcaMouse, CONFIG.forcaMouse);
 		gl.uniform1f(u.uUsaMouse, CONFIG.interacaoMouse ? 1 : 0);
 
 		function aplicarCores() {
@@ -281,11 +299,24 @@
 			}
 		}
 
-		const mouse = { x: 0, y: 0 };
+		// O cursor real é o alvo; o que vai pro shader persegue esse alvo devagar.
+		// É essa defasagem que dá a sensação de fumaça sendo deslocada, em vez de
+		// um buraco grudado no ponteiro.
+		const alvoMouse = { x: -9999, y: -9999 };
+		const mouse = { x: -9999, y: -9999 };
+		let primeiroToque = true;
+
 		function moverMouse(e) {
 			const r = canvas.getBoundingClientRect();
-			mouse.x = e.clientX - r.left;
-			mouse.y = e.clientY - r.top;
+			alvoMouse.x = e.clientX - r.left;
+			alvoMouse.y = e.clientY - r.top;
+			// Começa fora da tela: sem este salto, o primeiro movimento arrastaria
+			// um rastro vindo do canto.
+			if (primeiroToque) {
+				mouse.x = alvoMouse.x;
+				mouse.y = alvoMouse.y;
+				primeiroToque = false;
+			}
 		}
 		if (CONFIG.interacaoMouse) {
 			window.addEventListener("pointermove", moverMouse, { passive: true });
@@ -305,6 +336,8 @@
 			if (!vivo) return;
 			redimensionar();
 			gl.uniform1f(u.uTempo, (performance.now() - t0) / 1000);
+			mouse.x += (alvoMouse.x - mouse.x) * CONFIG.inerciaMouse;
+			mouse.y += (alvoMouse.y - mouse.y) * CONFIG.inerciaMouse;
 			gl.uniform2f(u.uMouse, mouse.x, mouse.y);
 			gl.drawArrays(gl.TRIANGLES, 0, 3);
 			frame = requestAnimationFrame(desenhar);
