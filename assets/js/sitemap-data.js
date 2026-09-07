@@ -63,6 +63,7 @@ export const sitemap = [
           { href: "/links/", label: "/links" },
           { href: "/kaomojis/", label: "/kaomojis" },
           { href: "/avatar/", label: "/avatar" },
+          { href: "/picrew/", label: "/picrew" },
         ],
       },
       // { href: "/doar/", label: "/doar" }, // desativado - reativar removendo o comentário

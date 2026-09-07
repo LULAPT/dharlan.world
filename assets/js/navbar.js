@@ -387,6 +387,7 @@ export function carregarNavbar() {
 				{ label: "Links", href: "/links/" },
 				{ label: "Kaomojis", href: "/kaomojis/" },
 				{ label: "Avatar", href: "/avatar/" },
+				{ label: "Picrew", href: "/picrew/" },
 			],
 		},
 		// doar: { label: "Doar", href: "/doar/" }, // desativado - reativar removendo o comentário

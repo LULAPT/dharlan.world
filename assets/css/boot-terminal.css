@@ -221,6 +221,37 @@ body.boot-active #boot-terminal .scanline {
 	pointer-events: none;
 }
 
+/* Fundo de ondas com dither (dither-bg.js). Fica atrás de tudo; se o WebGL2
+   não estiver disponível o canvas nem é inserido e sobra o fundo liso. */
+#human-verify .dither-bg {
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+	z-index: 0;
+}
+
+/* Vinheta entre o fundo e a caixa: escurece as bordas da tela e abre um
+   claro no centro, pra caixa de verificação não competir com as ondas. */
+#human-verify::after {
+	background:
+		radial-gradient(
+			ellipse at center,
+			color-mix(in srgb, var(--clr-black-a0) 55%, transparent) 0%,
+			color-mix(in srgb, var(--clr-black-a0) 80%, transparent) 45%,
+			var(--clr-black-a0) 100%
+		);
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	z-index: 1;
+}
+
+#human-verify .verify-box {
+	z-index: 2;
+}
+
 .verify-box {
 	border: var(--borda-padrao);
 	background: color-mix(in srgb, var(--clr-black-a0) 70%, transparent);
@@ -231,6 +262,117 @@ body.boot-active #boot-terminal .scanline {
 	gap: 1rem;
 	min-width: 280px;
 	box-shadow: 0 0 20px color-mix(in srgb, var(--clr-main-a30) 25%, transparent);
+
+	/* Brilho de borda que segue o cursor (adaptado do BorderGlow do
+	   reactbits.dev, que é quase todo CSS — o JS só alimenta estas duas
+	   variáveis). O boot-terminal.js atualiza --edge-proximity (0 a 100,
+	   quanto o cursor está perto da borda) e --cursor-angle (de que lado
+	   ele está), interpolados a cada frame pra ficar suave. */
+	--edge-proximity: 0;
+	--cursor-angle: 45deg;
+	--edge-sensitivity: 30;
+	--color-sensitivity: 50;
+	--glow-padding: 40px;
+	--cone-spread: 25;
+	isolation: isolate;
+	position: relative;
+}
+
+/* Fora do hover o efeito some por completo — some devagar, pra não piscar
+   ao sair. É o que a regra :not(:hover) do componente original faz. */
+.verify-box:not(:hover)::before,
+.verify-box:not(:hover) > .edge-light {
+	opacity: 0;
+	transition: opacity 0.6s ease-in-out;
+}
+
+/* Borda acesa: só o arco voltado pro cursor aparece, recortado pelo
+   conic-gradient. Cor vem do tema, então acompanha dark/light/steam-green. */
+.verify-box::before,
+.verify-box > .edge-light {
+	border-radius: inherit;
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 0.35s ease-out;
+	z-index: -1;
+}
+
+.verify-box::before {
+	background:
+		linear-gradient(var(--clr-black-a0) 0 100%) padding-box,
+		linear-gradient(
+				color-mix(in srgb, var(--clr-main-a40) 90%, transparent) 0 100%
+			)
+			border-box;
+	border: 1px solid transparent;
+	opacity: calc(
+		(var(--edge-proximity) - var(--color-sensitivity)) /
+			(100 - var(--color-sensitivity))
+	);
+	-webkit-mask-image: conic-gradient(
+		from var(--cursor-angle) at center,
+		black calc(var(--cone-spread) * 1%),
+		transparent calc((var(--cone-spread) + 15) * 1%),
+		transparent calc((100 - var(--cone-spread) - 15) * 1%),
+		black calc((100 - var(--cone-spread)) * 1%)
+	);
+	mask-image: conic-gradient(
+		from var(--cursor-angle) at center,
+		black calc(var(--cone-spread) * 1%),
+		transparent calc((var(--cone-spread) + 15) * 1%),
+		transparent calc((100 - var(--cone-spread) - 15) * 1%),
+		black calc((100 - var(--cone-spread)) * 1%)
+	);
+}
+
+/* Halo externo, mais largo e difuso, também recortado pro lado do cursor. */
+.verify-box > .edge-light {
+	inset: calc(var(--glow-padding) * -1);
+	mix-blend-mode: plus-lighter;
+	opacity: calc(
+		(var(--edge-proximity) - var(--edge-sensitivity)) /
+			(100 - var(--edge-sensitivity))
+	);
+	-webkit-mask-image: conic-gradient(
+		from var(--cursor-angle) at center,
+		black 2.5%,
+		transparent 10%,
+		transparent 90%,
+		black 97.5%
+	);
+	mask-image: conic-gradient(
+		from var(--cursor-angle) at center,
+		black 2.5%,
+		transparent 10%,
+		transparent 90%,
+		black 97.5%
+	);
+}
+
+.verify-box > .edge-light::before {
+	border-radius: inherit;
+	box-shadow:
+		inset 0 0 0 1px color-mix(in srgb, var(--clr-main-a40) 90%, transparent),
+		inset 0 0 6px 0 color-mix(in srgb, var(--clr-main-a40) 40%, transparent),
+		inset 0 0 15px 0 color-mix(in srgb, var(--clr-main-a30) 30%, transparent),
+		inset 0 0 40px 2px color-mix(in srgb, var(--clr-main-a30) 12%, transparent),
+		0 0 6px 0 color-mix(in srgb, var(--clr-main-a40) 40%, transparent),
+		0 0 15px 0 color-mix(in srgb, var(--clr-main-a30) 30%, transparent),
+		0 0 45px 2px color-mix(in srgb, var(--clr-main-a30) 12%, transparent);
+	content: "";
+	inset: var(--glow-padding);
+	position: absolute;
+}
+
+/* Sem cursor (toque, teclado) o efeito simplesmente não liga — a caixa
+   continua com o box-shadow de repouso. */
+@media (prefers-reduced-motion: reduce) {
+	.verify-box::before,
+	.verify-box > .edge-light {
+		display: none;
+	}
 }
 
 .verify-check {

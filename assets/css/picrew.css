@@ -1,0 +1,133 @@
+#col-centro {
+	gap: 14px;
+}
+
+h1 {
+	border-bottom: var(--borda-padrao);
+	font-size: 1.4rem;
+	font-weight: normal;
+	margin-bottom: 16px;
+	margin-top: 0;
+	padding-bottom: 7px;
+	text-transform: lowercase;
+}
+
+#picrew-intro {
+	margin-bottom: 18px;
+}
+
+/* O palco do .swf é 900x650 (lido do cabeçalho do arquivo). O aspect-ratio
+   segura essa proporção enquanto a largura encolhe no mobile, então o Ruffle
+   escala o jogo sem cortar nem deixar barra preta. */
+#picrew-palco {
+	aspect-ratio: 900 / 650;
+	background-color: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	border-radius: var(--b-radius);
+	margin: 0 auto;
+	max-width: 900px;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+
+/* O Ruffle injeta um <ruffle-player> como filho; ele precisa preencher o palco. */
+#picrew-palco > * {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+/* O style.css aplica image-rendering: pixelated no seletor universal — é o
+   serrilhado proposital do site. Só que image-rendering é herdado, então o
+   <canvas> do Ruffle (que fica no shadow DOM, fora do alcance do `*`) herda
+   pixelated do elemento <ruffle-player> e o jogo aparece todo serrilhado,
+   independente da qualidade escolhida no menu. Aqui o desenho é vetorial e
+   escalado, então precisa da suavização do navegador. */
+#picrew-palco,
+#picrew-palco * {
+	image-rendering: auto;
+}
+
+/* Aviso de "carregando" e de erro ficam sobrepostos, centralizados no palco. */
+#picrew-status {
+	align-items: center;
+	color: var(--clr-white);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	inset: 0;
+	justify-content: center;
+	padding: 24px;
+	position: absolute;
+	text-align: center;
+	user-select: none;
+}
+
+#picrew-status.escondido {
+	display: none;
+}
+
+#picrew-status p {
+	margin: 0;
+	max-width: 34ch;
+}
+
+#picrew-status .aviso-erro {
+	color: var(--clr-main-a30);
+}
+
+/* Barra de controles logo abaixo do palco, alinhada com ele. */
+#picrew-barra {
+	align-items: center;
+	background-color: var(--clr-black-a10);
+	border: var(--borda-padrao);
+	border-radius: var(--b-radius);
+	display: flex;
+	justify-content: flex-end;
+	margin: 8px auto 0;
+	max-width: 900px;
+	padding: 5px 8px;
+	width: 100%;
+}
+
+#picrew-barra.escondido {
+	display: none;
+}
+
+#picrew-fullscreen {
+	align-items: center;
+	background: none;
+	border: none;
+	color: var(--clr-white);
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	padding: 4px;
+}
+
+#picrew-fullscreen:hover,
+#picrew-fullscreen:focus {
+	color: var(--clr-main-a30);
+}
+
+#picrew-fullscreen svg {
+	display: block;
+	fill: currentColor;
+	height: 1.25em;
+	width: 1.25em;
+}
+
+#picrew-creditos {
+	border-top: var(--borda-padrao);
+	font-size: 0.92em;
+	margin-top: 18px;
+	padding-top: 12px;
+	text-align: center;
+}
+
+@media (max-width: 1024px) {
+	#picrew-palco {
+		max-width: 100%;
+	}
+}

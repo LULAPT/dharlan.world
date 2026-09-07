@@ -1,5 +1,21 @@
 [
 	{
+		"date": "2026-09-07",
+		"items": [
+			"página <a href=\"/picrew/\">/picrew</a> criada em /utils, com o Mega Anime Avatar Creator da Rinmaru rodando em Flash emulado",
+			"fundo animado com efeito de dithering na tela de entrada, acompanhando o tema ativo",
+			"brilho de borda seguindo o cursor na caixa de verificação da entrada"
+		]
+	},
+	{
+		"date": "2026-09-06",
+		"items": [
+			"61 fotos novas na <a href=\"/galeria/fotografia/\">/galeria/fotografia</a>",
+			"miniaturas adicionadas na <a href=\"/galeria/fotografia/\">/galeria/fotografia</a>, que agora abre bem mais rápido — a imagem em tamanho cheio só é baixada ao expandir",
+			"links que ainda apontavam pro perfil antigo no neocities agora vão pro domínio próprio"
+		]
+	},
+	{
 		"date": "2026-08-24",
 		"items": [
 			"página <a href=\"/contato/\">/contato</a> criada em /outros, com cartão de identidade animado"

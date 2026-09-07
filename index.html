@@ -28,6 +28,7 @@
 	<body>
 		<div id="human-verify">
 			<div class="verify-box">
+				<span class="edge-light"></span>
 				<label class="verify-check">
 					<input type="checkbox" id="verify-checkbox" />
 					<span class="verify-box-visual">
@@ -38,7 +39,10 @@
 					</span>
 					<span class="verify-label">Verify you are human</span>
 				</label>
-				<div class="verify-footer">dharlan.world &middot; segurança e desempenho</div>
+				<div class="verify-footer">
+					dharlan.world &middot; ray id:
+					<span id="verify-ray-id">8f2a1c94b7e0d3a1</span>
+				</div>
 			</div>
 		</div>
 
@@ -129,6 +133,7 @@
 		</div>
 
 		<script type="module" src="/assets/js/main.js"></script>
+		<script src="/assets/js/dither-bg.js"></script>
 		<script src="/assets/js/boot-terminal.js"></script>
 
 		<script>
