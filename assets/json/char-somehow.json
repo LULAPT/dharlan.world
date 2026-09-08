@@ -1,0 +1,1604 @@
+{
+	"nome": "Char Somehow",
+	"origem": {
+		"base": "CharacterManaJ / Default(v3)",
+		"nota": "Acervo original em japonês; rótulos traduzidos pro pt-BR na extração."
+	},
+	"tamanho": {
+		"largura": 300,
+		"altura": 400
+	},
+	"gruposDeCor": [
+		{
+			"id": "color-hair",
+			"nome": "Cabelo"
+		},
+		{
+			"id": "color-eye",
+			"nome": "Olho"
+		},
+		{
+			"id": "color-skin",
+			"nome": "Pele"
+		},
+		{
+			"id": "color-dress",
+			"nome": "Roupa"
+		}
+	],
+	"categorias": [
+		{
+			"id": "hair_front",
+			"nome": "Cabelo — frente",
+			"opcional": false,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "hair_front",
+					"nome": "Base",
+					"ordem": 13,
+					"dir": "hair_front",
+					"grupoCor": "color-hair",
+					"itens": [
+						{
+							"arquivo": "franja-reta.png",
+							"nome": "Franja reta",
+							"ja": "ぱっつん"
+						},
+						{
+							"arquivo": "intake.png",
+							"nome": "Intake",
+							"ja": "インテーク"
+						},
+						{
+							"arquivo": "madame.png",
+							"nome": "Madame",
+							"ja": "お嬢様"
+						},
+						{
+							"arquivo": "natural.png",
+							"nome": "Natural",
+							"ja": "ナチュラル"
+						},
+						{
+							"arquivo": "ondulado.png",
+							"nome": "Ondulado",
+							"ja": "ウェーブ"
+						},
+						{
+							"arquivo": "rebelde.png",
+							"nome": "Rebelde",
+							"ja": "くせ毛"
+						},
+						{
+							"arquivo": "repartido-ao-meio-1.png",
+							"nome": "Repartido ao meio 1",
+							"ja": "中分け1"
+						},
+						{
+							"arquivo": "repartido-ao-meio-2.png",
+							"nome": "Repartido ao meio 2",
+							"ja": "中分け2"
+						},
+						{
+							"arquivo": "repartido-de-lado.png",
+							"nome": "Repartido de lado",
+							"ja": "横分け"
+						},
+						{
+							"arquivo": "selvagem.png",
+							"nome": "Selvagem",
+							"ja": "ワイルド"
+						}
+					]
+				},
+				{
+					"id": "hair_front_accessory",
+					"nome": "Acessórios",
+					"ordem": 14,
+					"dir": "hair_front_accessory",
+					"grupoCor": null,
+					"itens": []
+				}
+			]
+		},
+		{
+			"id": "hair_back",
+			"nome": "Cabelo — trás",
+			"opcional": false,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "hair_back",
+					"nome": "Base",
+					"ordem": 2,
+					"dir": "hair_back",
+					"grupoCor": "color-hair",
+					"itens": [
+						{
+							"arquivo": "cachos-duplos.png",
+							"nome": "Cachos duplos",
+							"ja": "ツインドリル"
+						},
+						{
+							"arquivo": "chanel.png",
+							"nome": "Chanel",
+							"ja": "ボブカット"
+						},
+						{
+							"arquivo": "curto.png",
+							"nome": "Curto",
+							"ja": "ショート"
+						},
+						{
+							"arquivo": "longo.png",
+							"nome": "Longo",
+							"ja": "ロング"
+						},
+						{
+							"arquivo": "maria-chiquinha-curta.png",
+							"nome": "Maria-chiquinha (curta)",
+							"ja": "ツインテール(短)"
+						},
+						{
+							"arquivo": "maria-chiquinha-longa.png",
+							"nome": "Maria-chiquinha (longa)",
+							"ja": "ツインテール(長)"
+						},
+						{
+							"arquivo": "medio.png",
+							"nome": "Médio",
+							"ja": "セミロング"
+						},
+						{
+							"arquivo": "ondulado-longo.png",
+							"nome": "Ondulado longo",
+							"ja": "ウェーブロング"
+						},
+						{
+							"arquivo": "ondulado-medio.png",
+							"nome": "Ondulado médio",
+							"ja": "ウェーブセミロング"
+						},
+						{
+							"arquivo": "preso-em-dois.png",
+							"nome": "Preso em dois",
+							"ja": "二つ結び"
+						},
+						{
+							"arquivo": "rabo-de-cavalo.png",
+							"nome": "Rabo de cavalo",
+							"ja": "ポニーテール"
+						},
+						{
+							"arquivo": "rabo-lateral-esquerdo-curto.png",
+							"nome": "Rabo lateral esquerdo (curto)",
+							"ja": "サイドテール左(短)"
+						},
+						{
+							"arquivo": "repicado-curto.png",
+							"nome": "Repicado curto",
+							"ja": "ギザギザショート"
+						},
+						{
+							"arquivo": "repicado-longo.png",
+							"nome": "Repicado longo",
+							"ja": "ギザギザロング"
+						},
+						{
+							"arquivo": "repicado-medio.png",
+							"nome": "Repicado médio",
+							"ja": "ギザギザセミロング"
+						},
+						{
+							"arquivo": "tranca.png",
+							"nome": "Trança",
+							"ja": "三つ編み"
+						}
+					]
+				},
+				{
+					"id": "hair_back_accessory",
+					"nome": "Acessórios",
+					"ordem": 3,
+					"dir": "hair_back_accessory",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "cachos-duplos.png",
+							"nome": "Cachos duplos",
+							"ja": "ツインドリル"
+						},
+						{
+							"arquivo": "maria-chiquinha-curta.png",
+							"nome": "Maria-chiquinha (curta)",
+							"ja": "ツインテール(短)"
+						},
+						{
+							"arquivo": "maria-chiquinha-longa.png",
+							"nome": "Maria-chiquinha (longa)",
+							"ja": "ツインテール(長)"
+						},
+						{
+							"arquivo": "rabo-de-cavalo.png",
+							"nome": "Rabo de cavalo",
+							"ja": "ポニーテール"
+						},
+						{
+							"arquivo": "rabo-lateral-esquerdo-curto.png",
+							"nome": "Rabo lateral esquerdo (curto)",
+							"ja": "サイドテール左(短)"
+						},
+						{
+							"arquivo": "tranca.png",
+							"nome": "Trança",
+							"ja": "三つ編み"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "head",
+			"nome": "Rosto",
+			"opcional": false,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "head",
+					"nome": "Rosto",
+					"ordem": 10,
+					"dir": "head",
+					"grupoCor": "color-skin",
+					"itens": [
+						{
+							"arquivo": "rosto-normal-1.png",
+							"nome": "Rosto normal 1",
+							"ja": "普通な顔1"
+						},
+						{
+							"arquivo": "rosto-normal-2.png",
+							"nome": "Rosto normal 2",
+							"ja": "普通な顔2"
+						},
+						{
+							"arquivo": "rosto-palido-1.png",
+							"nome": "Rosto pálido 1",
+							"ja": "青ざめた顔1"
+						},
+						{
+							"arquivo": "rosto-palido-2.png",
+							"nome": "Rosto pálido 2",
+							"ja": "青ざめた顔2"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "face",
+			"nome": "Expressão",
+			"opcional": false,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "face_front",
+					"nome": "Rosto",
+					"ordem": 15,
+					"dir": "face_front",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "aflita-boca-aberta.png",
+							"nome": "Aflita (boca aberta)",
+							"ja": "困り(口開き)"
+						},
+						{
+							"arquivo": "aflita-boca-fechada.png",
+							"nome": "Aflita (boca fechada)",
+							"ja": "困り(口閉じ)"
+						},
+						{
+							"arquivo": "boca-de-gato-aberta.png",
+							"nome": "Boca de gato (aberta)",
+							"ja": "猫口(口開き)"
+						},
+						{
+							"arquivo": "boca-de-gato-fechada.png",
+							"nome": "Boca de gato (fechada)",
+							"ja": "猫口(口閉じ)"
+						},
+						{
+							"arquivo": "boca-triangular-aflita.png",
+							"nome": "Boca triangular (aflita)",
+							"ja": "三角口(困り)"
+						},
+						{
+							"arquivo": "boca-triangular-brava.png",
+							"nome": "Boca triangular (brava)",
+							"ja": "三角口(怒り)"
+						},
+						{
+							"arquivo": "boca-triangular-neutra.png",
+							"nome": "Boca triangular (neutra)",
+							"ja": "三角口(素)"
+						},
+						{
+							"arquivo": "brava-boca-aberta.png",
+							"nome": "Brava (boca aberta)",
+							"ja": "怒り(口開き)"
+						},
+						{
+							"arquivo": "brava-boca-fechada.png",
+							"nome": "Brava (boca fechada)",
+							"ja": "怒り(口閉じ)"
+						},
+						{
+							"arquivo": "envergonhada-boca-aberta.png",
+							"nome": "Envergonhada (boca aberta)",
+							"ja": "照れ(口開き)"
+						},
+						{
+							"arquivo": "envergonhada-boca-fechada.png",
+							"nome": "Envergonhada (boca fechada)",
+							"ja": "照れ(口閉じ)"
+						},
+						{
+							"arquivo": "neutra.png",
+							"nome": "Neutra",
+							"ja": "素"
+						},
+						{
+							"arquivo": "sorrindo-boca-aberta.png",
+							"nome": "Sorrindo (boca aberta)",
+							"ja": "笑い(口開き)"
+						},
+						{
+							"arquivo": "sorrindo-boca-fechada.png",
+							"nome": "Sorrindo (boca fechada)",
+							"ja": "笑い(口閉じ)"
+						},
+						{
+							"arquivo": "surpresa.png",
+							"nome": "Surpresa",
+							"ja": "驚き"
+						}
+					]
+				},
+				{
+					"id": "face_back",
+					"nome": "Acessórios",
+					"ordem": 12,
+					"dir": "face_back",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "aflita-boca-aberta.png",
+							"nome": "Aflita (boca aberta)",
+							"ja": "困り(口開き)"
+						},
+						{
+							"arquivo": "aflita-boca-fechada.png",
+							"nome": "Aflita (boca fechada)",
+							"ja": "困り(口閉じ)"
+						},
+						{
+							"arquivo": "boca-de-gato-aberta.png",
+							"nome": "Boca de gato (aberta)",
+							"ja": "猫口(口開き)"
+						},
+						{
+							"arquivo": "boca-de-gato-fechada.png",
+							"nome": "Boca de gato (fechada)",
+							"ja": "猫口(口閉じ)"
+						},
+						{
+							"arquivo": "boca-triangular-aflita.png",
+							"nome": "Boca triangular (aflita)",
+							"ja": "三角口(困り)"
+						},
+						{
+							"arquivo": "boca-triangular-brava.png",
+							"nome": "Boca triangular (brava)",
+							"ja": "三角口(怒り)"
+						},
+						{
+							"arquivo": "boca-triangular-neutra.png",
+							"nome": "Boca triangular (neutra)",
+							"ja": "三角口(素)"
+						},
+						{
+							"arquivo": "brava-boca-aberta.png",
+							"nome": "Brava (boca aberta)",
+							"ja": "怒り(口開き)"
+						},
+						{
+							"arquivo": "brava-boca-fechada.png",
+							"nome": "Brava (boca fechada)",
+							"ja": "怒り(口閉じ)"
+						},
+						{
+							"arquivo": "envergonhada-boca-aberta.png",
+							"nome": "Envergonhada (boca aberta)",
+							"ja": "照れ(口開き)"
+						},
+						{
+							"arquivo": "envergonhada-boca-fechada.png",
+							"nome": "Envergonhada (boca fechada)",
+							"ja": "照れ(口閉じ)"
+						},
+						{
+							"arquivo": "neutra.png",
+							"nome": "Neutra",
+							"ja": "素"
+						},
+						{
+							"arquivo": "sorrindo-boca-aberta.png",
+							"nome": "Sorrindo (boca aberta)",
+							"ja": "笑い(口開き)"
+						},
+						{
+							"arquivo": "sorrindo-boca-fechada.png",
+							"nome": "Sorrindo (boca fechada)",
+							"ja": "笑い(口閉じ)"
+						},
+						{
+							"arquivo": "surpresa.png",
+							"nome": "Surpresa",
+							"ja": "驚き"
+						}
+					]
+				},
+				{
+					"id": "face_haircolor",
+					"nome": "Cabelo",
+					"ordem": 16,
+					"dir": "face_haircolor",
+					"grupoCor": "color-hair",
+					"itens": []
+				}
+			]
+		},
+		{
+			"id": "eye",
+			"nome": "Olhos",
+			"opcional": false,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "eye",
+					"nome": "Olho",
+					"ordem": 17,
+					"dir": "eye",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "olhos-caidos-escuros-1.png",
+							"nome": "Olhos caídos (escuros) 1",
+							"ja": "垂れ目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-caidos-escuros-2.png",
+							"nome": "Olhos caídos (escuros) 2",
+							"ja": "垂れ目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-caidos-escuros-3.png",
+							"nome": "Olhos caídos (escuros) 3",
+							"ja": "垂れ目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-caidos-1.png",
+							"nome": "Olhos caídos 1",
+							"ja": "垂れ目1"
+						},
+						{
+							"arquivo": "olhos-caidos-2.png",
+							"nome": "Olhos caídos 2",
+							"ja": "垂れ目2"
+						},
+						{
+							"arquivo": "olhos-caidos-3.png",
+							"nome": "Olhos caídos 3",
+							"ja": "垂れ目3"
+						},
+						{
+							"arquivo": "olhos-cansados-escuros-1.png",
+							"nome": "Olhos cansados (escuros) 1",
+							"ja": "だる目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-cansados-escuros-2.png",
+							"nome": "Olhos cansados (escuros) 2",
+							"ja": "だる目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-cansados-escuros-3.png",
+							"nome": "Olhos cansados (escuros) 3",
+							"ja": "だる目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-cansados-1.png",
+							"nome": "Olhos cansados 1",
+							"ja": "だる目1"
+						},
+						{
+							"arquivo": "olhos-cansados-2.png",
+							"nome": "Olhos cansados 2",
+							"ja": "だる目2"
+						},
+						{
+							"arquivo": "olhos-cansados-3.png",
+							"nome": "Olhos cansados 3",
+							"ja": "だる目3"
+						},
+						{
+							"arquivo": "olhos-de-risquinho.png",
+							"nome": "Olhos de risquinho",
+							"ja": "棒目"
+						},
+						{
+							"arquivo": "olhos-estilizados-1.png",
+							"nome": "Olhos estilizados 1",
+							"ja": "デフォルメ目1"
+						},
+						{
+							"arquivo": "olhos-estilizados-2.png",
+							"nome": "Olhos estilizados 2",
+							"ja": "デフォルメ目2"
+						},
+						{
+							"arquivo": "olhos-fechados-1.png",
+							"nome": "Olhos fechados 1",
+							"ja": "閉じ目1"
+						},
+						{
+							"arquivo": "olhos-fechados-2.png",
+							"nome": "Olhos fechados 2",
+							"ja": "閉じ目2"
+						},
+						{
+							"arquivo": "olhos-fechados-3.png",
+							"nome": "Olhos fechados 3",
+							"ja": "閉じ目3"
+						},
+						{
+							"arquivo": "olhos-malvados-escuros-1.png",
+							"nome": "Olhos malvados (escuros) 1",
+							"ja": "ワル目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-malvados-escuros-2.png",
+							"nome": "Olhos malvados (escuros) 2",
+							"ja": "ワル目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-malvados-escuros-3.png",
+							"nome": "Olhos malvados (escuros) 3",
+							"ja": "ワル目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-malvados-1.png",
+							"nome": "Olhos malvados 1",
+							"ja": "ワル目1"
+						},
+						{
+							"arquivo": "olhos-malvados-2.png",
+							"nome": "Olhos malvados 2",
+							"ja": "ワル目2"
+						},
+						{
+							"arquivo": "olhos-malvados-3.png",
+							"nome": "Olhos malvados 3",
+							"ja": "ワル目3"
+						},
+						{
+							"arquivo": "olhos-normais-escuros-1.png",
+							"nome": "Olhos normais (escuros) 1",
+							"ja": "普通な目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-normais-escuros-2.png",
+							"nome": "Olhos normais (escuros) 2",
+							"ja": "普通な目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-normais-escuros-3.png",
+							"nome": "Olhos normais (escuros) 3",
+							"ja": "普通な目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-normais-1.png",
+							"nome": "Olhos normais 1",
+							"ja": "普通な目1"
+						},
+						{
+							"arquivo": "olhos-normais-2.png",
+							"nome": "Olhos normais 2",
+							"ja": "普通な目2"
+						},
+						{
+							"arquivo": "olhos-normais-3.png",
+							"nome": "Olhos normais 3",
+							"ja": "普通な目3"
+						},
+						{
+							"arquivo": "olhos-puxados-escuros-1.png",
+							"nome": "Olhos puxados (escuros) 1",
+							"ja": "釣り目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-puxados-escuros-2.png",
+							"nome": "Olhos puxados (escuros) 2",
+							"ja": "釣り目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-puxados-escuros-3.png",
+							"nome": "Olhos puxados (escuros) 3",
+							"ja": "釣り目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-puxados-1.png",
+							"nome": "Olhos puxados 1",
+							"ja": "釣り目1"
+						},
+						{
+							"arquivo": "olhos-puxados-2.png",
+							"nome": "Olhos puxados 2",
+							"ja": "釣り目2"
+						},
+						{
+							"arquivo": "olhos-puxados-3.png",
+							"nome": "Olhos puxados 3",
+							"ja": "釣り目3"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-escuros-1.png",
+							"nome": "Olhos redondos puxados (escuros) 1",
+							"ja": "丸釣り目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-escuros-2.png",
+							"nome": "Olhos redondos puxados (escuros) 2",
+							"ja": "丸釣り目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-escuros-3.png",
+							"nome": "Olhos redondos puxados (escuros) 3",
+							"ja": "丸釣り目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-1.png",
+							"nome": "Olhos redondos puxados 1",
+							"ja": "丸釣り目1"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-2.png",
+							"nome": "Olhos redondos puxados 2",
+							"ja": "丸釣り目2"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-3.png",
+							"nome": "Olhos redondos puxados 3",
+							"ja": "丸釣り目3"
+						},
+						{
+							"arquivo": "olhos-triangulares-escuros-1.png",
+							"nome": "Olhos triangulares (escuros) 1",
+							"ja": "三角目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-triangulares-escuros-2.png",
+							"nome": "Olhos triangulares (escuros) 2",
+							"ja": "三角目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-triangulares-escuros-3.png",
+							"nome": "Olhos triangulares (escuros) 3",
+							"ja": "三角目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-triangulares-1.png",
+							"nome": "Olhos triangulares 1",
+							"ja": "三角目1"
+						},
+						{
+							"arquivo": "olhos-triangulares-2.png",
+							"nome": "Olhos triangulares 2",
+							"ja": "三角目2"
+						},
+						{
+							"arquivo": "olhos-triangulares-3.png",
+							"nome": "Olhos triangulares 3",
+							"ja": "三角目3"
+						}
+					]
+				},
+				{
+					"id": "eye_color",
+					"nome": "Base",
+					"ordem": 18,
+					"dir": "eye_color",
+					"grupoCor": "color-eye",
+					"itens": [
+						{
+							"arquivo": "olhos-caidos-escuros-1.png",
+							"nome": "Olhos caídos (escuros) 1",
+							"ja": "垂れ目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-caidos-escuros-2.png",
+							"nome": "Olhos caídos (escuros) 2",
+							"ja": "垂れ目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-caidos-escuros-3.png",
+							"nome": "Olhos caídos (escuros) 3",
+							"ja": "垂れ目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-caidos-1.png",
+							"nome": "Olhos caídos 1",
+							"ja": "垂れ目1"
+						},
+						{
+							"arquivo": "olhos-caidos-2.png",
+							"nome": "Olhos caídos 2",
+							"ja": "垂れ目2"
+						},
+						{
+							"arquivo": "olhos-caidos-3.png",
+							"nome": "Olhos caídos 3",
+							"ja": "垂れ目3"
+						},
+						{
+							"arquivo": "olhos-cansados-escuros-1.png",
+							"nome": "Olhos cansados (escuros) 1",
+							"ja": "だる目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-cansados-escuros-2.png",
+							"nome": "Olhos cansados (escuros) 2",
+							"ja": "だる目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-cansados-escuros-3.png",
+							"nome": "Olhos cansados (escuros) 3",
+							"ja": "だる目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-cansados-1.png",
+							"nome": "Olhos cansados 1",
+							"ja": "だる目1"
+						},
+						{
+							"arquivo": "olhos-cansados-2.png",
+							"nome": "Olhos cansados 2",
+							"ja": "だる目2"
+						},
+						{
+							"arquivo": "olhos-cansados-3.png",
+							"nome": "Olhos cansados 3",
+							"ja": "だる目3"
+						},
+						{
+							"arquivo": "olhos-malvados-escuros-1.png",
+							"nome": "Olhos malvados (escuros) 1",
+							"ja": "ワル目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-malvados-escuros-2.png",
+							"nome": "Olhos malvados (escuros) 2",
+							"ja": "ワル目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-malvados-escuros-3.png",
+							"nome": "Olhos malvados (escuros) 3",
+							"ja": "ワル目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-malvados-1.png",
+							"nome": "Olhos malvados 1",
+							"ja": "ワル目1"
+						},
+						{
+							"arquivo": "olhos-malvados-2.png",
+							"nome": "Olhos malvados 2",
+							"ja": "ワル目2"
+						},
+						{
+							"arquivo": "olhos-malvados-3.png",
+							"nome": "Olhos malvados 3",
+							"ja": "ワル目3"
+						},
+						{
+							"arquivo": "olhos-normais-escuros-1.png",
+							"nome": "Olhos normais (escuros) 1",
+							"ja": "普通な目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-normais-escuros-2.png",
+							"nome": "Olhos normais (escuros) 2",
+							"ja": "普通な目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-normais-escuros-3.png",
+							"nome": "Olhos normais (escuros) 3",
+							"ja": "普通な目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-normais-1.png",
+							"nome": "Olhos normais 1",
+							"ja": "普通な目1"
+						},
+						{
+							"arquivo": "olhos-normais-2.png",
+							"nome": "Olhos normais 2",
+							"ja": "普通な目2"
+						},
+						{
+							"arquivo": "olhos-normais-3.png",
+							"nome": "Olhos normais 3",
+							"ja": "普通な目3"
+						},
+						{
+							"arquivo": "olhos-puxados-escuros-1.png",
+							"nome": "Olhos puxados (escuros) 1",
+							"ja": "釣り目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-puxados-escuros-2.png",
+							"nome": "Olhos puxados (escuros) 2",
+							"ja": "釣り目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-puxados-escuros-3.png",
+							"nome": "Olhos puxados (escuros) 3",
+							"ja": "釣り目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-puxados-1.png",
+							"nome": "Olhos puxados 1",
+							"ja": "釣り目1"
+						},
+						{
+							"arquivo": "olhos-puxados-2.png",
+							"nome": "Olhos puxados 2",
+							"ja": "釣り目2"
+						},
+						{
+							"arquivo": "olhos-puxados-3.png",
+							"nome": "Olhos puxados 3",
+							"ja": "釣り目3"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-escuros-1.png",
+							"nome": "Olhos redondos puxados (escuros) 1",
+							"ja": "丸釣り目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-escuros-2.png",
+							"nome": "Olhos redondos puxados (escuros) 2",
+							"ja": "丸釣り目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-escuros-3.png",
+							"nome": "Olhos redondos puxados (escuros) 3",
+							"ja": "丸釣り目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-1.png",
+							"nome": "Olhos redondos puxados 1",
+							"ja": "丸釣り目1"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-2.png",
+							"nome": "Olhos redondos puxados 2",
+							"ja": "丸釣り目2"
+						},
+						{
+							"arquivo": "olhos-redondos-puxados-3.png",
+							"nome": "Olhos redondos puxados 3",
+							"ja": "丸釣り目3"
+						},
+						{
+							"arquivo": "olhos-triangulares-escuros-1.png",
+							"nome": "Olhos triangulares (escuros) 1",
+							"ja": "三角目(黒め)1"
+						},
+						{
+							"arquivo": "olhos-triangulares-escuros-2.png",
+							"nome": "Olhos triangulares (escuros) 2",
+							"ja": "三角目(黒め)2"
+						},
+						{
+							"arquivo": "olhos-triangulares-escuros-3.png",
+							"nome": "Olhos triangulares (escuros) 3",
+							"ja": "三角目(黒め)3"
+						},
+						{
+							"arquivo": "olhos-triangulares-1.png",
+							"nome": "Olhos triangulares 1",
+							"ja": "三角目1"
+						},
+						{
+							"arquivo": "olhos-triangulares-2.png",
+							"nome": "Olhos triangulares 2",
+							"ja": "三角目2"
+						},
+						{
+							"arquivo": "olhos-triangulares-3.png",
+							"nome": "Olhos triangulares 3",
+							"ja": "三角目3"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "body",
+			"nome": "Corpo",
+			"opcional": false,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "body_front_color",
+					"nome": "Base",
+					"ordem": 7,
+					"dir": "body_front_color",
+					"grupoCor": "color-dress",
+					"itens": [
+						{
+							"arquivo": "blazer-1.png",
+							"nome": "Blazer 1",
+							"ja": "ブレザー1"
+						},
+						{
+							"arquivo": "blazer-2.png",
+							"nome": "Blazer 2",
+							"ja": "ブレザー2"
+						},
+						{
+							"arquivo": "casual-blusa-1.png",
+							"nome": "Casual (blusa) 1",
+							"ja": "私服(ブラウス)1"
+						},
+						{
+							"arquivo": "casual-blusa-2.png",
+							"nome": "Casual (blusa) 2",
+							"ja": "私服(ブラウス)2"
+						},
+						{
+							"arquivo": "casual-camisa-1.png",
+							"nome": "Casual (camisa) 1",
+							"ja": "私服(シャツ)1"
+						},
+						{
+							"arquivo": "casual-camisa-2.png",
+							"nome": "Casual (camisa) 2",
+							"ja": "私服(シャツ)2"
+						},
+						{
+							"arquivo": "casual-sueter-1.png",
+							"nome": "Casual (suéter) 1",
+							"ja": "私服(セーター)1"
+						},
+						{
+							"arquivo": "casual-sueter-2.png",
+							"nome": "Casual (suéter) 2",
+							"ja": "私服(セーター)2"
+						},
+						{
+							"arquivo": "espartilho-1.png",
+							"nome": "Espartilho 1",
+							"ja": "コルセット1"
+						},
+						{
+							"arquivo": "espartilho-2.png",
+							"nome": "Espartilho 2",
+							"ja": "コルセット2"
+						},
+						{
+							"arquivo": "gothic-lolita-mini-1.png",
+							"nome": "Gothic lolita (mini) 1",
+							"ja": "ゴスロリ(ミニ)1"
+						},
+						{
+							"arquivo": "gothic-lolita-mini-2.png",
+							"nome": "Gothic lolita (mini) 2",
+							"ja": "ゴスロリ(ミニ)2"
+						},
+						{
+							"arquivo": "maio-escolar-branco-1.png",
+							"nome": "Maiô escolar (branco) 1",
+							"ja": "スクール水着(白)1"
+						},
+						{
+							"arquivo": "maio-escolar-branco-2.png",
+							"nome": "Maiô escolar (branco) 2",
+							"ja": "スクール水着(白)2"
+						},
+						{
+							"arquivo": "maio-escolar-1.png",
+							"nome": "Maiô escolar 1",
+							"ja": "スクール水着1"
+						},
+						{
+							"arquivo": "maio-escolar-2.png",
+							"nome": "Maiô escolar 2",
+							"ja": "スクール水着2"
+						},
+						{
+							"arquivo": "traje-de-miko-1.png",
+							"nome": "Traje de miko 1",
+							"ja": "巫女装束1"
+						},
+						{
+							"arquivo": "traje-de-miko-2.png",
+							"nome": "Traje de miko 2",
+							"ja": "巫女装束2"
+						},
+						{
+							"arquivo": "uniforme-de-educacao-fisica-1.png",
+							"nome": "Uniforme de educação física 1",
+							"ja": "体操着1"
+						},
+						{
+							"arquivo": "uniforme-de-educacao-fisica-2.png",
+							"nome": "Uniforme de educação física 2",
+							"ja": "体操着2"
+						},
+						{
+							"arquivo": "uniforme-marinheiro-1.png",
+							"nome": "Uniforme marinheiro 1",
+							"ja": "セーラー服1"
+						},
+						{
+							"arquivo": "uniforme-marinheiro-2.png",
+							"nome": "Uniforme marinheiro 2",
+							"ja": "セーラー服2"
+						},
+						{
+							"arquivo": "vestido-com-avental-1.png",
+							"nome": "Vestido com avental 1",
+							"ja": "エプロンドレス1"
+						},
+						{
+							"arquivo": "vestido-com-avental-2.png",
+							"nome": "Vestido com avental 2",
+							"ja": "エプロンドレス2"
+						},
+						{
+							"arquivo": "vestido-de-verao-1.png",
+							"nome": "Vestido de verão 1",
+							"ja": "サマードレス1"
+						},
+						{
+							"arquivo": "vestido-de-verao-2.png",
+							"nome": "Vestido de verão 2",
+							"ja": "サマードレス2"
+						}
+					]
+				},
+				{
+					"id": "body_front",
+					"nome": "Roupa",
+					"ordem": 6,
+					"dir": "body_front",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "blazer-1.png",
+							"nome": "Blazer 1",
+							"ja": "ブレザー1"
+						},
+						{
+							"arquivo": "blazer-2.png",
+							"nome": "Blazer 2",
+							"ja": "ブレザー2"
+						},
+						{
+							"arquivo": "casual-blusa-1.png",
+							"nome": "Casual (blusa) 1",
+							"ja": "私服(ブラウス)1"
+						},
+						{
+							"arquivo": "casual-blusa-2.png",
+							"nome": "Casual (blusa) 2",
+							"ja": "私服(ブラウス)2"
+						},
+						{
+							"arquivo": "casual-camisa-1.png",
+							"nome": "Casual (camisa) 1",
+							"ja": "私服(シャツ)1"
+						},
+						{
+							"arquivo": "casual-camisa-2.png",
+							"nome": "Casual (camisa) 2",
+							"ja": "私服(シャツ)2"
+						},
+						{
+							"arquivo": "casual-sueter-1.png",
+							"nome": "Casual (suéter) 1",
+							"ja": "私服(セーター)1"
+						},
+						{
+							"arquivo": "casual-sueter-2.png",
+							"nome": "Casual (suéter) 2",
+							"ja": "私服(セーター)2"
+						},
+						{
+							"arquivo": "espartilho-1.png",
+							"nome": "Espartilho 1",
+							"ja": "コルセット1"
+						},
+						{
+							"arquivo": "espartilho-2.png",
+							"nome": "Espartilho 2",
+							"ja": "コルセット2"
+						},
+						{
+							"arquivo": "gothic-lolita-mini-1.png",
+							"nome": "Gothic lolita (mini) 1",
+							"ja": "ゴスロリ(ミニ)1"
+						},
+						{
+							"arquivo": "gothic-lolita-mini-2.png",
+							"nome": "Gothic lolita (mini) 2",
+							"ja": "ゴスロリ(ミニ)2"
+						},
+						{
+							"arquivo": "traje-de-miko-1.png",
+							"nome": "Traje de miko 1",
+							"ja": "巫女装束1"
+						},
+						{
+							"arquivo": "traje-de-miko-2.png",
+							"nome": "Traje de miko 2",
+							"ja": "巫女装束2"
+						},
+						{
+							"arquivo": "uniforme-de-educacao-fisica-1.png",
+							"nome": "Uniforme de educação física 1",
+							"ja": "体操着1"
+						},
+						{
+							"arquivo": "uniforme-de-educacao-fisica-2.png",
+							"nome": "Uniforme de educação física 2",
+							"ja": "体操着2"
+						},
+						{
+							"arquivo": "uniforme-marinheiro-1.png",
+							"nome": "Uniforme marinheiro 1",
+							"ja": "セーラー服1"
+						},
+						{
+							"arquivo": "uniforme-marinheiro-2.png",
+							"nome": "Uniforme marinheiro 2",
+							"ja": "セーラー服2"
+						},
+						{
+							"arquivo": "vestido-com-avental-1.png",
+							"nome": "Vestido com avental 1",
+							"ja": "エプロンドレス1"
+						},
+						{
+							"arquivo": "vestido-com-avental-2.png",
+							"nome": "Vestido com avental 2",
+							"ja": "エプロンドレス2"
+						}
+					]
+				},
+				{
+					"id": "body_back",
+					"nome": "Pele",
+					"ordem": 4,
+					"dir": "body_back",
+					"grupoCor": "color-skin",
+					"itens": [
+						{
+							"arquivo": "blazer-1.png",
+							"nome": "Blazer 1",
+							"ja": "ブレザー1"
+						},
+						{
+							"arquivo": "blazer-2.png",
+							"nome": "Blazer 2",
+							"ja": "ブレザー2"
+						},
+						{
+							"arquivo": "casual-blusa-1.png",
+							"nome": "Casual (blusa) 1",
+							"ja": "私服(ブラウス)1"
+						},
+						{
+							"arquivo": "casual-blusa-2.png",
+							"nome": "Casual (blusa) 2",
+							"ja": "私服(ブラウス)2"
+						},
+						{
+							"arquivo": "casual-camisa-1.png",
+							"nome": "Casual (camisa) 1",
+							"ja": "私服(シャツ)1"
+						},
+						{
+							"arquivo": "casual-camisa-2.png",
+							"nome": "Casual (camisa) 2",
+							"ja": "私服(シャツ)2"
+						},
+						{
+							"arquivo": "casual-sueter-1.png",
+							"nome": "Casual (suéter) 1",
+							"ja": "私服(セーター)1"
+						},
+						{
+							"arquivo": "casual-sueter-2.png",
+							"nome": "Casual (suéter) 2",
+							"ja": "私服(セーター)2"
+						},
+						{
+							"arquivo": "corpo-base-1.png",
+							"nome": "Corpo base 1",
+							"ja": "素体1"
+						},
+						{
+							"arquivo": "corpo-base-2.png",
+							"nome": "Corpo base 2",
+							"ja": "素体2"
+						},
+						{
+							"arquivo": "espartilho-1.png",
+							"nome": "Espartilho 1",
+							"ja": "コルセット1"
+						},
+						{
+							"arquivo": "espartilho-2.png",
+							"nome": "Espartilho 2",
+							"ja": "コルセット2"
+						},
+						{
+							"arquivo": "gothic-lolita-mini-1.png",
+							"nome": "Gothic lolita (mini) 1",
+							"ja": "ゴスロリ(ミニ)1"
+						},
+						{
+							"arquivo": "gothic-lolita-mini-2.png",
+							"nome": "Gothic lolita (mini) 2",
+							"ja": "ゴスロリ(ミニ)2"
+						},
+						{
+							"arquivo": "maio-escolar-branco-1.png",
+							"nome": "Maiô escolar (branco) 1",
+							"ja": "スクール水着(白)1"
+						},
+						{
+							"arquivo": "maio-escolar-branco-2.png",
+							"nome": "Maiô escolar (branco) 2",
+							"ja": "スクール水着(白)2"
+						},
+						{
+							"arquivo": "maio-escolar-1.png",
+							"nome": "Maiô escolar 1",
+							"ja": "スクール水着1"
+						},
+						{
+							"arquivo": "maio-escolar-2.png",
+							"nome": "Maiô escolar 2",
+							"ja": "スクール水着2"
+						},
+						{
+							"arquivo": "traje-de-miko-1.png",
+							"nome": "Traje de miko 1",
+							"ja": "巫女装束1"
+						},
+						{
+							"arquivo": "traje-de-miko-2.png",
+							"nome": "Traje de miko 2",
+							"ja": "巫女装束2"
+						},
+						{
+							"arquivo": "uniforme-de-educacao-fisica-1.png",
+							"nome": "Uniforme de educação física 1",
+							"ja": "体操着1"
+						},
+						{
+							"arquivo": "uniforme-de-educacao-fisica-2.png",
+							"nome": "Uniforme de educação física 2",
+							"ja": "体操着2"
+						},
+						{
+							"arquivo": "uniforme-marinheiro-1.png",
+							"nome": "Uniforme marinheiro 1",
+							"ja": "セーラー服1"
+						},
+						{
+							"arquivo": "uniforme-marinheiro-2.png",
+							"nome": "Uniforme marinheiro 2",
+							"ja": "セーラー服2"
+						},
+						{
+							"arquivo": "vestido-com-avental-1.png",
+							"nome": "Vestido com avental 1",
+							"ja": "エプロンドレス1"
+						},
+						{
+							"arquivo": "vestido-com-avental-2.png",
+							"nome": "Vestido com avental 2",
+							"ja": "エプロンドレス2"
+						},
+						{
+							"arquivo": "vestido-de-verao-1.png",
+							"nome": "Vestido de verão 1",
+							"ja": "サマードレス1"
+						},
+						{
+							"arquivo": "vestido-de-verao-2.png",
+							"nome": "Vestido de verão 2",
+							"ja": "サマードレス2"
+						}
+					]
+				},
+				{
+					"id": "body_front_accessory",
+					"nome": "Acessórios",
+					"ordem": 8,
+					"dir": "body_front_accessory",
+					"grupoCor": null,
+					"itens": []
+				}
+			]
+		},
+		{
+			"id": "accessory",
+			"nome": "Acessórios",
+			"opcional": true,
+			"multiplo": true,
+			"camadas": [
+				{
+					"id": "accessory_front",
+					"nome": "Frente",
+					"ordem": 19,
+					"dir": "accessory_front",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "antena-fina-cabelo.png",
+							"nome": "Antena fina (cabelo)",
+							"ja": "アホ毛細め(髪)"
+						},
+						{
+							"arquivo": "antena-grossa-cabelo.png",
+							"nome": "Antena grossa (cabelo)",
+							"ja": "アホ毛太め(髪)"
+						},
+						{
+							"arquivo": "aureola.png",
+							"nome": "Auréola",
+							"ja": "天使の輪"
+						},
+						{
+							"arquivo": "fita-de-cabelo.png",
+							"nome": "Fita de cabelo",
+							"ja": "ヘアバントリボン"
+						},
+						{
+							"arquivo": "fita-de-touca-roupa.png",
+							"nome": "Fita de touca (roupa)",
+							"ja": "ヘッドドレスリボン(服)"
+						},
+						{
+							"arquivo": "mechas-laterais-cabelo.png",
+							"nome": "Mechas laterais (cabelo)",
+							"ja": "触覚(髪)"
+						},
+						{
+							"arquivo": "oculos.png",
+							"nome": "Óculos",
+							"ja": "メガネ"
+						},
+						{
+							"arquivo": "oculos-armacao-preta.png",
+							"nome": "Óculos (armação preta)",
+							"ja": "メガネ(黒縁)"
+						},
+						{
+							"arquivo": "touca-branca.png",
+							"nome": "Touca branca",
+							"ja": "ホワイトブリム"
+						}
+					]
+				},
+				{
+					"id": "accessory_middle_front",
+					"nome": "Meio (dir.)",
+					"ordem": 11,
+					"dir": "accessory_middle_front",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "chifres-de-demonio.png",
+							"nome": "Chifres de demônio",
+							"ja": "悪魔の角"
+						},
+						{
+							"arquivo": "costeletas-curtas-cabelo.png",
+							"nome": "Costeletas curtas (cabelo)",
+							"ja": "もみあげ短め(髪)"
+						},
+						{
+							"arquivo": "costeletas-largas-cabelo.png",
+							"nome": "Costeletas largas (cabelo)",
+							"ja": "もみあげ幅広(髪)"
+						},
+						{
+							"arquivo": "costeletas-medias-cabelo.png",
+							"nome": "Costeletas médias (cabelo)",
+							"ja": "もみあげちょい長(髪)"
+						},
+						{
+							"arquivo": "costeletas-trancadas-cabelo.png",
+							"nome": "Costeletas trançadas (cabelo)",
+							"ja": "もみあげ編み(髪)"
+						},
+						{
+							"arquivo": "orelhas-de-elfo-pele.png",
+							"nome": "Orelhas de elfo (pele)",
+							"ja": "エルフ耳(肌)"
+						}
+					]
+				},
+				{
+					"id": "accessory_middle_back",
+					"nome": "Meio (esq.)",
+					"ordem": 9,
+					"dir": "accessory_middle_back",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "chifres-de-demonio.png",
+							"nome": "Chifres de demônio",
+							"ja": "悪魔の角"
+						},
+						{
+							"arquivo": "costeletas-curtas-cabelo.png",
+							"nome": "Costeletas curtas (cabelo)",
+							"ja": "もみあげ短め(髪)"
+						},
+						{
+							"arquivo": "costeletas-largas-cabelo.png",
+							"nome": "Costeletas largas (cabelo)",
+							"ja": "もみあげ幅広(髪)"
+						},
+						{
+							"arquivo": "costeletas-medias-cabelo.png",
+							"nome": "Costeletas médias (cabelo)",
+							"ja": "もみあげちょい長(髪)"
+						},
+						{
+							"arquivo": "costeletas-trancadas-cabelo.png",
+							"nome": "Costeletas trançadas (cabelo)",
+							"ja": "もみあげ編み(髪)"
+						},
+						{
+							"arquivo": "orelhas-de-elfo-pele.png",
+							"nome": "Orelhas de elfo (pele)",
+							"ja": "エルフ耳(肌)"
+						},
+						{
+							"arquivo": "orelhas-de-gato-cabelo.png",
+							"nome": "Orelhas de gato (cabelo)",
+							"ja": "猫耳(髪)"
+						}
+					]
+				},
+				{
+					"id": "accessory_underwear",
+					"nome": "Roupa de baixo",
+					"ordem": 5,
+					"dir": "accessory_underwear",
+					"grupoCor": null,
+					"itens": []
+				},
+				{
+					"id": "accessory_back",
+					"nome": "Atrás",
+					"ordem": 1,
+					"dir": "accessory_back",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "antena-fina-cabelo.png",
+							"nome": "Antena fina (cabelo)",
+							"ja": "アホ毛細め(髪)"
+						},
+						{
+							"arquivo": "antena-grossa-cabelo.png",
+							"nome": "Antena grossa (cabelo)",
+							"ja": "アホ毛太め(髪)"
+						},
+						{
+							"arquivo": "asas-de-anjo.png",
+							"nome": "Asas de anjo",
+							"ja": "天使の羽"
+						},
+						{
+							"arquivo": "asas-de-demonio.png",
+							"nome": "Asas de demônio",
+							"ja": "悪魔の羽"
+						},
+						{
+							"arquivo": "aureola.png",
+							"nome": "Auréola",
+							"ja": "天使の輪"
+						},
+						{
+							"arquivo": "chifres-de-demonio.png",
+							"nome": "Chifres de demônio",
+							"ja": "悪魔の角"
+						},
+						{
+							"arquivo": "costeletas-curtas-cabelo.png",
+							"nome": "Costeletas curtas (cabelo)",
+							"ja": "もみあげ短め(髪)"
+						},
+						{
+							"arquivo": "costeletas-largas-cabelo.png",
+							"nome": "Costeletas largas (cabelo)",
+							"ja": "もみあげ幅広(髪)"
+						},
+						{
+							"arquivo": "costeletas-medias-cabelo.png",
+							"nome": "Costeletas médias (cabelo)",
+							"ja": "もみあげちょい長(髪)"
+						},
+						{
+							"arquivo": "costeletas-trancadas-cabelo.png",
+							"nome": "Costeletas trançadas (cabelo)",
+							"ja": "もみあげ編み(髪)"
+						},
+						{
+							"arquivo": "fita-de-cabelo.png",
+							"nome": "Fita de cabelo",
+							"ja": "ヘアバントリボン"
+						},
+						{
+							"arquivo": "fita-de-touca-roupa.png",
+							"nome": "Fita de touca (roupa)",
+							"ja": "ヘッドドレスリボン(服)"
+						},
+						{
+							"arquivo": "mechas-laterais-cabelo.png",
+							"nome": "Mechas laterais (cabelo)",
+							"ja": "触覚(髪)"
+						},
+						{
+							"arquivo": "oculos.png",
+							"nome": "Óculos",
+							"ja": "メガネ"
+						},
+						{
+							"arquivo": "oculos-armacao-preta.png",
+							"nome": "Óculos (armação preta)",
+							"ja": "メガネ(黒縁)"
+						},
+						{
+							"arquivo": "orelhas-de-elfo-pele.png",
+							"nome": "Orelhas de elfo (pele)",
+							"ja": "エルフ耳(肌)"
+						},
+						{
+							"arquivo": "orelhas-de-gato-cabelo.png",
+							"nome": "Orelhas de gato (cabelo)",
+							"ja": "猫耳(髪)"
+						},
+						{
+							"arquivo": "touca-branca.png",
+							"nome": "Touca branca",
+							"ja": "ホワイトブリム"
+						}
+					]
+				}
+			]
+		}
+	]
+}

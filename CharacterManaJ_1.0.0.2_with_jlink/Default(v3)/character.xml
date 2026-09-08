@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<character xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="default" rev="default_v3" version="1.0" xsi:schemaLocation="http://charactermanaj.sourceforge.jp/schema/charactermanaj character.xsd" xmlns="http://charactermanaj.sourceforge.jp/schema/charactermanaj">
+    <name xml:lang="en">Default(v3)</name>
+    <information>
+        <author xml:lang="en">Unknown</author>
+        <description xml:lang="en">default character
+--- import: 2026-09-07 19:41:15.247 : file:/C:/Users/Administrator/Downloads/character_03.07.zip ---
+default character
+</description>
+    </information>
+    <image-size>
+        <width>300</width>
+        <height>400</height>
+    </image-size>
+    <settings>
+        <entry key="custom-layer-pattern">true</entry>
+        <entry key="watch-dir">true</entry>
+    </settings>
+    <categories>
+        <category id="hair_front" multipleSelectable="false" optional="false">
+            <visible-rows>6</visible-rows>
+            <display-name xml:lang="en">Hair - Front</display-name>
+            <layers>
+                <layer id="hair_front">
+                    <display-name xml:lang="en">Variable</display-name>
+                    <order>13</order>
+                    <colorGroup init-sync="true" refid="color-hair"/>
+                    <dir>hair_front</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="hair_front_accessory">
+                    <display-name xml:lang="en">Accessory</display-name>
+                    <order>14</order>
+                    <dir>hair_front_accessory</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+        <category id="hair_back" multipleSelectable="false" optional="false">
+            <visible-rows>6</visible-rows>
+            <display-name xml:lang="en">Hair - Back</display-name>
+            <layers>
+                <layer id="hair_back">
+                    <display-name xml:lang="en">Variable</display-name>
+                    <order>2</order>
+                    <colorGroup init-sync="true" refid="color-hair"/>
+                    <dir>hair_back</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="hair_back_accessory">
+                    <display-name xml:lang="en">Accessory</display-name>
+                    <order>3</order>
+                    <dir>hair_back_accessory</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+        <category id="head" multipleSelectable="false" optional="false">
+            <visible-rows>6</visible-rows>
+            <display-name xml:lang="en">Head</display-name>
+            <layers>
+                <layer id="head">
+                    <display-name xml:lang="en">Head</display-name>
+                    <order>10</order>
+                    <colorGroup init-sync="true" refid="color-skin"/>
+                    <dir>head</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+        <category id="face" multipleSelectable="false" optional="false">
+            <visible-rows>6</visible-rows>
+            <display-name xml:lang="en">Expression</display-name>
+            <layers>
+                <layer id="face_front">
+                    <display-name xml:lang="en">Face</display-name>
+                    <order>15</order>
+                    <dir>face_front</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="face_back">
+                    <display-name xml:lang="en">Accessory</display-name>
+                    <order>12</order>
+                    <dir>face_back</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="face_haircolor">
+                    <display-name xml:lang="en">Hair</display-name>
+                    <order>16</order>
+                    <colorGroup init-sync="true" refid="color-hair"/>
+                    <dir>face_haircolor</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+        <category id="eye" multipleSelectable="false" optional="false">
+            <visible-rows>6</visible-rows>
+            <display-name xml:lang="en">Eyes</display-name>
+            <layers>
+                <layer id="eye">
+                    <display-name xml:lang="en">Eye</display-name>
+                    <order>17</order>
+                    <dir>eye</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="eye_color">
+                    <display-name xml:lang="en">Variable</display-name>
+                    <order>18</order>
+                    <colorGroup init-sync="true" refid="color-eye"/>
+                    <dir>eye_color</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+        <category id="body" multipleSelectable="false" optional="false">
+            <visible-rows>6</visible-rows>
+            <display-name xml:lang="en">Body</display-name>
+            <layers>
+                <layer id="body_front_color">
+                    <display-name xml:lang="en">Variable</display-name>
+                    <order>7</order>
+                    <colorGroup init-sync="true" refid="color-dress"/>
+                    <dir>body_front_color</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="body_front">
+                    <display-name xml:lang="en">Clothes</display-name>
+                    <order>6</order>
+                    <dir>body_front</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="body_back">
+                    <display-name xml:lang="en">Skin</display-name>
+                    <order>4</order>
+                    <colorGroup init-sync="true" refid="color-skin"/>
+                    <dir>body_back</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="body_front_accessory">
+                    <display-name xml:lang="en">Accessory</display-name>
+                    <order>8</order>
+                    <dir>body_front_accessory</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+        <category id="accessory" multipleSelectable="true" optional="true">
+            <visible-rows>10</visible-rows>
+            <display-name xml:lang="en">Accessory</display-name>
+            <layers>
+                <layer id="accessory_front">
+                    <display-name xml:lang="en">Top</display-name>
+                    <order>19</order>
+                    <dir>accessory_front</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="accessory_middle_front">
+                    <display-name xml:lang="en">Middle(R)</display-name>
+                    <order>11</order>
+                    <dir>accessory_middle_front</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="accessory_middle_back">
+                    <display-name xml:lang="en">Middle(L)</display-name>
+                    <order>9</order>
+                    <dir>accessory_middle_back</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="accessory_underwear">
+                    <display-name xml:lang="en">Underwear</display-name>
+                    <order>5</order>
+                    <dir>accessory_underwear</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+                <layer id="accessory_back">
+                    <display-name xml:lang="en">Back</display-name>
+                    <order>1</order>
+                    <dir>accessory_back</dir>
+                    <colorModel>HSB</colorModel>
+                </layer>
+            </layers>
+        </category>
+    </categories>
+    <colorGroups>
+        <colorGroup id="color-hair">
+            <display-name xml:lang="en">Hair</display-name>
+        </colorGroup>
+        <colorGroup id="color-eye">
+            <display-name xml:lang="en">Eye</display-name>
+        </colorGroup>
+        <colorGroup id="color-skin">
+            <display-name xml:lang="en">Skin</display-name>
+        </colorGroup>
+        <colorGroup id="color-dress">
+            <display-name xml:lang="en">Dress</display-name>
+        </colorGroup>
+    </colorGroups>
+</character>

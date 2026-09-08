@@ -1,0 +1,291 @@
+/* Canvas do dot field: fixo na viewport e atrás de tudo, igual ao da
+   /wishlist/. É o que faz a malha passar por trás do header. */
+#dot-field {
+	inset: 0;
+	pointer-events: none;
+	position: fixed;
+	z-index: 0;
+}
+
+body.char-somehow header {
+	position: relative;
+	z-index: 2;
+}
+
+/* Esta página não tem footer e usa a largura toda — o style.css dá ao <main>
+   a coluna central de ~1036px, estreita demais pros painéis + preview. */
+body.char-somehow main {
+	/* display: block é essencial aqui. O style.css deixa o <main> como
+	   "display: flex; flex-wrap: wrap", e nesse modo o #tela vira item flex
+	   com flex: 0 1 auto — ele se dimensiona pelo conteúdo e encolhe em vez
+	   de ocupar a largura toda. Era isso que comprimia a área dos painéis. */
+	display: block;
+	margin: 0;
+	max-width: none;
+	min-height: 0;
+	padding: 0 20px 40px;
+	position: relative;
+	width: 100%;
+	z-index: 1;
+}
+
+#tela {
+	width: 100%;
+}
+
+/* O style.css põe "image-rendering: pixelated" no seletor universal — é o
+   serrilhado proposital do site. Esta arte é suave e escalada, então aqui
+   precisa da suavização do navegador de volta. */
+#palco,
+#palco canvas {
+	image-rendering: auto;
+}
+
+/* ---------------- barra de título e ações ---------------- */
+/* Sem separador no desktop: a barra fica embaixo do preview, e uma linha
+   atravessando ali só criava um risco solto perto da engrenagem. No mobile
+   ela volta (ver a media query no fim), onde de fato ajuda. */
+#barra {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	justify-content: space-between;
+}
+
+#barra h1 {
+	font-family: var(--fonte-titulo);
+	font-size: 1.5rem;
+	font-weight: normal;
+	margin: 0;
+	text-transform: lowercase;
+}
+
+.acoes {
+	display: flex;
+	gap: 8px;
+}
+
+/* O style.css estiliza button com borda e cor de texto, mas não define
+   background — então sobrava o cinza padrão do navegador e os botões saíam
+   brancos. Aqui volta o visual que a página tinha antes, com especificidade
+   suficiente pra vencer o "button:not(:has(span.icone))" (0,1,2). */
+.char-somehow .acoes button {
+	background-color: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	border-radius: var(--b-radius);
+	color: var(--clr-white);
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 1em;
+	padding: var(--padding-btn-small);
+	transition: background-color var(--transition-time),
+		border-color var(--transition-time), color var(--transition-time);
+	white-space: nowrap;
+	width: auto;
+}
+
+.char-somehow .acoes button:hover {
+	background-color: var(--clr-main-a40);
+	border-color: var(--clr-main-a30);
+	color: var(--clr-black-a0);
+}
+
+/* ---------------- layout ---------------- */
+#tela {
+	align-items: flex-start;
+	display: flex;
+	gap: 16px;
+}
+
+/* O mínimo da coluna decide quantos painéis cabem por linha. Com 210px dá 6
+   por linha em Full HD, que é a largura confortável das caixas — o que sobra
+   quebra pra linha de baixo, e tudo bem. O que estava comprimindo a área não
+   era este número, e sim o <main> ainda em modo flex (ver acima). */
+#painels {
+	align-content: start;
+	display: grid;
+	flex: 1;
+	gap: 12px;
+	grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+.painel {
+	background-color: color-mix(in srgb, var(--clr-black-a10) 80%, transparent);
+	border: var(--borda-padrao);
+	border-radius: var(--b-radius);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.painel h2 {
+	background-color: color-mix(in srgb, var(--clr-black-a0) 70%, transparent);
+	border-bottom: var(--borda-padrao);
+	font-family: var(--fonte-corpo);
+	font-size: 1em;
+	font-weight: normal;
+	margin: 0;
+	padding: 6px 10px;
+	/* O style.css tem "h2, h3, h4, h5, h6 { text-transform: lowercase }" — o
+	   padrão de títulos do site. Só apagar a declaração daqui não bastava:
+	   sem nada escrito, a regra global volta a valer. Precisa desligar de
+	   forma explícita. */
+	text-transform: none;
+}
+
+.lista {
+	max-height: 190px;
+	overflow-y: auto;
+	scrollbar-width: thin;
+}
+
+/* Seletores prefixados com .painel de propósito: o style.css tem
+   "button:not(:has(span.icone))" — especificidade (0,1,2) — impondo
+   inline-flex, width:fit-content, borda e padding a todo botão do site. Sem o
+   prefixo, essa regra ganharia e os itens da lista virariam pílulas pequenas
+   em vez de linhas. */
+.painel .lista button {
+	background: none;
+	border: none;
+	border-radius: 0;
+	color: var(--clr-white);
+	cursor: pointer;
+	display: block;
+	font-family: inherit;
+	font-size: 1em;
+	overflow: hidden;
+	padding: 4px 10px;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+}
+
+.painel .lista button:hover {
+	background-color: var(--clr-main-a30);
+	color: var(--clr-black-a0);
+}
+
+.painel .lista button.ativo {
+	background-color: var(--clr-main-a40);
+	color: var(--clr-black-a0);
+}
+
+/* ---------------- cores ---------------- */
+.painel-cor .conteudo {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	padding: 10px;
+}
+
+/* Mesmo motivo do bloco acima: precisa vencer o button do style.css, que
+   forçaria width:fit-content e desmancharia o quadradinho. */
+.painel-cor .amostra {
+	border: 1px solid var(--clr-borda);
+	border-radius: var(--b-radius);
+	cursor: pointer;
+	display: block;
+	flex: 0 0 auto;
+	height: 24px;
+	padding: 0;
+	transition: transform var(--transition-time);
+	width: 24px;
+}
+
+.painel-cor .amostra:hover {
+	transform: scale(1.12);
+}
+
+.painel-cor .amostra.ativo {
+	box-shadow: 0 0 0 2px var(--clr-main-a40);
+}
+
+/* A amostra "original" não tem cor própria: mostra um risco. */
+.painel-cor .amostra.original {
+	background: repeating-linear-gradient(
+		45deg,
+		var(--clr-gray-a20),
+		var(--clr-gray-a20) 4px,
+		var(--clr-gray-a30) 4px,
+		var(--clr-gray-a30) 8px
+	);
+}
+
+.painel-cor .amostra-livre {
+	background: none;
+	border: 1px solid var(--clr-borda);
+	cursor: pointer;
+	flex: 0 0 auto;
+	height: 24px;
+	padding: 0;
+	width: 24px;
+}
+
+/* ---------------- preview ---------------- */
+#preview {
+	align-self: start;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	position: sticky;
+	top: 16px;
+}
+
+#palco {
+	background-color: color-mix(in srgb, var(--clr-black-a10) 70%, transparent);
+	background-image: linear-gradient(45deg, #00000022 25%, transparent 25%),
+		linear-gradient(-45deg, #00000022 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #00000022 75%),
+		linear-gradient(-45deg, transparent 75%, #00000022 75%);
+	background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+	background-size: 16px 16px;
+	border: var(--borda-padrao);
+	border-radius: var(--b-radius);
+}
+
+#palco canvas {
+	display: block;
+	height: 520px;
+	width: 390px;
+}
+
+#preview .acoes button {
+	flex: 1;
+}
+
+#carregando {
+	opacity: 0.6;
+	padding: 40px 20px;
+	text-align: center;
+}
+
+@media (max-width: 900px) {
+	#tela {
+		flex-direction: column-reverse;
+	}
+
+	#preview {
+		align-self: stretch;
+		position: static;
+	}
+
+	#palco {
+		align-self: center;
+	}
+
+	#palco canvas {
+		height: 400px;
+		width: 300px;
+	}
+
+	/* No mobile a barra sobe pro topo da coluna — é o layout que já estava
+	   bom por lá — e o separador volta, que ali funciona bem. */
+	#barra {
+		border-bottom: var(--borda-padrao);
+		margin-bottom: 6px;
+		order: -1;
+		padding-bottom: 12px;
+	}
+}

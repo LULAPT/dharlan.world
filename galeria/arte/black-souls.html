@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+		/>
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+		<title>ｂｌａｃｋ　ｓｏｕｌｓ</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- Esta página é autônoma, como a /galeria/arte/2kki/: não carrega o
+		     style.css, só as variáveis, fontes e animações. O visual inteiro
+		     mora aqui embaixo. -->
+		<link rel="stylesheet" href="/assets/css/animations.css" />
+		<link rel="stylesheet" href="/assets/css/fonts.css" />
+		<link rel="stylesheet" href="/assets/css/variaveis.css" />
+
+		<script type="module" src="/assets/js/main.js"></script>
+
+		<style>
+			:root {
+				--b-radius: 0px;
+				--clr-primaria: #e8e2e6;
+				--clr-secundaria: #06060a;
+				--clr-disabled: #7a1029;
+			}
+
+			* {
+				image-rendering: pixelated !important;
+				margin: 0;
+				padding: 0;
+			}
+
+			::selection {
+				background: var(--clr-primaria);
+				color: var(--clr-secundaria);
+			}
+
+			body,
+			html {
+				background-color: var(--clr-secundaria);
+				font-family: var(--fonte-corpo);
+				font-size: 13px;
+				height: 100%;
+				overflow: hidden;
+				width: 100%;
+			}
+
+			/* ----------------------------------------------
+			 * Preloader — a entrada, igual à da /2kki/: nada toca antes de um
+			 * clique, porque o autoplay de áudio exige gesto do usuário.
+			 * ---------------------------------------------- */
+			#preloader {
+				align-items: center;
+				background-color: var(--clr-secundaria);
+				display: flex;
+				height: 100%;
+				justify-content: center;
+				left: 0;
+				position: fixed;
+				top: 0;
+				width: 100%;
+				z-index: 100;
+			}
+
+			#preloader-content {
+				display: flex;
+				flex-direction: column;
+				gap: 28px;
+				align-items: center;
+				text-align: center;
+				z-index: 2;
+			}
+
+			#preloader-content .texto {
+				color: var(--clr-primaria);
+				font-size: 1.35em;
+				line-height: 1.7em;
+				max-width: 34ch;
+				opacity: 0.85;
+			}
+
+			#play-button {
+				background-color: transparent;
+				border: 1px solid var(--clr-primaria);
+				color: var(--clr-primaria);
+				cursor: pointer;
+				font-family: inherit;
+				font-size: 1.1em;
+				padding: 10px 32px;
+				transition: background-color 0.25s, color 0.25s;
+			}
+
+			#play-button:hover {
+				background-color: var(--clr-primaria);
+				color: var(--clr-secundaria);
+			}
+
+			/* ----------------------------------------------
+			 * Cenário
+			 * ---------------------------------------------- */
+			#bg {
+				background-color: var(--clr-secundaria);
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				height: 100%;
+				left: 0;
+				opacity: 0;
+				position: fixed;
+				top: 0;
+				transition: opacity 2s ease;
+				width: 100%;
+				z-index: 0;
+			}
+
+			#bg.visible {
+				opacity: 1;
+			}
+
+			/* Enquanto não há imagem de cenário, isto marca a área e deixa claro
+			   que é placeholder. Some sozinho quando o #bg receber um
+			   background-image. */
+			#bg-aviso {
+				align-items: center;
+				color: var(--clr-primaria);
+				display: flex;
+				height: 100%;
+				justify-content: center;
+				left: 0;
+				line-height: 1.8em;
+				opacity: 0.35;
+				position: fixed;
+				text-align: center;
+				top: 0;
+				width: 100%;
+				z-index: 1;
+			}
+
+			/* Vinheta por cima do cenário, pra dar profundidade e destacar os
+			   controles. */
+			#vinheta {
+				background: radial-gradient(
+					ellipse at center,
+					transparent 35%,
+					rgba(0, 0, 0, 0.55) 100%
+				);
+				height: 100%;
+				left: 0;
+				pointer-events: none;
+				position: fixed;
+				top: 0;
+				width: 100%;
+				z-index: 2;
+			}
+
+			/* ----------------------------------------------
+			 * Controles
+			 * ---------------------------------------------- */
+			#controls {
+				align-items: center;
+				bottom: 20px;
+				display: flex;
+				gap: 8px;
+				left: 20px;
+				position: fixed;
+				z-index: 10;
+			}
+
+			#controls button {
+				background-color: var(--clr-secundaria);
+				border: 1px solid #222;
+				border-radius: var(--b-radius);
+				color: var(--clr-primaria);
+				cursor: pointer;
+				font-family: inherit;
+				font-size: 1em;
+				padding: 6px 10px;
+				transition: background-color 0.2s, color 0.2s;
+			}
+
+			#controls button:hover {
+				background-color: #1a1a20;
+			}
+
+			.square-btn {
+				align-items: center;
+				display: flex;
+				height: 30px;
+				justify-content: center;
+				width: 30px;
+			}
+
+			.square-btn svg {
+				fill: var(--clr-primaria);
+				height: 16px;
+				width: 16px;
+			}
+
+			#faixa {
+				color: var(--clr-primaria);
+				font-size: 0.9em;
+				margin-left: 8px;
+				opacity: 0.6;
+				max-width: 40vw;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			@media (max-width: 700px) {
+				#faixa {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Preloader -->
+		<div id="preloader">
+			<div id="preloader-content">
+				<div class="texto">
+					Toda alma que atravessa a floresta deixa alguma coisa para trás.
+				</div>
+				<button id="play-button">atravessar</button>
+			</div>
+		</div>
+
+		<div id="controls">
+			<button id="back-button" onclick="window.location.href='/galeria/arte/'">
+				Voltar
+			</button>
+
+			<button class="square-btn" onclick="faixaAnterior()" title="Anterior">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+					<path
+						d="M224.93-224.93v-510.14h83v510.14h-83Zm510.14-24L376.35-480l358.72-231.07v462.14Z"
+					/>
+				</svg>
+			</button>
+			<button class="square-btn" onclick="proximaFaixa()" title="Próxima">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+					<path
+						d="M652.07-224.93v-510.14h83v510.14h-83Zm-427.14-24v-462.14L583.65-480 224.93-248.93Z"
+					/>
+				</svg>
+			</button>
+			<button
+				id="mute-music"
+				class="square-btn"
+				onclick="alternarMudo()"
+				title="Silenciar música"
+				data-smt-title="Silenciar música"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+					<path
+						d="M405.37-134.91q-62.27 0-105.88-43.62-43.62-43.61-43.62-105.88 0-62.27 43.62-105.89 43.61-43.61 105.88-43.61 18.31 0 34.88 4.78 16.58 4.78 31.62 12.35v-408.31h232.5v155h-149.5v385.68q0 62.27-43.62 105.88-43.61 43.62-105.88 43.62Z"
+					/>
+				</svg>
+			</button>
+
+			<span id="faixa"></span>
+		</div>
+
+		<div id="bg"></div>
+		<div id="bg-aviso">
+			cenário ainda não definido<br />
+			<small>defina CENARIO em black-souls.html</small>
+		</div>
+		<div id="vinheta"></div>
+
+		<div id="player"></div>
+
+		<script>
+			// ---------------------------------------------------------------
+			// Ajustes — é aqui que a página é montada
+			// ---------------------------------------------------------------
+
+			// Imagem de fundo do cenário. Deixe vazio enquanto não houver uma;
+			// a página mostra o aviso de placeholder no lugar.
+			// Ex.: "/assets/img/black-souls/floresta.png"
+			var CENARIO = "";
+
+			// IDs de vídeos do YouTube com a trilha. Mesmo esquema da /2kki/:
+			// nada é hospedado aqui, só referenciado. Enquanto estiver vazio a
+			// página roda em silêncio e os controles de música ficam ocultos.
+			var TRILHA = [];
+
+			// ---------------------------------------------------------------
+
+			var embaralhada = [];
+			var indiceAtual = 0;
+			var player = null;
+			var mudo = false;
+
+			function embaralhar(lista) {
+				var arr = lista.slice();
+				for (var i = arr.length - 1; i > 0; i--) {
+					var j = Math.floor(Math.random() * (i + 1));
+					var t = arr[i];
+					arr[i] = arr[j];
+					arr[j] = t;
+				}
+				return arr;
+			}
+
+			function dormir(ms) {
+				return new Promise(function (resolve) {
+					setTimeout(resolve, ms);
+				});
+			}
+
+			function aplicarCenario() {
+				var bg = document.getElementById("bg");
+				var aviso = document.getElementById("bg-aviso");
+				if (CENARIO) {
+					bg.style.backgroundImage = 'url("' + CENARIO + '")';
+					if (aviso) aviso.remove();
+				}
+			}
+
+			// Sem trilha definida, os botões de música não fazem sentido.
+			function ajustarControles() {
+				if (TRILHA.length) return;
+				["mute-music", "faixa"].forEach(function (id) {
+					var el = document.getElementById(id);
+					if (el) el.style.display = "none";
+				});
+				document.querySelectorAll("#controls .square-btn").forEach(function (b) {
+					if (b.id !== "mute-music") b.style.display = "none";
+				});
+			}
+
+			document
+				.getElementById("play-button")
+				.addEventListener("click", async function () {
+					document.getElementById("preloader").style.display = "none";
+
+					if (TRILHA.length) {
+						var tag = document.createElement("script");
+						tag.src = "https://www.youtube.com/iframe_api";
+						var primeiro = document.getElementsByTagName("script")[0];
+						primeiro.parentNode.insertBefore(tag, primeiro);
+					}
+
+					await dormir(1200);
+					document.getElementById("bg").classList.add("visible");
+				});
+
+			function onYouTubeIframeAPIReady() {
+				if (!TRILHA.length) return;
+				embaralhada = embaralhar(TRILHA);
+				indiceAtual = 0;
+				player = new YT.Player("player", {
+					height: "0",
+					width: "0",
+					videoId: embaralhada[indiceAtual],
+					playerVars: { autoplay: 1, mute: 0, controls: 0 },
+					events: {
+						onReady: function (e) {
+							e.target.setVolume(35);
+							mostrarFaixa();
+						},
+						onStateChange: function (e) {
+							// Acabou a faixa: emenda a próxima.
+							if (e.data === YT.PlayerState.ENDED) proximaFaixa();
+						},
+					},
+				});
+			}
+
+			function mostrarFaixa() {
+				var el = document.getElementById("faixa");
+				if (!el || !player || !player.getVideoData) return;
+				try {
+					var d = player.getVideoData();
+					el.textContent = d && d.title ? d.title : "";
+				} catch (e) {
+					/* o título nem sempre está disponível de imediato */
+				}
+			}
+
+			function trocarPara(indice) {
+				if (!player || !embaralhada.length) return;
+				indiceAtual = (indice + embaralhada.length) % embaralhada.length;
+				player.loadVideoById(embaralhada[indiceAtual]);
+				setTimeout(mostrarFaixa, 800);
+			}
+
+			function proximaFaixa() {
+				trocarPara(indiceAtual + 1);
+			}
+
+			function faixaAnterior() {
+				trocarPara(indiceAtual - 1);
+			}
+
+			function alternarMudo() {
+				if (!player) return;
+				var btn = document.getElementById("mute-music");
+				mudo = !mudo;
+				if (mudo) {
+					player.mute();
+					btn.style.backgroundColor = "var(--clr-disabled)";
+					btn.title = "Ativar música";
+					btn.setAttribute("data-smt-title", "Ativar música");
+				} else {
+					player.unMute();
+					btn.style.backgroundColor = "";
+					btn.title = "Silenciar música";
+					btn.setAttribute("data-smt-title", "Silenciar música");
+				}
+			}
+
+			aplicarCenario();
+			ajustarControles();
+		</script>
+	</body>
+</html>

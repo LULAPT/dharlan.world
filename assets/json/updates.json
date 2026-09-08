@@ -1,5 +1,15 @@
 [
 	{
+		"date": "2026-09-08",
+		"items": [
+			"página <a href=\"/wishlist/\">/wishlist</a> criada em /outros, com os itens espalhados soltos pela tela, arrastáveis e com peso",
+			"<a href=\"/picrew/\">/picrew</a> virou índice e agora abre duas páginas: o <a href=\"/picrew/mega-anime-avatar-creator/\">Mega Anime Avatar Creator</a> e o <a href=\"/picrew/char-somehow/\">Char Somehow</a>",
+			"<a href=\"/picrew/char-somehow/\">Char Somehow</a> adicionado — montador de personagem em camadas, com acervo traduzido pro português e cor de cabelo ajustável",
+			"<a href=\"/galeria/arte/2kki/\">/2kki</a> movida pra dentro da <a href=\"/galeria/arte/\">/galeria/arte</a>",
+			"página <a href=\"/galeria/arte/black-souls/\">/black-souls</a> criada, ainda em construção"
+		]
+	},
+	{
 		"date": "2026-09-07",
 		"items": [
 			"página <a href=\"/picrew/\">/picrew</a> criada em /utils, com o Mega Anime Avatar Creator da Rinmaru rodando em Flash emulado",
@@ -73,7 +83,7 @@
 	{
 		"date": "2025-12-17",
 		"items": [
-			"alterações na <a href=\"/2kki/\">/2kki</a>, com maior uniformização no layout, ícones alterados e animações adicionadas"
+			"alterações na <a href=\"/galeria/arte/2kki/\">/2kki</a>, com maior uniformização no layout, ícones alterados e animações adicionadas"
 		]
 	},
 	{
@@ -153,7 +163,7 @@
 		"items": [
 			"mais <a href=\"/links/\">/links</a> adicionados",
 			"alterações na <a href=\"/mplace/\">/mplace</a>",
-			"alterações na <a href=\"/2kki/\">/2kki</a>"
+			"alterações na <a href=\"/galeria/arte/2kki/\">/2kki</a>"
 		]
 	},
 	{ "date": "2025-09-13", "items": ["alterações no layout"] },
@@ -170,7 +180,7 @@
 	{
 		"date": "2025-09-07",
 		"items": [
-			"página <a href=\"/2kki/\">/2kki</a> adicionada",
+			"página <a href=\"/galeria/arte/2kki/\">/2kki</a> adicionada",
 			"alterações na <a href=\"/inventario/\">/inventario</a>",
 			"mais <a href=\"/links/\">/links</a> adicionados"
 		]

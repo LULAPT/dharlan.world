@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<partssets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://charactermanaj.sourceforge.jp/schema/charactermanaj partsset.xsd" xmlns="http://charactermanaj.sourceforge.jp/schema/charactermanaj">
+    <preset id="default">
+        <display-name xml:lang="en">default</display-name>
+        <category refid="head">
+            <parts name="普通な顔1"/>
+        </category>
+        <category refid="eye">
+            <parts name="普通な目1"/>
+        </category>
+        <category refid="face">
+            <parts name="笑い(口閉じ)"/>
+        </category>
+        <category refid="hair_front">
+            <parts name="ナチュラル"/>
+        </category>
+        <category refid="hair_back">
+            <parts name="セミロング"/>
+        </category>
+        <category refid="body">
+            <parts name="セーラー服1"/>
+        </category>
+        <category refid="accessory"/>
+    </preset>
+</partssets>

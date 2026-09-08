@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<custom-layer-orders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://charactermanaj.osdn.jp/schema/customlayerorder.xsd customlayerorder.xsd" xmlns="http://charactermanaj.osdn.jp/schema/customlayerorder.xsd">
+    <pattern id="hide_eyebrows" name="bangs covering eyebrows">
+        <localized-name lang="en" name="bangs covering eyebrows"/>
+        <localized-name lang="zh" name="劉海遮住眉毛"/>
+        <localized-name lang="ja" name="眉を髪の下に表示する"/>
+        <mapping category="hair_front" layer="hair_front" order="16.4"/>
+        <mapping category="hair_front" layer="hair_front_accessory" order="16.5"/>
+        <mapping category="eye" layer="eye" order="17.0"/>
+    </pattern>
+    <pattern id="hide_eyes" name="bangs covering eyes">
+        <localized-name lang="en" name="bangs covering eyes"/>
+        <localized-name lang="zh" name="劉海遮住眼睛"/>
+        <localized-name lang="ja" name="目を髪の下に表示する"/>
+        <mapping category="eye" layer="eye" order="12.5"/>
+        <mapping category="eye" layer="eye_color" order="12.6"/>
+    </pattern>
+    <pattern id="hide_eyes_and_eyebrows" name="bangs covering eyes and eyebrows">
+        <localized-name lang="en" name="bangs covering eyes and eyebrows"/>
+        <localized-name lang="zh" name="劉海遮住眼睛和眉毛"/>
+        <localized-name lang="ja" name="目と眉を髪の下に表示する"/>
+        <mapping category="hair_front" layer="hair_front" order="18.4"/>
+        <mapping category="hair_front" layer="hair_front_accessory" order="18.5"/>
+        <mapping category="eye" layer="eye" order="17.0"/>
+    </pattern>
+</custom-layer-orders>

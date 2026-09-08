@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/char-somehow.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<body class="char-somehow">
+		<div id="container">
+			<header id="header-compacta"></header>
+			<header id="header-mobile"></header>
+
+			<!-- Sem footer e sem #nav-atual, como a /wishlist/: a ferramenta ocupa
+			     a tela toda. O título da aba sai do mapa SEM_BREADCRUMB do
+			     page-title.js. -->
+			<main>
+				<div id="tela">
+					<div id="painels">
+						<div id="carregando">Carregando o acervo...</div>
+					</div>
+
+					<!-- A #barra mora dentro do #preview, depois do salvar: no
+					     desktop ela fica embaixo do botão. No mobile o CSS a
+					     manda pro topo da coluna (order: -1), preservando o
+					     layout que já estava bom por lá. -->
+					<div id="preview">
+						<div id="palco"><canvas id="canvas"></canvas></div>
+						<div class="acoes">
+							<button id="btn-salvar" type="button">Salvar PNG</button>
+						</div>
+
+						<div id="barra">
+							<h1>⠀</h1>
+							<div class="acoes">
+								<button id="btn-aleatorio" type="button">Aleatório</button>
+								<button id="btn-limpar" type="button">Limpar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script src="/assets/js/dot-field.js"></script>
+		<script src="/assets/js/char-somehow.js"></script>
+	</body>
+</html>

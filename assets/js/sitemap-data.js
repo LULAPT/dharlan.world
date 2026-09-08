@@ -14,8 +14,9 @@ export const sitemap = [
             href: "/galeria/arte/",
             label: "/arte",
             children: [
-              { href: "/galeria/arte/sketchbook-2019/", label: "/sketchbook-2019" },
-              { href: "/galeria/arte/sketchbook-2022/", label: "/sketchbook-2022" },
+              // Os sketchbooks continuam no repositório, só delistados.
+              { href: "/galeria/arte/2kki/", label: "/2kki" },
+              { href: "/galeria/arte/black-souls/", label: "/black-souls" },
             ],
           },
           { href: "/galeria/fotografia/", label: "/fotografia" },
@@ -40,10 +41,8 @@ export const sitemap = [
         ],
       },
       {
-        items: [
-          { href: "/2kki/", label: "/2kki" },
-          { href: "/mplace/", label: "/mplace" },
-        ],
+        // A /2kki/ saiu daqui: virou filha da /galeria/arte/.
+        items: [{ href: "/mplace/", label: "/mplace" }],
       },
       {
         href: "/outros/",
@@ -54,6 +53,7 @@ export const sitemap = [
           { href: "/inventario/", label: "/inventario" },
           { href: "/agora/", label: "/agora" },
           { href: "/contato/", label: "/contato" },
+          { href: "/wishlist/", label: "/wishlist" },
         ],
       },
       {
@@ -63,7 +63,14 @@ export const sitemap = [
           { href: "/links/", label: "/links" },
           { href: "/kaomojis/", label: "/kaomojis" },
           { href: "/avatar/", label: "/avatar" },
-          { href: "/picrew/", label: "/picrew" },
+          {
+            href: "/picrew/",
+            label: "/picrew",
+            children: [
+              { href: "/picrew/mega-anime-avatar-creator/", label: "/mega-anime-avatar-creator" },
+              { href: "/picrew/char-somehow/", label: "/char-somehow" },
+            ],
+          },
         ],
       },
       // { href: "/doar/", label: "/doar" }, // desativado - reativar removendo o comentário

@@ -4,6 +4,8 @@ const SEM_BREADCRUMB = {
 	"/home/": ["home"],
 	"/not_found/": ["404"],
 	"/anotacoes/": ["anotacoes"],
+	"/wishlist/": ["outros", "wishlist"],
+	"/picrew/char-somehow/": ["utils", "picrew", "char-somehow"],
 };
 
 function slugify(text) {

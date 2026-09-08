@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/wishlist.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<body class="wishlist">
+		<div id="container">
+			<header id="header-compacta"></header>
+			<header id="header-mobile"></header>
+
+			<!-- Sem #nav-atual e sem #conteudo-inner de propósito: nesta página o
+			     main é só a área onde os itens flutuam. O título da aba é
+			     resolvido pelo mapa SEM_BREADCRUMB do page-title.js. -->
+			<main>
+				<div id="wishlist">
+					<!-- <h1 id="wishlist-titulo">wishlist</h1>
+					<p id="wishlist-intro">
+						coisas que eu quero. arraste os itens pra onde quiser.
+					</p> -->
+					<div id="wishlist-carregando">Carregando...</div>
+				</div>
+			</main>
+
+			<!-- Sem footer nesta página de propósito: os itens ficam soltos e
+			     podem parar em qualquer lugar da tela, então um rodapé só
+			     atrapalharia. O footer.js ignora a ausência do elemento. -->
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script src="/assets/js/dot-field.js"></script>
+		<script src="/assets/js/wishlist.js"></script>
+	</body>
+</html>

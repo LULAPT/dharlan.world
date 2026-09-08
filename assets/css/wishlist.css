@@ -1,0 +1,152 @@
+/* Canvas do dot field: fixo na viewport e atrás de tudo, do mesmo jeito que o
+   fundo do /inventario/ usa background-attachment: fixed. É isso que faz ele
+   passar por trás do header em vez de parar nele. */
+#dot-field {
+	inset: 0;
+	pointer-events: none;
+	position: fixed;
+	z-index: 0;
+}
+
+/* O header sobe acima do canvas, mas segue transparente, então a malha
+   continua aparecendo através dele. Esta página não tem footer. */
+body.wishlist header {
+	position: relative;
+	z-index: 2;
+}
+
+/* Esta página não usa #nav-atual nem #conteudo-inner: o main é só a área onde
+   os itens flutuam.
+
+   O style.css dá ao <main> "width: var(--main-width); margin: 0 auto", a coluna
+   central de ~1036px que todas as páginas usam. Era ela que prendia os itens no
+   meio da tela. Aqui — e só aqui, via body.wishlist — o main ocupa a largura
+   toda. Nenhuma outra página é afetada. */
+body.wishlist main {
+	margin: 0;
+	max-width: none;
+	min-height: 0;
+	padding: 0;
+	position: relative;
+	width: 100%;
+	z-index: 1;
+}
+
+/* Esta página cabe exatamente na viewport, sem rolagem. O style.css põe
+   "overflow-y: scroll" no body (barra sempre visível); aqui isso é desligado.
+   Como não há footer e os itens são posicionados em px pelo JS, nada precisa
+   transbordar. */
+body.wishlist {
+	height: 100vh;
+	overflow: hidden;
+}
+
+/* A altura de fato é definida pelo JS (viewport menos o que o header ocupa),
+   pra que header + área somem exatamente 100vh. O min-height aqui é só um
+   fallback enquanto o JS não rodou. */
+#wishlist {
+	margin: 0 auto;
+	min-height: 60vh;
+	padding: 0 2rem;
+	position: relative;
+	width: 100%;
+}
+
+#wishlist-titulo {
+	font-family: var(--fonte-titulo);
+	font-size: 2rem;
+	font-weight: normal;
+	margin: 0 0 0.4em;
+	text-align: center;
+	text-transform: lowercase;
+}
+
+#wishlist-intro {
+	margin: 0 auto 2.5rem;
+	max-width: 46ch;
+	opacity: 0.7;
+	text-align: center;
+}
+
+/* Cada item é posicionado em px por JS, dentro do #wishlist. */
+.wishlist-item {
+	cursor: grab;
+	opacity: 0;
+	position: absolute;
+	touch-action: none;
+	/* opacity com atraso individual por item (via transition-delay inline) —
+	   é isso que dá o "surgimento" em sequência, um item de cada vez. */
+	transition: filter var(--transition-time),
+		opacity var(--transition-time-long) ease;
+	user-select: none;
+	width: fit-content;
+	z-index: 20;
+}
+
+.wishlist-item.surgiu {
+	opacity: 1;
+}
+
+/* Wrapper só pro "pop" de escala. Fica separado do elemento externo de
+   propósito: a rotação de cada item é aplicada inline no .wishlist-item
+   (transform: rotate(...)), e um transform de escala no mesmo elemento
+   substituiria o rotate em vez de somar. Aqui os dois convivem: um cuida da
+   inclinação, o outro do tamanho. */
+.wishlist-item-pop {
+	transform: scale(0.35);
+	transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wishlist-item.surgiu .wishlist-item-pop {
+	transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wishlist-item,
+	.wishlist-item-pop {
+		transition: none !important;
+	}
+}
+
+.wishlist-item.arrastando {
+	cursor: grabbing;
+	z-index: 40;
+}
+
+.wishlist-item img {
+	display: block;
+	filter: drop-shadow(0 4px 10px rgb(0 0 0 / 0.45));
+	height: auto;
+	max-width: 100%;
+	pointer-events: none;
+	transition: transform var(--transition-time);
+	width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.wishlist-item:hover img {
+		transform: rotate(-2deg) scale(1.04);
+	}
+}
+
+/* O item pode ser link (href no JSON) ou não; nos dois casos o visual é igual. */
+.wishlist-item a {
+	display: block;
+	text-decoration: none;
+}
+
+#wishlist-carregando {
+	opacity: 0.6;
+	padding: 3rem 0;
+	text-align: center;
+}
+
+@media (max-width: 1024px) {
+	/* O mobile usa o mesmo espalhamento do desktop, só com itens menores e uma
+	   área mais alta (a altura é calculada em JS, a partir da quantidade de
+	   itens). Não há mais fallback pra grade: os itens continuam soltos,
+	   arrastáveis e se acomodando. */
+	#wishlist {
+		padding: 0 1rem;
+	}
+}

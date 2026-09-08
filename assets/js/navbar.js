@@ -378,6 +378,7 @@ export function carregarNavbar() {
 				{ label: "Inventário", href: "/inventario/" },
 				{ label: "Agora", href: "/agora/" },
 				{ label: "Contato", href: "/contato/" },
+				{ label: "Wishlist", href: "/wishlist/" },
 			],
 		},
 		utils: {
