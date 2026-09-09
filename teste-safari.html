@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- Página temporária: não deve entrar em buscador nenhum. -->
+		<meta name="robots" content="noindex, nofollow" />
+		<title>Teste de compatibilidade</title>
+
+		<!--
+			Página de diagnóstico descartável. Abra no aparelho que apresenta o
+			problema.
+
+			REGRA DESTA PÁGINA: ela não pode usar NENHUMA das coisas que está
+			testando. Sem lch(), sem color-mix(), sem :has(), sem custom
+			properties, sem arrow function, sem optional chaining, sem const/let.
+			Só CSS e JS que funcionam desde sempre — senão ela quebraria
+			justamente no aparelho que queremos diagnosticar, e não diria nada.
+		-->
+		<style>
+			body {
+				background: #111111;
+				color: #eeeeee;
+				font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+				font-size: 15px;
+				line-height: 1.5;
+				margin: 0;
+				padding: 16px;
+			}
+
+			h1 {
+				font-size: 19px;
+				margin: 0 0 4px;
+			}
+
+			p.sub {
+				color: #999999;
+				font-size: 13px;
+				margin: 0 0 20px;
+			}
+
+			h2 {
+				border-bottom: 1px solid #333333;
+				font-size: 15px;
+				margin: 26px 0 10px;
+				padding-bottom: 6px;
+			}
+
+			table {
+				border-collapse: collapse;
+				width: 100%;
+			}
+
+			td {
+				border-bottom: 1px solid #262626;
+				padding: 9px 6px;
+				vertical-align: top;
+			}
+
+			td.rot {
+				width: 58%;
+			}
+
+			td.res {
+				font-weight: bold;
+				text-align: right;
+				white-space: nowrap;
+			}
+
+			.ok {
+				color: #4ade80;
+			}
+
+			.falha {
+				color: #f87171;
+			}
+
+			.nota {
+				color: #888888;
+				display: block;
+				font-size: 12px;
+				font-weight: normal;
+			}
+
+			#info {
+				background: #1b1b1b;
+				border: 1px solid #333333;
+				font-family: monospace;
+				font-size: 12px;
+				padding: 10px;
+				word-break: break-all;
+			}
+
+			#veredito {
+				border: 2px solid #444444;
+				font-size: 15px;
+				margin-top: 26px;
+				padding: 14px;
+			}
+
+			#copiar {
+				background: #2563eb;
+				border: none;
+				color: #ffffff;
+				display: block;
+				font-family: inherit;
+				font-size: 16px;
+				margin: 16px 0 8px;
+				padding: 14px;
+				width: 100%;
+			}
+
+			#copiar:active {
+				background: #1d4ed8;
+			}
+
+			#saida {
+				background: #1b1b1b;
+				border: 1px solid #333333;
+				color: #cccccc;
+				font-family: monospace;
+				font-size: 11px;
+				height: 150px;
+				padding: 8px;
+				width: 100%;
+			}
+
+			/* Amostras visuais. O fundo cinza é o piso: se a cor moderna não for
+			   entendida, é ele que aparece — e aí dá pra ver com o olho, não só
+			   pelo relatório. */
+			.amostra {
+				background: #555555;
+				border: 1px solid #666666;
+				color: #ffffff;
+				display: inline-block;
+				font-size: 12px;
+				margin: 4px 6px 4px 0;
+				padding: 14px 10px;
+				text-align: center;
+				width: 120px;
+			}
+
+			#am-lch {
+				background: lch(from #d45c95 calc(l + 10) c h);
+			}
+
+			#am-colormix {
+				background: color-mix(in srgb, #d45c95 60%, transparent);
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Teste de compatibilidade</h1>
+		<p class="sub">
+			Se algum item aparecer em vermelho, é uma causa provável dos elementos
+			sumirem neste aparelho.
+		</p>
+
+		<h2>Aparelho</h2>
+		<div id="info">carregando...</div>
+
+		<h2>Recursos de CSS</h2>
+		<table id="tabela-css">
+			<tbody></tbody>
+		</table>
+
+		<h2>Recursos de JavaScript</h2>
+		<table id="tabela-js">
+			<tbody></tbody>
+		</table>
+
+		<h2>Teste real com as cores do site</h2>
+		<p class="sub" style="margin-bottom: 10px">
+			Carrega o mesmo variaveis.css do site e lê o valor que o navegador
+			calculou. É a prova direta: se vier vazio, a paleta está morrendo aqui.
+		</p>
+		<table id="tabela-vars">
+			<tbody></tbody>
+		</table>
+
+		<h2>Amostras visuais</h2>
+		<p class="sub" style="margin-bottom: 10px">
+			As duas devem ficar <strong>rosa</strong>. Se aparecerem
+			<strong>cinza</strong>, o navegador não entendeu a cor.
+		</p>
+		<div>
+			<span class="amostra" id="am-lch">lch()</span>
+			<span class="amostra" id="am-colormix">color-mix()</span>
+		</div>
+
+		<div id="veredito">apurando...</div>
+
+		<button id="copiar" type="button">Copiar relatório</button>
+		<p class="sub" style="margin: 0 0 6px">
+			Toque no botão e cole a resposta pra quem pediu o teste. Se o botão não
+			funcionar, selecione o texto da caixa abaixo e copie na mão.
+		</p>
+		<textarea id="saida" readonly></textarea>
+
+		<script>
+			(function () {
+				var falhasCriticas = 0;
+				// Vai acumulando tudo em texto puro, pra virar um relatório
+				// colável — bem mais prático que pedir print de página longa.
+				var relatorio = [];
+
+				function linha(tabela, rotulo, passou, nota) {
+					relatorio.push(
+						(passou ? "[ok]    " : "[FALHA] ") + rotulo +
+						(nota ? "  (" + nota + ")" : "")
+					);
+					var tr = document.createElement("tr");
+					var td1 = document.createElement("td");
+					td1.className = "rot";
+					td1.appendChild(document.createTextNode(rotulo));
+					if (nota) {
+						var s = document.createElement("span");
+						s.className = "nota";
+						s.appendChild(document.createTextNode(nota));
+						td1.appendChild(s);
+					}
+					var td2 = document.createElement("td");
+					td2.className = "res " + (passou ? "ok" : "falha");
+					td2.appendChild(document.createTextNode(passou ? "OK" : "FALHA"));
+					tr.appendChild(td1);
+					tr.appendChild(td2);
+					tabela.appendChild(tr);
+					return passou;
+				}
+
+				// ---------- aparelho ----------
+				var ua = navigator.userAgent;
+				var versaoOS = "não identificada";
+				var m = ua.match(/OS (\d+)[._](\d+)/);
+				if (m) versaoOS = m[1] + "." + m[2];
+				else {
+					var mv = ua.match(/Version\/(\d+\.\d+)/);
+					if (mv) versaoOS = "Safari " + mv[1];
+				}
+				document.getElementById("info").innerHTML =
+					"<strong>Versão detectada:</strong> " + versaoOS +
+					"<br><br><strong>User agent:</strong><br>" + ua +
+					"<br><br><strong>Tela:</strong> " +
+					window.innerWidth + "x" + window.innerHeight +
+					" @" + (window.devicePixelRatio || 1) + "x";
+
+				// ---------- CSS ----------
+				var tCss = document.querySelector("#tabela-css tbody");
+				var temSupports = !!(window.CSS && CSS.supports);
+
+				if (!temSupports) {
+					linha(tCss, "CSS.supports()", false,
+						"navegador antigo demais pra se autoavaliar");
+					falhasCriticas++;
+				} else {
+					if (!linha(tCss, "lch() com sintaxe relativa",
+						CSS.supports("color", "lch(from red l c h)"),
+						"precisa de Safari 16.4+ — usado em 72 variáveis de cor")) {
+						falhasCriticas++;
+					}
+					if (!linha(tCss, "color-mix()",
+						CSS.supports("color", "color-mix(in srgb, red 50%, blue)"),
+						"precisa de Safari 16.2+ — usado na tela de entrada")) {
+						falhasCriticas++;
+					}
+					linha(tCss, "seletor :has()",
+						CSS.supports("selector(:has(a))"),
+						"precisa de Safari 15.4+ — afeta só estilos pontuais");
+					linha(tCss, "aspect-ratio", CSS.supports("aspect-ratio", "1/1"), "");
+					linha(tCss, "inset", CSS.supports("inset", "0"), "");
+					linha(tCss, "custom properties",
+						CSS.supports("--x", "0"), "base de todo o sistema de temas");
+				}
+
+				// ---------- JS ----------
+				var tJs = document.querySelector("#tabela-js tbody");
+
+				function suporta(codigo) {
+					try {
+						// eslint-disable-next-line no-new-func
+						new Function(codigo)();
+						return true;
+					} catch (e) {
+						return false;
+					}
+				}
+
+				linha(tJs, "optional chaining (?.)",
+					suporta("var o = {}; return o.a?.b;"),
+					"usado no fade-in.js — se falhar, o body some");
+				linha(tJs, "nullish coalescing (??)", suporta("return null ?? 1;"), "");
+				linha(tJs, "arrow function", suporta("return (() => 1)();"), "");
+				linha(tJs, "template literal", suporta("return `x`;"), "");
+				linha(tJs, "async/await", suporta("return (async function(){})();"), "");
+				linha(tJs, "Promise", typeof Promise !== "undefined", "");
+				linha(tJs, "fetch", typeof fetch !== "undefined", "");
+				linha(tJs, "IntersectionObserver",
+					typeof IntersectionObserver !== "undefined", "");
+				linha(tJs, "WebGL2",
+					(function () {
+						try {
+							return !!document.createElement("canvas").getContext("webgl2");
+						} catch (e) {
+							return false;
+						}
+					})(),
+					"fundo com dithering da tela de entrada");
+
+				// ---------- variáveis reais do site ----------
+				// Carrega o variaveis.css de verdade e lê o que o navegador
+				// calculou. É o teste mais direto de todos.
+				var tVars = document.querySelector("#tabela-vars tbody");
+				var link = document.createElement("link");
+				link.rel = "stylesheet";
+				link.href = "/assets/css/variaveis.css";
+
+				link.onload = function () {
+					var alvo = document.createElement("div");
+					alvo.style.display = "none";
+					document.body.appendChild(alvo);
+					var cs = getComputedStyle(document.documentElement);
+
+					var nomes = [
+						["--clr-black-a0", "cor de fundo do site (valor literal)"],
+						["--clr-black-a10", "derivada por lch()"],
+						["--clr-gray-a20", "derivada — usada nas bordas"],
+						["--clr-main-a30", "derivada — cor de destaque"],
+						["--clr-white", "cor do texto (valor literal)"],
+					];
+
+					var derivadasQuebradas = 0;
+					for (var i = 0; i < nomes.length; i++) {
+						var v = cs.getPropertyValue(nomes[i][0]).trim();
+						var ok = v.length > 0;
+						// Se veio o texto lch(...) cru é porque o navegador guardou
+						// sem conseguir resolver — também conta como quebrado.
+						if (ok && v.indexOf("lch(") === 0 && !CSS.supports("color", v)) {
+							ok = false;
+						}
+						linha(tVars, nomes[i][0], ok,
+							nomes[i][1] + (v ? " → " + v : " → (vazio)"));
+						if (!ok && nomes[i][0].indexOf("a0") === -1) derivadasQuebradas++;
+					}
+
+					if (derivadasQuebradas > 0) falhasCriticas++;
+					concluir();
+				};
+
+				link.onerror = function () {
+					linha(tVars, "carregar variaveis.css", false,
+						"não achou o arquivo — abra esta página pelo servidor do site");
+					concluir();
+				};
+
+				document.head.appendChild(link);
+
+				function montarTexto() {
+					var txt = "RELATORIO DE COMPATIBILIDADE - dharlan.world\n";
+					txt += "versao detectada: " + versaoOS + "\n";
+					txt += "tela: " + window.innerWidth + "x" + window.innerHeight +
+						" @" + (window.devicePixelRatio || 1) + "x\n";
+					txt += "user agent: " + ua + "\n";
+					txt += "\n" + relatorio.join("\n");
+					txt += "\n\nproblemas criticos: " + falhasCriticas;
+					return txt;
+				}
+
+				document.getElementById("copiar").addEventListener("click", function () {
+					var area = document.getElementById("saida");
+					area.select();
+					area.setSelectionRange(0, 99999); // iOS precisa do range explícito
+					var copiou = false;
+					try {
+						if (navigator.clipboard && navigator.clipboard.writeText) {
+							navigator.clipboard.writeText(area.value);
+							copiou = true;
+						} else {
+							copiou = document.execCommand("copy");
+						}
+					} catch (e) {
+						copiou = false;
+					}
+					this.textContent = copiou
+						? "Copiado! Agora é só colar"
+						: "Não deu — copie da caixa abaixo";
+				});
+
+				function concluir() {
+					document.getElementById("saida").value = montarTexto();
+
+					var el = document.getElementById("veredito");
+					if (falhasCriticas === 0) {
+						el.style.borderColor = "#4ade80";
+						el.innerHTML =
+							"<strong class='ok'>Este aparelho suporta tudo.</strong><br>" +
+							"Se o site quebra aqui mesmo assim, a causa é outra — " +
+							"vale tirar print desta página e do que aparece quebrado.";
+					} else {
+						el.style.borderColor = "#f87171";
+						el.innerHTML =
+							"<strong class='falha'>Encontrados " + falhasCriticas +
+							" problema(s) crítico(s).</strong><br>" +
+							"Confirma o diagnóstico: as cores do site dependem de " +
+							"recursos que este navegador não entende. " +
+							"Tire um print desta página inteira.";
+					}
+				}
+			})();
+		</script>
+	</body>
+</html>
