@@ -37,11 +37,7 @@ body.wishlist main {
    Como não há footer e os itens são posicionados em px pelo JS, nada precisa
    transbordar. */
 body.wishlist {
-	/* 100dvh é obrigatório aqui: no iOS o 100vh é maior que a área visível, e
-	   com overflow: hidden a faixa que sobra fica inalcançável — os itens de
-	   baixo simplesmente somem, sem rolagem pra chegar neles. */
 	height: 100vh;
-	height: 100dvh;
 	overflow: hidden;
 }
 
