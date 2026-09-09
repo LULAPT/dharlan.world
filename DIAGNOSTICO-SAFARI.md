@@ -3,6 +3,53 @@
 > Arquivo de handoff de uma sessão anterior do Claude Code.
 > Descartável — apague depois de resolvido.
 
+---
+
+## ⚠️ HIPÓTESE ORIGINAL REFUTADA (2026-09-09)
+
+Teste feito em aparelho real, **iPhone 13 / iOS 18.7 / Safari 26.6.1**, com a
+página `/teste-safari/`. Resultado: **20 de 20 verificações passaram, zero
+problemas críticos.**
+
+- `lch()` com sintaxe relativa → **suportado**
+- `color-mix()` → **suportado**
+- `:has()`, optional chaining, WebGL2 → **todos suportados**
+- As variáveis derivadas resolvem certo (`--clr-gray-a20` etc.)
+
+**As seções 1, 2 e 4 abaixo estão descartadas para este aparelho.** Não gere os
+fallbacks de `lch()`/`color-mix()`: seriam ~100 substituições sem efeito no
+problema real. (Ainda teriam valor para iOS < 16.4, mas isso é outra
+discussão — não é a causa do que foi relatado.)
+
+### Nova suspeita: `100vh` no iOS
+
+O relatório trouxe um dado revelador: a tela mediu **390x699**, mas um
+iPhone 13 tem 390x844 em pixels CSS. No iOS, `100vh` vale a tela **inteira**
+(844), ignorando a barra do navegador — os 145px de diferença.
+
+A `/index/` depende de `100vh` em dois pontos:
+
+| Onde | Valor |
+|---|---|
+| `index.html` (inline no `.container`) | `height: 100vh` |
+| `assets/css/index.css` — `.centralizar-start` | `min-height: 100vh` + `justify-content: center` |
+
+Com `justify-content: center` num espaço de 844px enquanto só 699px são
+visíveis, o conteúdo nasce ~73px abaixo do centro real e o que estiver na
+faixa de baixo sai da tela. Bate com "os itens somem".
+
+**Correção provável:** trocar `100vh` por `100dvh` (dynamic viewport height,
+que acompanha a barra) com `100vh` como piso para navegadores antigos:
+
+```css
+min-height: 100vh;   /* piso */
+min-height: 100dvh;  /* quem entende, sobrescreve */
+```
+
+A página `/teste-safari/` já mede isso e reporta a diferença exata.
+
+---
+
 ## Sintoma relatado
 Em iPhone (Safari/iOS), os elementos "simplesmente somem". Em alguns casos
 a página nem chega a abrir (fica presa na tela preta do boot terminal).

@@ -179,6 +179,18 @@
 			<tbody></tbody>
 		</table>
 
+		<h2>Altura da tela (suspeita principal)</h2>
+		<p class="sub" style="margin-bottom: 10px">
+			No iOS, <code>100vh</code> vale a tela INTEIRA, ignorando a barra do
+			navegador. Se der diferente da área visível, o conteúdo centralizado
+			com <code>100vh</code> nasce deslocado e some pra fora da tela.
+		</p>
+		<div id="medida-vh" style="height: 100vh; position: absolute; visibility: hidden; pointer-events: none"></div>
+		<div id="medida-dvh" style="height: 100dvh; position: absolute; visibility: hidden; pointer-events: none"></div>
+		<table id="tabela-vh">
+			<tbody></tbody>
+		</table>
+
 		<h2>Amostras visuais</h2>
 		<p class="sub" style="margin-bottom: 10px">
 			As duas devem ficar <strong>rosa</strong>. Se aparecerem
@@ -306,6 +318,35 @@
 						}
 					})(),
 					"fundo com dithering da tela de entrada");
+
+				// ---------- altura da tela ----------
+				// A index usa "height: 100vh" no container e "min-height: 100vh"
+				// no .centralizar-start, com justify-content: center. Se 100vh
+				// for maior que a área visível, o conteúdo é centralizado num
+				// espaço maior do que existe e as pontas saem da tela.
+				var tVh = document.querySelector("#tabela-vh tbody");
+				var alturaVh = document.getElementById("medida-vh").offsetHeight;
+				var alturaDvh = document.getElementById("medida-dvh").offsetHeight;
+				var visivel = window.innerHeight;
+				var sobra = alturaVh - visivel;
+
+				linha(tVh, "área visível (innerHeight)", true, visivel + "px");
+				linha(tVh, "quanto vale 100vh aqui", sobra <= 2,
+					alturaVh + "px" + (sobra > 2
+						? " — " + sobra + "px A MAIS que o visível"
+						: " — igual ao visível, ok"));
+				linha(tVh, "suporte a 100dvh",
+					alturaDvh > 0 && Math.abs(alturaDvh - visivel) <= 2,
+					alturaDvh > 0 ? alturaDvh + "px (acompanha a barra do navegador)"
+						: "não suportado");
+
+				if (sobra > 2) {
+					falhasCriticas++;
+					relatorio.push(
+						"        >>> 100vh estoura " + sobra + "px alem do visivel." +
+						" Conteudo centralizado com 100vh sai da tela."
+					);
+				}
 
 				// ---------- variáveis reais do site ----------
 				// Carrega o variaveis.css de verdade e lê o que o navegador
