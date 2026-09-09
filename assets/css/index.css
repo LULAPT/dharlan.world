@@ -6,7 +6,13 @@ html {
 }
 
 .centralizar-start {
+	/* No iOS, 100vh vale a tela inteira e ignora a barra do Safari — medido em
+	   iPhone 13: 739px de 100vh contra 699px realmente visíveis. Com
+	   justify-content: center, o conteúdo era centralizado nesse espaço maior
+	   e as pontas saíam da tela. O 100dvh acompanha a barra; o 100vh acima
+	   fica como piso pra quem não entende dvh. */
 	min-height: 100vh;
+	min-height: 100dvh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
