@@ -17,9 +17,35 @@ export function fadeIn() {
     `;
     document.head.appendChild(style);
 
-    if (USAR_FADE_IN) document.body.style.opacity = "0";
+    if (USAR_FADE_IN) {
+      document.body.style.opacity = "0";
 
-    window.addEventListener("DOMContentLoaded", () => {
+      // Rede de segurança. A opacidade só é devolvida lá embaixo, dentro do
+      // animationend do fadeInAnim — se essa animação não rodar (aba em
+      // segundo plano, prefers-reduced-motion, qualquer engasgo do
+      // navegador), o body fica invisível PARA SEMPRE e a página inteira
+      // some. Aqui a visibilidade volta de qualquer jeito.
+      setTimeout(function () {
+        if (document.body.style.opacity === "0") {
+          document.body.style.opacity = "";
+        }
+      }, FADE_MS + 2000);
+    }
+
+    // fadeIn() é chamado de dentro de um handler de DOMContentLoaded (ver
+    // main.js). Registrar aqui outro listener do MESMO evento é uma corrida:
+    // se ele já tiver passado pela fase de bolha até o window, o listener
+    // nunca dispara — e aí o opacity: 0 acima nunca é desfeito. Se o DOM já
+    // está pronto, executa direto.
+    const aoPronto = (fn) => {
+      if (document.readyState === "loading") {
+        window.addEventListener("DOMContentLoaded", fn);
+      } else {
+        fn();
+      }
+    };
+
+    aoPronto(() => {
       const body = document.body;
 
       if (USAR_FADE_IN) {
