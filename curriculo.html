@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+		<!-- Página protegida: não faz sentido gastar orçamento de crawl nela, e o
+		     portão existe justamente pra ela não circular solta. -->
+		<meta name="robots" content="noindex, nofollow" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<!-- A caixa do portão é a mesma .verify-box da tela de boot da /index/. -->
+		<link rel="stylesheet" href="/assets/css/boot-terminal.css" />
+		<link rel="stylesheet" href="/assets/css/curriculo.css" />
+		<!-- A folha do currículo entra só depois da senha: o curriculo.js liga
+		     esta e desliga todas as outras, pra nenhum estilo do site vazar pro
+		     documento. -->
+		<link rel="stylesheet" href="/assets/css/curriculo-folha.css" disabled />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<!-- Sem header, sem footer e sem breadcrumb: a página é só a caixa (e a
+	     engrenagem de configurações, que o settings-panel.js cria sozinho no
+	     body). Por não ter #nav-atual, ela precisa estar no mapa SEM_BREADCRUMB
+	     do page-title.js pra ganhar título. -->
+	<body class="portao-ativo">
+		<section id="portao">
+			<div class="verify-box" id="caixa-senha">
+				<span class="edge-light"></span>
+
+				<pre id="portao-titulo" aria-hidden="true">
+  ░██████   ░██       ░██░██ ░██
+ ░██   ░██  ░██          ░██ ░██
+░██         ░██    ░██░██░██ ░██  ░███████
+ ░████████  ░██   ░██ ░██░██ ░██ ░██
+        ░██ ░███████  ░██░██ ░██  ░███████
+ ░██   ░██  ░██   ░██ ░██░██ ░██        ░██
+  ░██████   ░██    ░██░██░██ ░██  ░███████ <span id="titulo-cursor">_</span></pre
+				>
+				<h1 class="acessivel-so-leitor">Résumé — restricted access</h1>
+
+				<div id="portao-divisor" aria-hidden="true"></div>
+
+				<div id="portao-corpo">
+					<form id="form-senha" autocomplete="off" novalidate>
+						<p class="linha oculta" data-passo>
+							<span class="prompt">dharlan@world:~$</span>
+							<span class="cmd" data-digitar>init --secure</span>
+						</p>
+						<p class="linha linha-ok oculta" data-passo>
+							<!-- O nome do navegador entra pelo curriculo.js. O texto que está
+							     aqui é o que sobra se a detecção não reconhecer nada. -->
+							[ OK ] channel established &middot;
+							<span id="cliente">unknown client</span>
+						</p>
+						<p class="linha oculta" data-passo>
+							<span class="prompt">dharlan@world:~$</span>
+							<span class="cmd" data-digitar>whoami</span>
+						</p>
+						<p class="linha linha-saida oculta" data-passo>
+							&gt; user unknown
+						</p>
+						<p class="linha oculta" data-passo>
+							<span class="prompt">dharlan@world:~$</span>
+							<span class="cmd" data-digitar>auth --passwd</span>
+						</p>
+
+						<div class="oculta" data-passo>
+							<label class="acessivel-so-leitor" for="campo-senha">
+								Access password
+							</label>
+							<input
+								type="password"
+								id="campo-senha"
+								placeholder="&gt; enter password"
+								autocomplete="current-password"
+								spellcheck="false"
+							/>
+						</div>
+
+						<p class="linha oculta" data-passo>
+							<span class="prompt">dharlan@world:~$</span>
+							<span class="cmd" data-digitar>open /curriculo/</span>
+						</p>
+
+						<div class="oculta" data-passo>
+							<!-- Spinner e checkmark são os mesmos da tela de "verify you are
+							     human"; o X é exclusivo daqui (senha errada). -->
+							<div class="verify-check" id="estado">
+								<span class="verify-box-visual">
+									<span class="verify-spinner"></span>
+									<svg class="verify-checkmark" viewBox="0 0 24 24">
+										<path d="M9 16.2 4.8 12l-1.4 1.4L9 19 20.6 7.4l-1.4-1.4z" />
+									</svg>
+									<svg class="verify-xmark" viewBox="0 0 24 24">
+										<path
+											d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"
+										/>
+									</svg>
+								</span>
+								<span class="verify-label" id="estado-texto">[ y / n ]</span>
+							</div>
+
+							<button type="submit" id="btn-entrar">Submit</button>
+						</div>
+
+						<p class="linha linha-erro" id="linha-erro" hidden></p>
+					</form>
+
+					<pre id="portao-arte" aria-hidden="true">
+        ██████████
+      ████      ████
+    ████          ████
+    ████          ████
+    ████          ████
+  ██████████████████████
+██████████████████████████
+██████████████████████████
+██████████      ██████████
+██████████      ██████████
+████████████  ████████████
+██████████      ██████████
+██████████████████████████
+██████████████████████████
+  ██████████████████████</pre
+					>
+				</div>
+
+				<div class="verify-footer">
+					dharlan.world &middot; ray id:
+					<span id="verify-ray-id">0000000000000000</span>
+				</div>
+			</div>
+		</section>
+
+		<!-- Preenchido pelo curriculo.js só depois da senha. Deixar vazio é
+		     proposital: conteúdo escrito aqui apareceria no view-source sem senha
+		     nenhuma, e o portão não valeria nada. -->
+		<article id="curriculo" hidden></article>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script src="/assets/js/dither-bg.js"></script>
+		<script src="/assets/js/verify-box.js"></script>
+		<script src="/assets/js/curriculo.js"></script>
+	</body>
+</html>

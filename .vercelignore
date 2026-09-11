@@ -1,0 +1,7 @@
+# A Vercel serve estaticamente tudo que está no repositório. A pasta supabase/
+# é código que roda na Supabase, não no site — sem isto, o fonte da função
+# ficaria acessível em dharlan.world/supabase/functions/curriculo/index.ts.
+#
+# Não é vazamento de segredo (a senha e as chaves vivem em variáveis de
+# ambiente, nunca no arquivo), mas não tem por que publicar.
+supabase/

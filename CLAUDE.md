@@ -183,9 +183,39 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 - Imagens com classe `dither` são processadas por
   [dither.js](assets/js/dither.js) / [bayer-dither.js](assets/js/bayer-dither.js).
 - `assets/css/sonhos.css` existe sem página correspondente (não há `sonhos.html`).
-- **`/curriculo/` está linkado mas não existe** — aparece na home, no
-  `sitemap-data.js` e no changelog, e retorna 404. O PDF está em
-  `assets/pdf/curriculo_mozart_mattar.pdf`.
+
+## A `/curriculo/` é a exceção da regra
+
+Única página com back-end, e a única que não é HTML/CSS/JS puro no fim das
+contas. [curriculo.html](curriculo.html) é só o portão: um terminal em ASCII com
+campo de senha, reaproveitando a `.verify-box` do boot da `/index/` (por isso
+carrega `boot-terminal.css`) e o fundo dither do
+[dither-bg.js](assets/js/dither-bg.js). Não tem header, footer nem breadcrumb —
+só a caixa e a engrenagem — então ela mora no mapa `SEM_BREADCRUMB` do
+[page-title.js](assets/js/page-title.js).
+
+**O currículo não está neste repositório, e não pode estar.** Conteúdo escrito no
+HTML apareceria no view-source sem senha nenhuma, e o portão não valeria nada.
+Ele vive numa tabela da Supabase e só chega no navegador junto com a resposta de
+senha correta, vinda da Edge Function em
+[supabase/functions/curriculo/index.ts](supabase/functions/curriculo/index.ts) —
+que é também quem guarda a senha (variável de ambiente `SENHA_CURRICULO`) e
+segura a força bruta (8 tentativas por IP a cada 15 min, tabela `tentativas`).
+
+- As tabelas ficam com **RLS ligada e sem policy nenhuma**: é isso que impede a
+  chave pública de ler o currículo. O painel avisa "RLS enabled with no policies"
+  — é proposital, não é problema pra corrigir. Ver [schema.sql](supabase/schema.sql).
+- O PDF fica num bucket **privado**, entregue por URL assinada de 60s.
+- A pasta `supabase/` sai do deploy pelo `.vercelignore`: é código que roda na
+  Supabase, não no site. Publicar via `npx.cmd supabase functions deploy curriculo`
+  (no Windows o `npx` puro esbarra na política de scripts do PowerShell).
+- Depois da senha, o [curriculo.js](assets/js/curriculo.js) **desliga todas as
+  folhas de estilo do site** e liga só a
+  [curriculo-folha.css](assets/css/curriculo-folha.css). O currículo é uma cópia
+  do PDF original — preto no branco, A4, sem nada da estética do site. Não
+  "conserte" isso achando que faltou tema.
+- Pra mexer no conteúdo do currículo: painel da Supabase, tabela `curriculo`,
+  coluna `dados` (jsonb). Não precisa deploy nem commit.
 
 ## Sobras do site original
 
@@ -230,8 +260,12 @@ Resto das sobras:
 - `assets/img/mozartmt-logo-white.png` (logo da index) e
   `assets/img/mozartsempiano-btn-01.jpg` (botão 88x31 da home) — só os nomes dos
   arquivos; o `alt` do logo já foi corrigido pra `dharlan`
-- `assets/pdf/curriculo_mozart_mattar.pdf`
 - `temp/` — pasta de imagens soltas, sem uso no site
+
+Já resolvido: `assets/pdf/curriculo_mozart_mattar.pdf` era o currículo do dono
+anterior e estava **público no site**, servido pela Vercel sem senha nenhuma.
+Foi apagado quando a `/curriculo/` entrou no ar. A pasta `assets/pdf/` sumiu
+junto, por ter ficado vazia.
 
 ## Estilo do código
 

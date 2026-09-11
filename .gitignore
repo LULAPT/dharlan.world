@@ -95,3 +95,6 @@ assets/css/minecraft.css
 assets/img/pokemon/*
 assets/fontes/pokemon-bw.ttf
 assets/fontes/Pokemon-Classic.ttf
+# Rascunho local que nunca pode ir pro ar nem pro histórico do git
+# (o currículo de verdade mora aqui enquanto a página está sendo feita)
+local/

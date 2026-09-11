@@ -1,0 +1,10 @@
+# Config da CLI da Supabase. project_id é preenchido pelo `supabase link`.
+
+[functions.curriculo]
+# A função é chamada pelo navegador de qualquer visitante, sem login nenhum —
+# não existe usuário pra ter um JWT. Quem controla o acesso aqui é a senha
+# dentro da própria função, mais o freio por IP.
+#
+# Sem isto, o gateway responde 401 antes do código rodar e o erro no navegador
+# não explica nada.
+verify_jwt = false

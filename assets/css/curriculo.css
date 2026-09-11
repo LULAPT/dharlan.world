@@ -1,0 +1,524 @@
+/* Portão de senha da /curriculo/ e o currículo que aparece depois dele.
+   A caixa é a mesma .verify-box da tela de boot da /index/ (boot-terminal.css),
+   com a checkbox trocada por um campo de senha — por isso este arquivo entra
+   depois daquele no <head>, pra sobrescrever. */
+
+/* Enquanto o portão está de pé ele ocupa a tela inteira; a rolagem só volta
+   quando o currículo aparece no lugar dele. */
+body.portao-ativo {
+	overflow: hidden;
+}
+
+#portao {
+	align-items: center;
+	background: var(--clr-black-a0);
+	display: flex;
+	inset: 0;
+	isolation: isolate;
+	justify-content: center;
+	overflow: hidden;
+	padding: 2rem 1rem;
+	position: fixed;
+	/* Abaixo do #settings-panel (997), pra engrenagem continuar clicável por
+	   cima do portão — mesma divisão de camadas do boot da /index/. */
+	z-index: 900;
+}
+
+#portao.portao-saindo {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.5s ease;
+}
+
+/* Fundo de ondas com dither (dither-bg.js), igual ao da tela de verificação
+   da /index/. Sem WebGL2 o canvas nem é criado e sobra o fundo liso. */
+#portao .dither-bg {
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+	z-index: 0;
+}
+
+/* Mesma vinheta da /index/: escurece as bordas pra caixa não competir com as
+   ondas. */
+#portao::after {
+	background: radial-gradient(
+		ellipse at center,
+		color-mix(in srgb, var(--clr-black-a0) 45%, transparent) 0%,
+		color-mix(in srgb, var(--clr-black-a0) 78%, transparent) 50%,
+		var(--clr-black-a0) 100%
+	);
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	z-index: 1;
+}
+
+#caixa-senha {
+	align-items: stretch;
+	border: 1px dashed var(--clr-main-a30);
+	gap: 1.2rem;
+	max-width: 100%;
+	/* Anula o min-width: 280px da .verify-box, que estouraria em telas bem
+	   estreitas. */
+	min-width: 0;
+	padding: 1.8rem 2rem;
+	/* O body do site é text-align: center; aqui dentro tudo é terminal. */
+	text-align: left;
+	/* Largura definida, não "o que o conteúdo pedir": sem isso as porcentagens
+	   lá dentro resolvem contra uma largura indefinida, o formulário colapsa
+	   pra largura de uma palavra e o cadeado sobe por cima do texto.
+	   O container-type trava essa garantia: com ele a caixa não pode mais
+	   voltar a se medir pelo conteúdo, e o ASCII lá dentro passa a se
+	   dimensionar em cqw (1% da largura útil DELA, não da tela). Medir por vw
+	   era o que fazia o layout dar um salto em ~760px: a caixa já tinha parado
+	   de crescer aos 640px, mas o título continuava crescendo com a janela. */
+	container-type: inline-size;
+	width: min(640px, 100%);
+	z-index: 2;
+}
+
+/* ASCII do título e do cadeado ------------------------------------------- */
+
+/* Fonte monoespaçada do sistema, não a VT323 do resto da caixa: os blocos █
+   precisam existir na fonte e ter exatamente a largura do espaço, senão cada
+   linha do desenho sai com um comprimento diferente e a arte entorta.
+   line-height 1 é o que cola os blocos verticalmente, sem fresta entre as
+   linhas. */
+#portao-titulo,
+#portao-arte {
+	font-family: "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
+	line-height: 1;
+	margin: 0;
+	overflow: hidden;
+	user-select: none;
+	white-space: pre;
+}
+
+/* O título tem 44 colunas fixas, então o corpo da fonte é o que faz ele caber:
+   largura útil ÷ 28 dá as 44 colunas com folga (mesma proporção coluna/divisor
+   do desenho anterior, só reduzida à metade das colunas). A folga não é
+   exagero — fora do Windows a fonte que sobra (DejaVu Sans Mono) é ~10% mais
+   larga que a Consolas, e no limite as últimas letras seriam cortadas.
+   O cursor (#titulo-cursor) fica pequeno de propósito, então não entra nessa
+   conta. Mexeu no ASCII? Recalcule o divisor pela regra colunas ÷ 1,57.
+   A primeira declaração é o plano B pra quem não tem container queries. */
+#portao-titulo {
+	color: var(--clr-main-a40);
+	font-size: 0.85rem;
+	font-size: calc(100cqw / 28);
+	text-shadow: 0 0 12px color-mix(in srgb, var(--clr-main-a40) 45%, transparent);
+}
+
+/* O cadeado tem 26 colunas e é enfeite: só aparece quando a caixa é larga o
+   bastante pra ele não roubar espaço do formulário. A condição é a largura da
+   CAIXA, não a da janela — é o que mantém o desktop inteiro com o mesmo
+   desenho, já que a caixa para de crescer nos 640px. */
+#portao-arte {
+	align-self: center;
+	color: color-mix(in srgb, var(--clr-main-a40) 55%, transparent);
+	display: none;
+	font-size: calc(100cqw / 72);
+	text-shadow: 0 0 10px color-mix(in srgb, var(--clr-main-a40) 30%, transparent);
+	transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Some junto com as rajadas de lixo que o curriculo.js escreve no <pre>: o JS
+   troca os caracteres, isto aqui faz a imagem tremer e apagar. O steps() é de
+   propósito — interpolação suave tiraria a cara de sinal falhando.
+   O translate é só visual: o <pre> não sai do lugar no grid. */
+#portao-arte.com-defeito {
+	animation: cadeado-defeito 0.11s steps(2, end) infinite;
+	color: var(--clr-main-a40);
+	text-shadow:
+		0 0 4px var(--clr-main-a40),
+		0 0 18px color-mix(in srgb, var(--clr-main-a40) 50%, transparent);
+	transition: none;
+}
+
+@keyframes cadeado-defeito {
+	0% {
+		opacity: 0.35;
+		transform: translateX(-2px);
+	}
+
+	40% {
+		opacity: 1;
+		transform: translateX(2px);
+	}
+
+	70% {
+		opacity: 0.6;
+		transform: translateX(-1px);
+	}
+
+	100% {
+		opacity: 0.9;
+		transform: none;
+	}
+}
+
+/* Quem pediu menos animação não recebe nada disso — o JS nem liga o timer, mas
+   a regra fica aqui pra não depender só dele. */
+@media (prefers-reduced-motion: reduce) {
+	#portao-arte.com-defeito {
+		animation: none;
+		opacity: 1;
+		transform: none;
+	}
+}
+
+#portao-divisor {
+	border-top: 1px dashed color-mix(in srgb, var(--clr-main-a30) 60%, transparent);
+	margin-top: -0.4rem;
+}
+
+/* Grid, não flex, e com as colunas escritas na mão. Em flex a largura de cada
+   coluna sai de negociação entre os dois filhos, e o <pre> do cadeado — que não
+   pode encolher — ganhava essa negociação: o formulário era espremido até caber
+   uma palavra por linha e o texto vazava por baixo do desenho.
+   minmax(0, 1fr) diz o contrário em uma linha: o formulário fica com TODA a
+   sobra e nunca com menos que zero. Uma coluna só enquanto o cadeado está
+   escondido; a segunda entra junto com ele, no @container. */
+#portao-corpo {
+	align-items: start;
+	display: grid;
+	gap: 2rem;
+	grid-template-columns: minmax(0, 1fr);
+	/* Redundante com o align-items: stretch da caixa, mas explícito: a linha
+	   ocupa a largura útil inteira, ponto. */
+	width: 100%;
+}
+
+#form-senha {
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+	min-width: 0;
+}
+
+/* O cadeado entra quando a caixa tem largura útil pra ele, e traz a segunda
+   coluna junto: largura exata do desenho, e o resto todo pro formulário.
+   Este bloco tem que ficar DEPOIS do #portao-corpo lá de cima — @container não
+   soma especificidade, então quem vem por último vence. */
+@container (min-width: 520px) {
+	#portao-arte {
+		display: block;
+	}
+
+	#portao-corpo {
+		grid-template-columns: minmax(0, 1fr) max-content;
+	}
+}
+
+/* Linhas do terminal ------------------------------------------------------ */
+
+.linha {
+	color: var(--clr-white);
+	font-family: "VT323", monospace;
+	font-size: 1.15rem;
+	line-height: 1.15;
+	margin: 0;
+}
+
+.linha .prompt {
+	color: var(--clr-main-a40);
+}
+
+.linha-ok,
+.linha-saida {
+	opacity: 0.6;
+	padding-left: 0.2rem;
+}
+
+.linha-erro {
+	color: var(--clr-red-a40);
+	padding-left: 0.2rem;
+}
+
+/* Cada passo entra em cena quando o curriculo.js manda; antes disso não ocupa
+   espaço, pra caixa crescer junto com a digitação. */
+.oculta {
+	display: none;
+}
+
+[data-passo]:not(.oculta) {
+	animation: portao-surge 0.18s ease-out;
+}
+
+@keyframes portao-surge {
+	from {
+		opacity: 0;
+		transform: translateY(-2px);
+	}
+}
+
+/* Cursor piscando no fim da linha que está sendo digitada. */
+.cmd.digitando::after {
+	animation: portao-cursor 0.9s steps(1) infinite;
+	background: var(--clr-main-a40);
+	content: "";
+	display: inline-block;
+	height: 0.9em;
+	margin-left: 1px;
+	vertical-align: -0.1em;
+	width: 0.5em;
+}
+
+@keyframes portao-cursor {
+	50% {
+		opacity: 0;
+	}
+}
+
+/* Cursor de terminal grudado no fim do título em ASCII. Fica menor que os
+   blocos de propósito — é um prompt esperando, não parte do desenho. Ele senta
+   na mesma linha de base das letras, que é onde um cursor de terminal fica. */
+#titulo-cursor {
+	animation: portao-cursor 1.05s steps(1) infinite;
+	font-size: 0.55em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#titulo-cursor {
+		animation: none;
+	}
+}
+
+/* Campo de senha e botão -------------------------------------------------- */
+
+#campo-senha {
+	background: color-mix(in srgb, var(--clr-black-a0) 55%, transparent);
+	border: 1px solid color-mix(in srgb, var(--clr-main-a30) 70%, transparent);
+	color: var(--clr-white);
+	font-family: "VT323", monospace;
+	font-size: 1.2rem;
+	letter-spacing: 0.08em;
+	padding: 0.45rem 0.6rem;
+	width: 100%;
+}
+
+#campo-senha::placeholder {
+	color: var(--clr-white);
+	letter-spacing: normal;
+	opacity: 0.35;
+}
+
+#campo-senha:focus {
+	border-color: var(--clr-main-a40);
+	box-shadow: 0 0 10px color-mix(in srgb, var(--clr-main-a40) 25%, transparent);
+	outline: none;
+}
+
+#caixa-senha.senha-errada #campo-senha {
+	animation: portao-tremor 0.35s ease-in-out;
+	border-color: var(--clr-red-a40);
+}
+
+@keyframes portao-tremor {
+	25% {
+		transform: translateX(-4px);
+	}
+
+	75% {
+		transform: translateX(4px);
+	}
+}
+
+#btn-entrar {
+	align-self: flex-start;
+	background: var(--clr-main-a40);
+	border: none;
+	color: var(--clr-black-a0);
+	cursor: pointer;
+	font-family: "VT323", monospace;
+	font-size: 1.15rem;
+	margin-top: 0.7rem;
+	padding: 0.35rem 1.6rem;
+	transition: background-color var(--transition-time);
+}
+
+#btn-entrar:hover:not(:disabled) {
+	background: var(--clr-main-a50);
+}
+
+#btn-entrar:disabled {
+	cursor: wait;
+	opacity: 0.5;
+}
+
+/* Estado (spinner / check / X) -------------------------------------------- */
+
+#estado {
+	cursor: default;
+	margin-top: 0.3rem;
+}
+
+#estado .verify-label {
+	font-family: "VT323", monospace;
+	opacity: 0.75;
+}
+
+.verify-xmark {
+	fill: var(--clr-red-a40);
+	height: 100%;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	transform: scale(0.5);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+	width: 100%;
+}
+
+.verify-check.is-erro .verify-xmark {
+	opacity: 1;
+	transform: scale(1);
+}
+
+.verify-check.is-erro .verify-box-visual {
+	border-color: var(--clr-red-a40);
+}
+
+/* Currículo liberado ------------------------------------------------------
+   Regras herdadas do layout do site original, que ficaram órfãs no sobre.css
+   depois que a página sumiu. Vieram pra cá inteiras. */
+
+#curriculo {
+	animation: portao-surge 0.4s ease-out;
+	font-size: 1rem;
+	margin: 0 auto;
+	max-width: 780px;
+	/* A página não tem #container: a margem lateral do texto sai daqui. */
+	padding: 3rem 1.5rem 4rem;
+	text-align: left;
+}
+
+/* Rodapé do currículo: o botão do PDF e o único caminho de volta pro site,
+   já que a página não tem navbar. */
+#curriculo-rodape {
+	align-items: center;
+	border-top: 1px solid var(--clr-gray-a30);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.2rem;
+	justify-content: space-between;
+	margin-top: 2.5rem;
+	padding-top: 1.5rem;
+}
+
+#curriculo ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+#curriculo ul > li::before {
+	content: unset;
+}
+
+#curriculo ul > li a {
+	text-decoration: none;
+}
+
+#curriculo ul b {
+	font-weight: 700;
+}
+
+#curriculo h2 {
+	display: block;
+	font-family: var(--fonte-corpo);
+	font-size: 1.1em;
+	font-weight: 800;
+	padding-bottom: 8px;
+	position: relative;
+	text-decoration: none;
+}
+
+#curriculo h2:not(:first-of-type) {
+	margin-top: 1.5em;
+}
+
+#curriculo h2::after {
+	background: var(--clr-gray-a30);
+	bottom: 0;
+	content: "";
+	height: 1px;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+#curriculo h3 {
+	font-family: var(--fonte-corpo);
+	margin-bottom: 8px;
+	text-decoration: underline;
+}
+
+#curriculo h4 {
+	color: var(--clr-white);
+	font-family: var(--fonte-corpo);
+	font-size: 1em;
+	letter-spacing: 0.12em;
+	margin-bottom: 0.4em;
+	text-transform: full-width;
+}
+
+#curriculo p {
+	color: var(--clr-gray-a50);
+	font-size: 1em;
+	margin-bottom: 2em;
+}
+
+.skill-bar {
+	background: var(--clr-gray-a10);
+	height: auto;
+	margin-bottom: 14px;
+	margin-top: 6px;
+	overflow: hidden;
+	width: 100%;
+}
+
+body.rounded .skill-bar {
+	border-radius: 0 5px 0 5px;
+}
+
+.skill-bar-fill {
+	background: linear-gradient(90deg, var(--clr-main-a30), var(--clr-blue-a20));
+	height: 100%;
+	padding: 3px 10px;
+	transition: width var(--transition-time-long);
+}
+
+#abrir_curriculo {
+	background-color: var(--clr-main-a40);
+	color: var(--clr-white);
+	font-weight: bold;
+	padding: 10px 16px;
+	text-decoration: none;
+}
+
+#abrir_curriculo:hover {
+	background-color: var(--clr-main-a50);
+}
+
+/* Só pro leitor de tela: o <h1> real da página, já que o título visível é
+   ASCII dentro de um <pre>. */
+.acessivel-so-leitor {
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+/* Quem decide se o cadeado aparece é o @container lá em cima. Aqui sobra só o
+   respiro da caixa em tela pequena. */
+@media (max-width: 560px) {
+	#caixa-senha {
+		padding: 1.4rem 1.2rem;
+	}
+}

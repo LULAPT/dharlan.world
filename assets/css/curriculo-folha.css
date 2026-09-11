@@ -1,0 +1,304 @@
+/* A folha do currículo — o documento que aparece depois da senha.
+ *
+ * Isto aqui NÃO é CSS do dharlan.world e não deve virar: nada de variaveis.css,
+ * nada de --clr-main, nada de fundo pixelado. O currículo é preto no branco,
+ * como o PDF de onde ele veio. Quando a folha entra em cena, o curriculo.js
+ * desliga as folhas de estilo do site pra nenhum resquício vazar pra cá.
+ *
+ * As medidas saíram das coordenadas do PDF multiplicadas por 794/2482 = 0,32,
+ * que é o fator pra levar a página A4 do PDF pra pixels a 96dpi.
+ *
+ * A fonte é a Boriboon, que veio embutida no PDF. Ela não entra neste
+ * repositório: quem carrega o @font-face é quem tem o arquivo (a pré-visualização
+ * local hoje, o servidor depois). Sem ela o texto cai na fonte do sistema e a
+ * folha continua legível — só perde o desenho das letras.
+ */
+
+.curriculo-folha *,
+.curriculo-folha *::before,
+.curriculo-folha *::after {
+	box-sizing: border-box;
+}
+
+body.curriculo-aberto {
+	background: #e4e4e7;
+	color: #000;
+	font-family: "Boriboon", "Segoe UI", system-ui, sans-serif;
+	letter-spacing: normal;
+	line-height: normal;
+	margin: 0;
+	overflow-y: auto;
+	padding: 24px 16px 64px;
+	text-align: left;
+}
+
+/* --- barra de cima: relógio e botão -----------------------------------------
+   Chrome da página, não do documento: fica fora da folha e some na impressão,
+   pra folha continuar sendo cópia fiel do PDF. */
+
+#curriculo-barra {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	justify-content: space-between;
+	margin: 0 auto 20px;
+	max-width: 794px;
+}
+
+#curriculo-relogio {
+	color: #52525b;
+	font-family: ui-monospace, "Cascadia Mono", "Consolas", monospace;
+	font-size: 13px;
+	/* Números de largura fixa: sem isso o relógio balança a cada segundo. */
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.02em;
+}
+
+#curriculo-relogio b {
+	color: #18181b;
+	font-weight: 600;
+}
+
+#curriculo-baixar {
+	background: #18181b;
+	border: none;
+	border-radius: 4px;
+	color: #fafafa;
+	cursor: pointer;
+	font-family: "Segoe UI", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	padding: 9px 18px;
+	text-decoration: none;
+}
+
+#curriculo-baixar:hover {
+	background: #3f3f46;
+}
+
+#curriculo-baixar[aria-disabled="true"] {
+	cursor: default;
+	opacity: 0.45;
+}
+
+/* --- a folha ---------------------------------------------------------------
+   794px = A4 a 96dpi, a mesma proporção do PDF. */
+
+.curriculo-folha {
+	background: #fff;
+	box-shadow:
+		0 1px 3px rgba(0, 0, 0, 0.12),
+		0 8px 24px rgba(0, 0, 0, 0.12);
+	margin: 0 auto;
+	min-height: 1123px;
+	padding: 56px 68px 68px;
+	width: 794px;
+}
+
+/* --- cabeçalho --------------------------------------------------------- */
+
+.curriculo-folha .nome {
+	font-size: 32px;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1.1;
+	margin: 0;
+}
+
+.curriculo-folha .nascimento {
+	color: #949494;
+	font-size: 18px;
+	line-height: 1.2;
+	margin: 10px 0 0;
+}
+
+.curriculo-folha .regua {
+	background: #000;
+	border: none;
+	height: 1px;
+	margin: 19px 0 0;
+}
+
+/* --- seções -------------------------------------------------------------- */
+
+.curriculo-folha h2 {
+	font-size: 21.3px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	line-height: 1.15;
+	margin: 0;
+}
+
+.curriculo-folha .perfil {
+	margin-top: 29px;
+}
+
+.curriculo-folha .perfil p {
+	font-size: 16px;
+	line-height: 1.19;
+	margin: 11px 0 0;
+}
+
+/* No PDF a coluna da esquerda vai de x=213 a ~960 e a da direita de 1073 a
+   2270 — daí esta proporção. */
+.curriculo-folha .colunas {
+	display: grid;
+	gap: 36px;
+	grid-template-columns: 239fr 383fr;
+	margin-top: 46px;
+}
+
+.curriculo-folha section + section {
+	margin-top: 34px;
+}
+
+/* A régua sob o título só existe na coluna da direita. É assim no PDF, não é
+   esquecimento. */
+.curriculo-folha .col-dir h2 {
+	border-bottom: 1px solid #000;
+	padding-bottom: 9px;
+}
+
+/* --- contato ------------------------------------------------------------- */
+
+.curriculo-folha .contato ul {
+	list-style: none;
+	margin: 13px 0 0;
+	padding: 0;
+}
+
+.curriculo-folha .contato li {
+	align-items: flex-start;
+	display: flex;
+	font-size: 16px;
+	gap: 13px;
+	line-height: 1.19;
+	margin-top: 13px;
+}
+
+.curriculo-folha .contato li:first-child {
+	margin-top: 0;
+}
+
+.curriculo-folha .contato li::before {
+	content: none;
+}
+
+.curriculo-folha .contato svg {
+	flex-shrink: 0;
+	height: 25px;
+	margin-top: 1px;
+	width: 25px;
+}
+
+/* --- itens (curso, formação, cargo) -------------------------------------- */
+
+.curriculo-folha .item {
+	margin-top: 26px;
+}
+
+.curriculo-folha .item:first-of-type {
+	margin-top: 20px;
+}
+
+.curriculo-folha .item h3 {
+	font-size: 18.6px;
+	font-weight: 900;
+	line-height: 1.15;
+	margin: 0;
+}
+
+/* O cargo da experiência é o único em Bold no PDF; todo o resto é Black. */
+.curriculo-folha .item.cargo h3 {
+	font-weight: 700;
+}
+
+.curriculo-folha .item p {
+	font-size: 16px;
+	line-height: 1.19;
+	margin: 6px 0 0;
+}
+
+/* Descrição de item é cinza; texto solto de seção é preto. */
+.curriculo-folha .item .desc {
+	color: #949494;
+}
+
+.curriculo-folha .secao-texto p {
+	font-size: 16px;
+	line-height: 1.19;
+	margin: 13px 0 0;
+}
+
+/* --- marcadores ---------------------------------------------------------- */
+
+.curriculo-folha .marcadores {
+	list-style: none;
+	margin: 9px 0 0;
+	padding: 0;
+}
+
+.curriculo-folha .marcadores li {
+	font-size: 16px;
+	line-height: 1.19;
+	margin-top: 9px;
+	padding-left: 27px;
+	position: relative;
+}
+
+.curriculo-folha .marcadores li::before {
+	background: #000;
+	border-radius: 50%;
+	content: "";
+	height: 5px;
+	left: 0;
+	position: absolute;
+	top: 7px;
+	width: 5px;
+}
+
+/* --- tela estreita -------------------------------------------------------
+   A folha tem largura de A4 fixa; abaixo disso ela encolhe inteira em vez de
+   reempacotar, pra continuar sendo a mesma página. */
+
+@media (max-width: 858px) {
+	body.curriculo-aberto {
+		padding: 16px 0 48px;
+	}
+
+	#curriculo-barra {
+		max-width: none;
+		padding: 0 16px;
+	}
+
+	.curriculo-folha {
+		transform: scale(calc(100vw / 826));
+		transform-origin: top center;
+	}
+}
+
+/* --- impressão ------------------------------------------------------------ */
+
+@page {
+	margin: 0;
+	size: A4;
+}
+
+@media print {
+	body.curriculo-aberto {
+		background: #fff;
+		padding: 0;
+	}
+
+	#curriculo-barra {
+		display: none;
+	}
+
+	.curriculo-folha {
+		box-shadow: none;
+		margin: 0;
+		transform: none;
+		width: 100%;
+	}
+}
