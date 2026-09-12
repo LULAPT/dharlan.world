@@ -96,8 +96,10 @@ Deno.serve(async (req) => {
 		.eq("ip_hash", chave)
 		.gte("criado_em", desde);
 
-	// Registra antes de comparar, e registra sempre — inclusive a tentativa
-	// certa. Contar só os erros deixaria a porta aberta pra quem acerta.
+	// Registra antes de comparar, e registra sempre — inclusive a que vai dar
+	// certo. Contar só depois de comparar deixaria a porta aberta pra quem
+	// derruba a conexão antes da resposta. Quem acerta tem o contador zerado
+	// mais adiante, então isto não penaliza ninguém.
 	await db.from("tentativas").insert({ ip_hash: chave });
 
 	if ((count ?? 0) >= MAX_TENTATIVAS) {
@@ -122,6 +124,24 @@ Deno.serve(async (req) => {
 		// Resposta genérica: não distingue "senha errada" de "senha vazia" nem
 		// de "segredo não configurado".
 		return responder({ erro: "negado" }, 401, cab);
+	}
+
+	// Senha certa: zera o contador deste IP. O freio existe contra quem está
+	// adivinhando, e quem acabou de provar que sabe não é esse. Sem isto, quem
+	// tem a senha levava 429 depois de 8 acessos em 15 minutos — inclusive o
+	// recrutador que só recarregou a página.
+	//
+	// Não enfraquece o freio: quem erra continua somando até os 8, porque só
+	// chega nesta linha quem acertou.
+	const { error: erroLimpeza } = await db
+		.from("tentativas")
+		.delete()
+		.eq("ip_hash", chave);
+
+	if (erroLimpeza) {
+		// Não é motivo pra negar o acesso: o pior caso é o contador seguir
+		// cheio e o próximo acesso deste IP levar 429.
+		console.error("curriculo: falha ao limpar as tentativas —", erroLimpeza);
 	}
 
 	// --- currículo ------------------------------------------------------------

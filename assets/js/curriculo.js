@@ -445,9 +445,11 @@ document.addEventListener("DOMContentLoaded", () => {
 			const daFolha = link.href.includes("curriculo-folha.css");
 			link.disabled = !daFolha;
 		}
-		// A engrenagem de configurações é do site, não do documento.
+		// Engrenagem e botão do rádio são do site, não do documento. Os dois
+		// injetam o próprio <style>, então não some junto com os <link> acima.
 		document.getElementById("settings-panel")?.remove();
 		document.getElementById("settings-gear")?.remove();
+		document.getElementById("radio-botao")?.remove();
 
 		// O fade-in.js deixa opacity: 0 inline no body e só limpa quando a
 		// animação termina. Se ela não terminar (movimento reduzido, aba em

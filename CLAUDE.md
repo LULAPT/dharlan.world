@@ -57,13 +57,15 @@ declara os contêineres vazios:
 
 Sem header nenhum: [index.html](index.html), [2kki.html](2kki.html),
 [anotacoes.html](anotacoes.html), [not_found.html](not_found.html),
+[radio.html](radio.html), [curriculo.html](curriculo.html),
 [mplace/index.html](mplace/index.html) (essa usa a classe `floating-nav`).
 
-Três páginas fogem do padrão do `<head>` acima e são praticamente autônomas —
+Quatro páginas fogem do padrão do `<head>` acima e são praticamente autônomas —
 não carregam `style.css` e trazem o próprio visual inteiro:
 [anotacoes.html](anotacoes.html) (só `anotacoes.css`, favicon próprio, filtro SVG
 de dither embutido), [2kki.html](2kki.html) (importa `variaveis/fonts/animations`
-soltos) e [mplace/index.html](mplace/index.html) (nem `main.js` carrega).
+soltos), [radio.html](radio.html) (o visual vem do tema do player) e
+[mplace/index.html](mplace/index.html) — nas duas últimas o `main.js` nem carrega.
 
 Breadcrumb é HTML manual em cada página:
 
@@ -154,8 +156,9 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 
 ## Chaves de localStorage / sessionStorage
 
-`current-theme`, `switchCRT`, `festiveEffects`, `nsfwBlur`, `mplace-chunks`
-(localStorage) · `bootTerminalSeen`, `confettiDone` (sessionStorage).
+`current-theme`, `switchCRT`, `festiveEffects`, `nsfwBlur`, `mplace-chunks`,
+`radio-estado`, `radio-tema`, `radio-destacado` (localStorage) ·
+`bootTerminalSeen`, `confettiDone` (sessionStorage).
 
 ## Detalhes que costumam pegar
 
@@ -216,6 +219,56 @@ segura a força bruta (8 tentativas por IP a cada 15 min, tabela `tentativas`).
   "conserte" isso achando que faltou tema.
 - Pra mexer no conteúdo do currículo: painel da Supabase, tabela `curriculo`,
   coluna `dados` (jsonb). Não precisa deploy nem commit.
+
+## A `/radio/` e o player flutuante
+
+Porte do [webdeck-player](https://github.com/cristiancfm/webdeck-player) (MIT),
+que toca playlists do YouTube num deck com cara de aparelho de som.
+[radio.html](radio.html) é autônoma: não carrega `style.css` nem `main.js`, e o
+visual inteiro vem do tema escolhido.
+
+**O CSS dos temas é o do original, só re-escopado sob `#web-deck-player`.** Foi
+assim pra manter o desenho intacto sem vazar seletor global pro resto do site.
+Não renomeie ids/classes da marcação do player nem mova as cores pro
+[radio.css](assets/css/radio.css) — é isso que segura os dois mundos separados.
+
+- Os 8 temas ficam em `assets/radio-temas/`, um por pasta, cada um com seu CSS,
+  fonte e ícones. Três são do dharlan; os outros cinco vieram do original.
+- Os temas do dharlan **não têm `logo.png`** — o `#playerLogo` vira o texto
+  "dharlan.world" por `::after`. Pra usar imagem: ponha o PNG na pasta do tema e
+  troque `logo: false` → `true` no array `TEMAS` do [radio.js](assets/js/radio.js).
+- **Mantenha** `LICENSE-webdeck-player.txt`, os `about.txt` e as
+  `fonts/licenses/`. O botão ⓘ do player mostra o crédito.
+- As estações estão em
+  [radio-estacoes.json](assets/json/radio-estacoes.json); `playlist` é o `list=`
+  da URL do YouTube, e a playlist precisa ser pública ou não listada.
+
+**Modo "flutuar"**: liga `radio-destacado` e o [main.js](assets/js/main.js)
+passa a montar o mini player no canto inferior direito em toda página
+([radio-mini.js](assets/js/radio-mini.js)). O import é condicional — quem não
+ligou não paga por ele.
+
+O **áudio não sobrevive à navegação**, e não tem conserto dentro desta
+arquitetura: o site é multipágina, cada clique recarrega o documento e mata o
+`<iframe>`. O que existe é o estado no `localStorage` e o player da página
+seguinte retomando do mesmo segundo — o som corta ~1s. Virar SPA ou abrir popup
+seriam as saídas, e as duas contrariam o projeto. Não é bug a consertar.
+
+Autoplay pode ser barrado pelo navegador (a permissão não atravessa o page
+load). Se o `play()` não pegar em 2,5s, o botão pisca e o status pede um clique.
+
+### O botão do rádio
+
+[radio-botao.js](assets/js/radio-botao.js) põe um atalho fixo pra `/radio/` no
+canto inferior esquerdo, colado na engrenagem e com o mesmo desenho dela. Mora
+fora da navbar de propósito — **`/radio/` não está no `links` do navbar.js nem
+no `sitemap-data.js`**, e isso é escolha do dono, não esquecimento.
+
+Como a engrenagem, ele injeta o próprio `<style>` em vez de usar `assets/css/`:
+o elemento não existe em HTML nenhum, quem o cria é o próprio módulo. Quem
+esconde chrome do site (o `vestirFolha()` da `/curriculo/`, por exemplo) precisa
+remover `#radio-botao` junto com `#settings-panel` — `<style>` injetado não some
+quando se desligam os `<link>`.
 
 ## Sobras do site original
 

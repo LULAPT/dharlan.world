@@ -13,6 +13,7 @@ import { wavyText } from "/assets/js/wavy-text.js";
 import { setPageTitle } from "/assets/js/page-title.js";
 import { animateFavicon } from "/assets/js/animated-favicon.js";
 import { initAnalytics } from "/assets/js/analytics.js";
+import { iniciarBotaoRadio } from "/assets/js/radio-botao.js";
 
 function isDate(month1to12, day) {
 	const n = new Date();
@@ -30,6 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	import("/assets/js/dither.js").catch((err) =>
 		console.error("Erro ao carregar dither.js:", err)
 	);
+
+	// Rádio destacado: só carrega o módulo pra quem ligou o player na /radio/,
+	// senão toda página pagaria o import à toa.
+	if (localStorage.getItem("radio-destacado") === "true") {
+		import("/assets/js/radio-mini.js")
+			.then(({ iniciarRadioMini }) => iniciarRadioMini())
+			.catch((err) => console.error("Erro ao carregar radio-mini.js:", err));
+	}
+
 	initAnalytics();
 	carregarNavbar();
 	carregarFooter();
@@ -37,6 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	animateFavicon();
 	toggleCrt();
 	fadeIn();
+	// Antes do enableTooltips(): o script lê os title que já estão no DOM, então
+	// um botão criado depois dele ficaria com o tooltip nativo do navegador.
+	iniciarBotaoRadio();
 	enableTooltips();
 	initHeaderMobile();
 	enableLightMode();

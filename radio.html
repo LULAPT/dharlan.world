@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>/radio/ — dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!--
+			Página autônoma: não carrega style.css nem main.js, igual anotacoes.html
+			e mplace/index.html. O visual inteiro vem do tema do webdeck-player.
+		-->
+		<link
+			id="player-theme"
+			rel="stylesheet"
+			href="/assets/radio-temas/default/webdeck-player.css"
+		/>
+		<link rel="stylesheet" href="/assets/css/radio.css" />
+
+		<script>
+			// Aponta o tema salvo antes de renderizar, senão pisca o rosa padrão
+			// antes do JS trocar. Mesma ideia do theme-init.js do site.
+			(function () {
+				try {
+					var tema = localStorage.getItem("radio-tema");
+					if (tema && /^[a-z-]+$/.test(tema)) {
+						document
+							.getElementById("player-theme")
+							.setAttribute(
+								"href",
+								"/assets/radio-temas/" + tema + "/webdeck-player.css"
+							);
+					}
+				} catch (e) {}
+			})();
+		</script>
+	</head>
+
+	<body class="radio-pagina">
+		<div id="radio-app"></div>
+
+		<a class="radio-voltar" href="/home/">&lt; voltar pro site</a>
+
+		<script type="module">
+			import { initAnalytics } from "/assets/js/analytics.js";
+			import { iniciarRadioPagina } from "/assets/js/radio-page.js";
+
+			initAnalytics();
+			iniciarRadioPagina();
+		</script>
+	</body>
+</html>

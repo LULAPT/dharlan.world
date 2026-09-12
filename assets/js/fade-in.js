@@ -58,6 +58,12 @@ export function fadeIn() {
 
       if (USAR_FADE_OUT) {
         document.addEventListener("click", (e) => {
+          // Se alguém já cancelou o clique, o link não era pra navegar — o
+          // handler dele quis outra coisa. Sem esta linha o fade-out navega
+          // mesmo assim, porque ele usa window.location e não o comportamento
+          // padrão do navegador, que é o que o preventDefault segura.
+          if (e.defaultPrevented) return;
+
           const el = e.target.closest("a[href]");
           if (!el) return;
           const href = el.getAttribute("href");

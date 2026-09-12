@@ -1,5 +1,13 @@
 [
 	{
+		"date": "2026-09-12",
+		"items": [
+			"página <a href=\"/radio/\">/radio</a> criada — um deck de rádio tocando playlist do youtube, com visor, controles e 8 temas",
+			"modo flutuante no rádio: o player desgruda e acompanha a navegação pelo site, retomando a faixa de onde parou",
+			"página <a href=\"/curriculo/\">/curriculo</a> agora existe de fato, atrás de uma tela de senha em ascii, o conteúdo só é carregado depois que a senha bate"
+		]
+	},
+	{
 		"date": "2026-09-08",
 		"items": [
 			"página <a href=\"/wishlist/\">/wishlist</a> criada em /outros, com os itens espalhados soltos pela tela, arrastáveis e com peso",

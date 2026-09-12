@@ -1,0 +1,240 @@
+/* ----------------------------------------------
+ *   ___          _ _
+ *  | _ \__ _  __| (_)___
+ *  |   / _` |/ _` | / _ \
+ *  |_|_\__,_|\__,_|_\___/
+ *
+ * Layout da /radio/ e do mini player flutuante.
+ *
+ * As CORES não moram aqui — vêm dos temas em assets/radio-temas/, que são o CSS
+ * do webdeck-player original só re-escopado sob #web-deck-player pra não vazar
+ * seletor global (body, *, button) no resto do site. Este arquivo cuida só de
+ * onde o player fica e de encolher ele no modo flutuante.
+ *
+ * Todo seletor do mini usa #web-deck-player.radio-mini de propósito: assim ele
+ * ganha do tema por especificidade, independente da ordem em que os dois CSS
+ * entram na página.
+ * ---------------------------------------------- */
+
+/* ------------------------------------ */
+/*            Página /radio/            */
+/* ------------------------------------ */
+
+body.radio-pagina {
+	align-items: center;
+	background-color: #0e0a0c;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	justify-content: center;
+	margin: 0;
+	min-height: 100vh;
+	padding: 16px;
+}
+
+/* Único caminho de volta — a página não tem header nem footer. */
+.radio-voltar {
+	color: #6b5a63;
+	font-family: "ANK", "Nimbus Mono PS", "Courier New", monospace;
+	font-size: 0.75rem;
+	letter-spacing: 1px;
+	text-decoration: none;
+}
+
+.radio-voltar:hover {
+	color: #d45c95;
+}
+
+/* ------------------------------------ */
+/*             Compartilhado            */
+/* ------------------------------------ */
+
+/* O original esconde o vídeo com display:none. Aqui é visibility, porque
+   display:none em iframe já derrubou áudio em navegador antes — visualmente dá
+   na mesma, a tela fica preta. */
+#web-deck-player #player-display.video-escondido > div {
+	visibility: hidden;
+}
+
+/* O iframe do YouTube é só imagem: clique nenhum chega nele.
+   Mesmo com controls=0 o player do YouTube continua clicável — clicar na tela
+   dá play/pause, e aparecem título, "assistir depois", "compartilhar" e as
+   telinhas de vídeo relacionado no fim da faixa. Tudo isso mexe no player por
+   fora, e o nosso deck fica mostrando um estado que não é mais o real.
+   Com pointer-events: none, o único caminho são os botões daqui, que falam com
+   a API. O gesto do usuário que o navegador exige pra liberar áudio continua
+   valendo: ele acontece no clique do nosso botão, na nossa página. */
+#web-deck-player #player-display iframe {
+	pointer-events: none;
+}
+
+/* Autoplay barrado pelo navegador: o play chama atenção pedindo o clique. */
+#web-deck-player #playButton.pedindo-clique {
+	animation: radio-pedir-clique 1s steps(2) infinite;
+}
+
+@keyframes radio-pedir-clique {
+	50% {
+		filter: brightness(1.6);
+	}
+}
+
+/* ------------------------------------ */
+/*             Mini player              */
+/* ------------------------------------ */
+
+/* Colado no rodapé da janela: sem folga embaixo, senão sobra uma fresta da
+   página aparecendo por baixo do deck. À direita fica um respiro, pra não
+   encostar na barra de rolagem. */
+#web-deck-player.radio-mini {
+	bottom: 0;
+	height: auto;
+	position: fixed;
+	right: 10px;
+	width: 340px;
+	z-index: 9998;
+}
+
+/* Barra de título do mini: nome no centro, ações ancoradas nas pontas.
+   Só no mini — o deck grande da /radio/ continua com a barra do tema. */
+#web-deck-player.radio-mini #player-title-bar {
+	align-items: center;
+	font-size: 11px;
+	gap: 6px;
+	justify-content: center;
+	/* Âncora dos dois grupos de botões. */
+	position: relative;
+}
+
+/* Os traços do tema (aquele "=====" dos dois lados do nome) são ::before e
+   ::after do #player-title-bar. Precisa do .radio-mini pra ganhar deles por
+   especificidade — a regra do tema também usa o id. */
+#web-deck-player.radio-mini #player-title-bar::before,
+#web-deck-player.radio-mini #player-title-bar::after {
+	content: none;
+}
+
+#web-deck-player.radio-mini #player-display {
+	height: 62px;
+	width: 110px;
+}
+
+#web-deck-player.radio-mini #info-screen {
+	font-size: 11px;
+}
+
+/* Sobra do deck grande que não cabe no canto. Esconder o .playing-controls
+   inteiro, e não só o botão de dentro, porque o wrapper tem borda e fundo
+   próprios — escondendo só o filho sobra uma caixinha vazia no canto. */
+#web-deck-player.radio-mini #player-control-panel .playing-controls:not(:first-of-type) {
+	display: none;
+}
+
+#web-deck-player.radio-mini #themeSelector {
+	display: none;
+}
+
+/* Some com a .player-row do vídeo/logo, que fica vazia no mini. */
+#web-deck-player.radio-mini #player-info .player-row:last-child {
+	display: none;
+}
+
+/* Sem isso o input estoura a largura e o botão de mudo cai pra outra linha. */
+#web-deck-player.radio-mini #player-volume {
+	align-items: center;
+	display: flex;
+	gap: 4px;
+}
+
+#web-deck-player.radio-mini #volumeBar {
+	width: 100%;
+}
+
+#web-deck-player.radio-mini .playing-controls button {
+	height: 26px;
+	min-width: 38px;
+}
+
+#web-deck-player.radio-mini .playing-controls button img {
+	height: 100%;
+}
+
+/* Ações que só existem no modo flutuante. Absolutas nas pontas da barra pra o
+   título ficar centrado na largura inteira — se entrassem no fluxo, o texto
+   seria empurrado e o centro sairia do lugar conforme a quantidade de botões. */
+#web-deck-player.radio-mini #radio-mini-acoes-esq,
+#web-deck-player.radio-mini #radio-mini-acoes {
+	align-items: center;
+	display: flex;
+	gap: 3px;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#web-deck-player.radio-mini #radio-mini-acoes-esq {
+	left: 6px;
+}
+
+#web-deck-player.radio-mini #radio-mini-acoes {
+	right: 6px;
+}
+
+/* Precisa dos dois ids + a classe pra ganhar do `#web-deck-player button` do
+   tema, que senão pinta estes com o gradiente dos botões grandes e eles viram
+   caixinhas. Fonte monospace do sistema porque a Silkscreen não tem glifo
+   pra tudo. */
+#web-deck-player.radio-mini #radio-mini-acoes-esq a,
+#web-deck-player.radio-mini #radio-mini-acoes a,
+#web-deck-player.radio-mini #radio-mini-acoes button {
+	background: none;
+	border: none;
+	box-shadow: none;
+	color: inherit;
+	cursor: pointer;
+	font-family: "Courier New", monospace;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1;
+	padding: 0 3px;
+	text-decoration: none;
+}
+
+#web-deck-player.radio-mini #radio-mini-acoes a:hover,
+#web-deck-player.radio-mini #radio-mini-acoes button:hover {
+	filter: brightness(1.5);
+}
+
+#web-deck-player.radio-mini.recolhido {
+	width: 150px;
+}
+
+#web-deck-player.radio-mini.recolhido #player-body {
+	display: none;
+}
+
+/* Recolhido sobram só "^" e "X". O "_" sai porque não há mais o que recolher —
+   quem reabre é o "^", que muda de função nesse estado (ver radio-mini.js). */
+#web-deck-player.radio-mini.recolhido #radio-mini-recolher {
+	display: none;
+}
+
+/* ------------------------------------ */
+/*                Celular               */
+/* ------------------------------------ */
+
+/* O deck é 600x250 fixo (medida do projeto original). Em tela estreita ele não
+   cabe, então encolhe por transform em vez de reflow — assim o layout interno
+   continua exatamente o do original. */
+@media (max-width: 640px) {
+	body.radio-pagina #web-deck-player {
+		transform: scale(0.62);
+		transform-origin: center center;
+	}
+
+	#web-deck-player.radio-mini {
+		left: 8px;
+		right: 8px;
+		width: auto;
+	}
+}
