@@ -157,7 +157,7 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 ## Chaves de localStorage / sessionStorage
 
 `current-theme`, `switchCRT`, `festiveEffects`, `nsfwBlur`, `mplace-chunks`,
-`radio-estado`, `radio-tema`, `radio-destacado` (localStorage) ·
+`radio-estado`, `radio-tema`, `radio-flutuar` (localStorage) ·
 `bootTerminalSeen`, `confettiDone` (sessionStorage).
 
 ## Detalhes que costumam pegar
@@ -243,10 +243,18 @@ Não renomeie ids/classes da marcação do player nem mova as cores pro
   [radio-estacoes.json](assets/json/radio-estacoes.json); `playlist` é o `list=`
   da URL do YouTube, e a playlist precisa ser pública ou não listada.
 
-**Modo "flutuar"**: liga `radio-destacado` e o [main.js](assets/js/main.js)
-passa a montar o mini player no canto inferior direito em toda página
-([radio-mini.js](assets/js/radio-mini.js)). O import é condicional — quem não
-ligou não paga por ele.
+**Modo "flutuar"**: `radio-flutuar` faz o [main.js](assets/js/main.js)
+montar o mini player no canto inferior direito em toda página
+([radio-mini.js](assets/js/radio-mini.js)). **Vem ligado por padrão** — a
+chave só desliga quando vale `"false"` (mesmo critério do `festiveEffects`),
+senão o rádio não acompanharia quem sai da `/radio/` sem apertar nada antes.
+Ainda assim o import é condicional: sem `radio-estado` salvo (ou seja, quem
+nunca abriu a `/radio/`) ninguém paga por ele nem ganha deck parado no canto.
+
+A chave se chamava `radio-destacado` e foi renomeada quando o padrão virou
+ligado: quem já tinha `"false"` guardado do tempo em que o modo nascia
+desligado continuaria com o botão em off pra sempre. O [radio.js](assets/js/radio.js)
+apaga a chave velha ao carregar. Renomeie de novo se algum dia o padrão mudar.
 
 O **áudio não sobrevive à navegação**, e não tem conserto dentro desta
 arquitetura: o site é multipágina, cada clique recarrega o documento e mata o

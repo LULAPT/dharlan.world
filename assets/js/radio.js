@@ -12,7 +12,16 @@
 
 const CHAVE_ESTADO = "radio-estado";
 const CHAVE_TEMA = "radio-tema";
-const CHAVE_DESTACADO = "radio-destacado";
+// Chave nova de propósito. A antiga (radio-destacado) já tinha "false"
+// gravado no navegador de quem desligou o modo enquanto ele nascia desligado —
+// e esse valor continuaria segurando o botão em off agora que o padrão é on.
+// Trocar o nome é o jeito mais barato de fazer o padrão valer pra todo mundo;
+// a antiga é apagada logo abaixo pra não ficar lixo no localStorage.
+const CHAVE_DESTACADO = "radio-flutuar";
+
+try {
+	localStorage.removeItem("radio-destacado");
+} catch {}
 
 export const CAMINHO_TEMAS = "/assets/radio-temas";
 // O tema que abre pra quem nunca escolheu. Se mudar aqui, mude junto o href do
@@ -90,11 +99,15 @@ export function salvarTema(tema) {
 	} catch {}
 }
 
+// Ligado por padrão: a graça do modo flutuante é o rádio acompanhar quem sai
+// da /radio/, e ninguém ia adivinhar que precisa apertar antes de navegar. Só
+// fica desligado pra quem desligou de propósito — daí o !== "false" em vez do
+// === "true" (mesmo critério do festiveEffects no main.js).
 export function estaDestacado() {
 	try {
-		return localStorage.getItem(CHAVE_DESTACADO) === "true";
+		return localStorage.getItem(CHAVE_DESTACADO) !== "false";
 	} catch {
-		return false;
+		return true;
 	}
 }
 

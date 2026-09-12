@@ -32,9 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.error("Erro ao carregar dither.js:", err)
 	);
 
-	// Rádio destacado: só carrega o módulo pra quem ligou o player na /radio/,
-	// senão toda página pagaria o import à toa.
-	if (localStorage.getItem("radio-destacado") === "true") {
+	// Rádio destacado: vem ligado por padrão (ver estaDestacado no radio.js),
+	// mas só monta pra quem já usou o rádio alguma vez — sem radio-estado
+	// salvo não há o que retomar, e toda página pagaria o import à toa pra
+	// mostrar um deck parado no canto de quem nunca abriu a /radio/.
+	if (
+		localStorage.getItem("radio-flutuar") !== "false" &&
+		localStorage.getItem("radio-estado")
+	) {
 		import("/assets/js/radio-mini.js")
 			.then(({ iniciarRadioMini }) => iniciarRadioMini())
 			.catch((err) => console.error("Erro ao carregar radio-mini.js:", err));
