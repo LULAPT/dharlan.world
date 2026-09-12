@@ -98,6 +98,15 @@ export async function iniciarRadioMini() {
 		ajustarAbrir();
 	});
 
+	// No celular o deck aberto come um pedaço grande da tela, então ele chega
+	// recolhido. A barra de título já diz o que está tocando, e um toque no "^"
+	// abre. No desktop continua abrindo inteiro.
+	//
+	// Mesmo 640px do @media do radio.css — se mudar lá, muda aqui.
+	if (window.matchMedia("(max-width: 640px)").matches) {
+		caixa.classList.add("recolhido");
+	}
+
 	ajustarAbrir();
 
 	caixa.querySelector("#radio-mini-fechar").addEventListener("click", () => {
