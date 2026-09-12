@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const bootMessages = [
 		{ text: "Initializing dharlan.world terminal...", delay: 1100 },
-		{ text: "Running memory check...", delay: 1700 },
-		{ text: "Memory OK: 640K Base, 64M Extended", delay: 900 },
-		{ text: "CPU: dharlan.world Terminal v1.0 @ 4.77 MHz", delay: 250 },
+		{ text: "Running memory check...", delay: 1200 },
+		{ text: "Memory OK: 640K Base, 64M Extended", delay: 1000 },
+		{ text: "CPU: dharlan.world Terminal v1.0 @ 4.77 MHz", delay: 350 },
 		{ text: "dharlan.world Terminal Ready.", delay: 350 },
 	];
 
