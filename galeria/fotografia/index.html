@@ -791,6 +791,20 @@
 				},
 			];
 
+			// O "euzinho" entra sempre perto do topo, mas não numa posição fixa:
+			// sorteia uma das três primeiras a cada carregamento, pra não cair sempre
+			// no mesmo canto da grade. O resto da lista mantém a ordem do arquivo.
+			//
+			// Sem entrada `thumb` de propósito — é a única foto sem .webp gerado em
+			// assets/img/fotografias/thumbs/, e o gallery-filter.js cai pro `src`
+			// sozinho (thumb.thumb || thumb.src).
+			minhasFotos.splice(Math.floor(Math.random() * 3), 0, {
+				title: "",
+				year: 2026,
+				tags: [],
+				medias: [{ type: "image", src: "/assets/img/fotografias/euzinho.jpg" }],
+			});
+
 			setupGalleryFilter({
 				items: minhasFotos,
 				filtrosId: "filter-gallery-filtros",

@@ -168,6 +168,55 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
   novo, limpe o sessionStorage ou abra aba anônima. A ASCII art do `dharlan` está
   duplicada em [index.html](index.html) e em [navbar.js](assets/js/navbar.js);
   mudar uma exige mudar a outra.
+- **A pele mobile do boot** (≤600px, em [boot-terminal.css](assets/css/boot-terminal.css))
+  troca a caixa centralizada pela sessão de terminal de um celular: histórico de
+  comandos já rodados (relógio, bateria, rede), arte do sistema e a régua de
+  cores do fastfetch. Esse histórico é **marcação estática** da
+  [index.html](index.html) — o boot de verdade continua sendo o do
+  [boot-terminal.js](assets/js/boot-terminal.js), que escreve embaixo dele, no
+  `#boot-output`, com os mesmos áudios e na mesma ordem. O JS não sabe que a
+  pele existe.
+- A paleta dessa pele sai das variáveis de tema, como o resto do site: rosa
+  sobre quase-preto no escuro e branco nos temas claros, sem regra extra — lá
+  o `--clr-black-a0` já é quase branco e o `--clr-white` é escuro, então o
+  desenho inverte sozinho. Quem repinta a tela inteira (régua de cores
+  inclusive) são as cinco variáveis `--boot-*` no topo do bloco mobile.
+- A arte do fetch tem duas versões, as do neofetch (robô do Android / maçã da
+  Apple); quem escolhe é o `data-plataforma` que um script no `<head>` da index
+  põe no `<html>`, e o CSS esconde a outra. São ascii puro de propósito: a
+  primeira versão era braille e entortava, porque cada aparelho resolvia esses
+  glifos numa fonte de símbolos diferente. Ascii cai na VT323 do terminal e
+  desenha igual em todo lugar.
+- **São dois breakpoints diferentes, de propósito.** A pele mobile é `≤600px`
+  (largura de celular); tablet, de 601px a 1024px, fica com o boot antigo, a
+  caixa centralizada. Já o `isMobile` do [boot-terminal.js](assets/js/boot-terminal.js)
+  é `≤1024px` e decide outra coisa: pular o "Press enter to enter...". Ou seja,
+  tablet tem o desenho antigo mas sai sozinho no "Done!". Só o desktop pede
+  Enter. Esconder a ascii art do dharlan também continua em `≤1024px`, que é
+  regra anterior a tudo isso.
+- **O botão do rádio é recusado enquanto o boot existe** — nas duas telas
+  (captcha e terminal) e em qualquer largura: era por ele que dava pra escapar
+  do boot indo direto pra `/radio/`. O clique devolve um som 8-bit e uma
+  balançada de "não", pelo [boot-terminal.js](assets/js/boot-terminal.js).
+- **A engrenagem só é recusada no celular (≤600px) e só na fase do terminal**,
+  que é onde ela aparece apagada e com um X vermelho pixelizado. Em tablet e
+  desktop, e também na tela do captcha, ela abre o painel normalmente — dá pra
+  trocar o tema antes de entrar. O X e o apagado moram num `@media
+  (max-width: 600px)`; a balançada fica fora dele, porque o rádio balança em
+  qualquer largura.
+- Os dois efeitos moram no [boot-terminal.css](assets/css/boot-terminal.css) e
+  não nos módulos que criam os botões, porque só existem durante o boot. O X é
+  um SVG 7x7 em `data:` com `crispEdges` + `image-rendering: pixelated`, pra
+  ficar serrilhado como o resto do site.
+- O painel de configurações **abre no `mouseenter`**, não no clique
+  ([settings-panel.js](assets/js/settings-panel.js)) — e no celular um toque
+  dispara hover emulado. Por isso bloquear o clique não impede o painel de
+  abrir: quem o segura fechado durante o boot (só no celular) é uma regra
+  `body.boot-active #settings-box` no boot-terminal.css. Se um dia o painel
+  passar a abrir por clique, essa regra vira redundante.
+- Cuidado ao estilizar o `#radio-botao`: ele é `position: fixed` no canto
+  inferior esquerdo. Redeclarar `position` nele (foi o que aconteceu com um
+  `relative` posto pro X) o arranca do canto e joga no fluxo da página.
 - **Áudio precisa de gesto do usuário.** O boot usa Web Audio (`GainNode`) pra
   passar de volume 1. Safari/iOS já quebrou aqui antes (ver commits
   `debug safari`, `removendo telas quebradas apenas no iOS`) — teste mudanças da

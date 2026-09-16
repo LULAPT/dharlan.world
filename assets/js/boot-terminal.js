@@ -8,6 +8,92 @@ document.addEventListener("DOMContentLoaded", () => {
 	const output = document.getElementById("boot-output");
 	if (!bootTerminal || !output) return;
 
+	// Quem tem overflow-y: auto é a .terminal; o #boot-output só cresce dentro
+	// dela. Mexer no scrollTop do #boot-output não fazia nada, e por isso as
+	// linhas novas saíam da tela sem a view acompanhar — visível no celular,
+	// onde a barra do navegador come altura e sobra pouca tela.
+	const caixaDeRolagem = output.closest(".terminal") || output;
+	function rolarPraBaixo() {
+		caixaDeRolagem.scrollTop = caixaDeRolagem.scrollHeight;
+	}
+
+	// A engrenagem e o botão do rádio ficam acima do boot (z-index 997 contra
+	// 900), o que é de propósito: na tela do captcha dá pra trocar o tema antes
+	// de entrar. Mas depois que a sequência começa eles viram enfeite — o CSS
+	// os apaga e marca com um X, e aqui o clique é recusado, pra ninguém pular
+	// o boot indo direto pra /radio/.
+	const ATALHOS = "#settings-panel, #radio-botao";
+
+	// Som 8-bit de recusa (driken5482, Pixabay). Criado só no primeiro clique
+	// negado: o boot já tem áudio próprio, não vale baixar mais um à toa.
+	let audioNegado = null;
+	function tocarNegado() {
+		try {
+			if (!audioNegado) {
+				audioNegado = new Audio(
+					"/assets/wav/driken5482-retro-hurt-1-236672.mp3"
+				);
+				audioNegado.volume = 0.12;
+			}
+			audioNegado.currentTime = 0;
+			audioNegado.play().catch(() => {});
+		} catch (e) {
+			/* áudio é enfeite: se o navegador barrar, a balançada já dá o recado */
+		}
+	}
+
+	function negar(elemento) {
+		tocarNegado();
+		// Tira, força reflow e repõe a classe pra animação reiniciar em cliques
+		// seguidos — sem o reflow no meio o navegador não vê mudança nenhuma.
+		elemento.classList.remove("boot-negado");
+		void elemento.offsetWidth;
+		elemento.classList.add("boot-negado");
+		elemento.addEventListener(
+			"animationend",
+			() => elemento.classList.remove("boot-negado"),
+			{ once: true }
+		);
+	}
+
+	function faseDoTerminal() {
+		return document.body.classList.contains("boot-active");
+	}
+
+	// Mesma largura da pele de celular no boot-terminal.css. Consultado a cada
+	// clique, e não uma vez só, porque girar o aparelho muda a resposta.
+	function ehCelular() {
+		return window.matchMedia("(max-width: 600px)").matches;
+	}
+
+	// Escutando desde já, não só quando a sequência começa: o captcha também é
+	// boot, e é de lá que dava pra escapar clicando no rádio. O listener sai
+	// no fim da bootSequence.
+	document.addEventListener("click", onCliqueAtalho, true);
+
+	// Captura pra chegar antes de qualquer handler do próprio elemento. O que
+	// ela NÃO faz é segurar o painel de configurações fechado: ele abre no
+	// mouseenter da engrenagem (e no celular um toque dispara hover emulado),
+	// então quem o mantém fechado durante o boot é uma regra do
+	// boot-terminal.css, não este listener.
+	function onCliqueAtalho(e) {
+		const alvo = e.target.closest && e.target.closest(ATALHOS);
+		if (!alvo) return;
+		// O rádio é sempre recusado enquanto o boot existe, em qualquer largura e
+		// nas duas telas: é por ele que dava pra escapar indo direto pra /radio/.
+		//
+		// A engrenagem só é recusada no celular e só na fase do terminal, que é
+		// onde ela aparece apagada com o X. Em tablet/desktop, e na tela do
+		// captcha, ela continua abrindo o painel normalmente — dá pra trocar o
+		// tema antes de entrar.
+		const ehRadio = alvo.id === "radio-botao";
+		if (!ehRadio && !(faseDoTerminal() && ehCelular())) return;
+		e.preventDefault();
+		e.stopPropagation();
+		// Quem balança é a caixinha de 40px, não o contêiner do painel.
+		negar(alvo.querySelector("#settings-gear") || alvo);
+	}
+
 	const humanVerify = document.getElementById("human-verify");
 	const verifyCheckbox = document.getElementById("verify-checkbox");
 	const verifyCheck = document.querySelector(".verify-check");
@@ -29,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		line.className = "output-line";
 		line.textContent = text || "";
 		output.appendChild(line);
-		output.scrollTop = output.scrollHeight;
+		rolarPraBaixo();
 		return line;
 	}
 
@@ -44,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	async function typeChars(el, text, speed) {
 		for (const char of text) {
 			el.textContent += char;
-			output.scrollTop = output.scrollHeight;
+			rolarPraBaixo();
 			await wait(speed);
 		}
 	}
@@ -141,13 +227,17 @@ document.addEventListener("DOMContentLoaded", () => {
 			const empty = " ".repeat(steps - i);
 			const pct = Math.round((i / steps) * 100);
 			barLine.textContent = `[${filled}${empty}] ${pct}%`;
+			rolarPraBaixo();
 			await wait(70);
 		}
 	}
 
 	async function bootSequence() {
-		// Mesmo critério de "mobile" usado no resto do site (breakpoint de
-		// 1024px). Sem teclado físico à mão, não faz sentido pedir Enter.
+		// Sem teclado físico à mão não faz sentido pedir Enter, então celular E
+		// tablet saem sozinhos no "Done!". Este 1024px NÃO é o breakpoint da pele
+		// de celular, que é 600px lá no boot-terminal.css — os dois números são
+		// diferentes de propósito: o tablet fica com o desenho antigo, mas sem
+		// Enter. Mudar um não implica mudar o outro.
 		const isMobile = window.matchMedia("(max-width: 1024px)").matches;
 
 		document.body.classList.add("boot-active");
@@ -185,6 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		await wait(700);
 		bootTerminal.remove();
 		document.body.classList.remove("boot-active");
+		document.removeEventListener("click", onCliqueAtalho, true);
 	}
 
 	function runVerification() {

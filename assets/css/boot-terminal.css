@@ -133,6 +133,21 @@ body.boot-active #boot-terminal .scanline {
 	animation: boot-blink 1s step-end infinite;
 }
 
+/* O histórico só existe na pele de celular, lá embaixo. No desktop e no
+   tablet o boot continua sendo a moldura de sempre, com a ascii art do
+   dharlan no topo e nada mais. */
+#boot-historico {
+	display: none;
+}
+
+/* iOS ganha a bússola, o resto ganha o robô. O atributo vem do script no
+   <head> da index; sem ele (JS desligado) sobra o robô, que é o caso
+   comum. */
+:root[data-plataforma="ios"] #boot-arte-android,
+:root:not([data-plataforma="ios"]) #boot-arte-ios {
+	display: none;
+}
+
 @keyframes boot-scanline {
 	0% {
 		transform: translateY(-100%);
@@ -185,18 +200,356 @@ body.boot-active #boot-terminal .scanline {
 	}
 }
 
+/* ---------------------------------------------------------------------
+   Pele mobile: o boot deixa de ser uma caixa no meio da tela e vira a
+   sessão de terminal de um celular — histórico de comandos já rodados,
+   relógio, a arte do sistema e a régua de cores do fastfetch. O boot de
+   verdade continua embaixo de tudo, no #boot-output.
+
+   É só desenho: o boot-terminal.js não sabe que nada disto existe, escreve
+   as mesmas linhas, na mesma ordem, com os mesmos áudios.
+
+   A paleta sai toda das variáveis de tema, então a tela acompanha o
+   seletor: rosa sobre quase-preto no escuro (o padrão), e branco nos temas
+   claros sem nenhuma regra a mais — lá o --clr-black-a0 já é quase branco
+   e o --clr-white é escuro, então o desenho inteiro inverte sozinho.
+   Mexer nas cinco variáveis abaixo repinta a tela inteira, inclusive a
+   régua de cores.
+
+   Os tamanhos saem de vw E vh (min() entre os dois) porque a tela toda
+   precisa caber sem rolagem: o vw sozinho estoura em aparelho baixo e
+   largo, o vh sozinho estoura em tela estreita.
+
+   Breakpoint de 600px: é largura de celular. Tablet (601px a 1024px) fica com
+   o boot antigo, a caixa centralizada — a pele de celular esticada naquela
+   largura não faz sentido.
+
+   Atenção: o boot-terminal.js tem um breakpoint PRÓPRIO, de 1024px, pra
+   decidir que não há teclado à mão e pular o "Press enter". Os dois números
+   são diferentes de propósito: o tablet fica com o desenho antigo mas sai no
+   "Done!" sozinho, sem pedir Enter.
+   --------------------------------------------------------------------- */
+
+/* Isto vale pro tablet também, e é regra antiga: a ascii art do dharlan não
+   cabe direito abaixo de 1024px. No celular quem faz esse papel é a arte do
+   sistema, lá no histórico. */
 @media (max-width: 1024px) {
-	/* Mesmo critério do home.html: essa ascii art não cabe direito em tela
-	   pequena. */
 	#boot-ascii {
 		display: none;
 	}
 }
 
 @media (max-width: 600px) {
+	#boot-terminal {
+		--boot-fundo: var(--clr-black-a0);
+		--boot-destaque: var(--clr-main-a40);
+		--boot-arte-cor: var(--clr-main-a30);
+		/* O meio-tom das respostas da máquina: o tom do tema puxado pra cor do
+		   texto, que no escuro clareia e no claro escurece — o mesmo papel que
+		   o pêssego fazia sobre o laranja. */
+		--boot-suave: color-mix(in srgb, var(--clr-main-a50) 55%, var(--clr-white));
+		--boot-texto: var(--clr-white);
+
+		background: var(--boot-fundo);
+		/* Em celular de verdade a barra do navegador come altura, e o inset: 0
+		   mede o viewport sem ela — o rodapé da tela ficava atrás da barra. O dvh
+		   acompanha a barra aparecendo e sumindo; navegador sem suporte ignora a
+		   linha e continua no inset: 0 de antes. */
+		height: 100dvh;
+	}
+
+	#boot-terminal .crt {
+		background: var(--boot-fundo);
+	}
+
+	#boot-terminal .scanline {
+		background: linear-gradient(
+			to bottom,
+			transparent,
+			color-mix(in srgb, var(--boot-destaque) 22%, transparent),
+			transparent
+		);
+	}
+
+	/* Sem moldura nenhuma: a tela preta vai de beirada a beirada, que é como
+	   um terminal de celular se parece de verdade. */
+	#boot-terminal .terminal-container {
+		padding: 0;
+	}
+
+	/* Caixa translúcida como no boot antigo: é o que deixa a vinheta, os
+	   scanlines e o flicker do .crt aparecerem por trás da tela. Com fundo
+	   opaco aqui o CRT sumia — ele é uma camada atrás do contêiner. */
 	#boot-terminal .terminal {
-		font-size: 1.1rem;
-		padding: 1.2rem;
+		background: color-mix(in srgb, var(--boot-fundo) 72%, transparent);
+		border: none;
+		color: var(--boot-texto);
+		font-size: min(4vw, 2vh);
+		line-height: 1.45;
+		padding: 0.9rem 0.8rem 1rem;
+		text-shadow: 0 0 10px
+			color-mix(in srgb, var(--boot-destaque) 40%, transparent);
+	}
+
+	#boot-historico {
+		display: block;
+	}
+
+	.boot-linha {
+		white-space: pre-wrap;
+	}
+
+	/* Comando em claro, resposta da máquina em pêssego, prompt em laranja: é
+	   o mesmo escalonamento do print. */
+	.boot-cmd {
+		color: var(--boot-texto);
+		margin-top: 0.7em;
+	}
+
+	.boot-saida {
+		color: var(--boot-suave);
+	}
+
+	.boot-prompt,
+	#boot-output .output-line .prompt,
+	#boot-output .cursor {
+		color: var(--boot-destaque);
+		font-weight: bold;
+	}
+
+	#boot-output {
+		color: var(--boot-suave);
+		margin-top: 0.7em;
+	}
+
+	#boot-relogio {
+		margin: 0.2em 0 0.4em;
+		text-align: center;
+	}
+
+	#boot-hora {
+		color: var(--boot-suave);
+		font-size: min(19vw, 9vh);
+		letter-spacing: 0.05em;
+		line-height: 1;
+		text-shadow: 0 0 18px
+			color-mix(in srgb, var(--boot-destaque) 55%, transparent);
+	}
+
+	.boot-relogio-data {
+		color: var(--boot-texto);
+	}
+
+	/* Arte à esquerda, tabela à direita — a mesma divisão do neofetch. */
+	#boot-fetch {
+		align-items: center;
+		display: flex;
+		gap: 0.9rem;
+		justify-content: center;
+		margin: 0.3em 0;
+	}
+
+	/* Ascii de verdade (as do neofetch), então herda a VT323 do terminal e
+	   desenha certo sem depender de fonte de símbolos do sistema — era o
+	   braille que entortava, porque cada aparelho o resolvia numa fonte
+	   diferente, com largura diferente por caractere.
+
+	   As duas têm ~32 colunas, daí um tamanho só pras duas. O line-height
+	   abaixo de 1 é de propósito: a VT323 tem muito espaço morto acima e
+	   abaixo do glifo, e sem isso o desenho sai esticado na vertical. */
+	.boot-arte {
+		color: var(--boot-arte-cor);
+		display: block;
+		font-size: min(2.9vw, 1.45vh);
+		letter-spacing: 0;
+		line-height: 0.92;
+		margin: 0;
+		text-shadow: 0 0 12px
+			color-mix(in srgb, var(--boot-destaque) 55%, transparent);
+		white-space: pre;
+	}
+
+	#boot-fetch-info {
+		column-gap: 0.6rem;
+		color: var(--boot-suave);
+		display: grid;
+		font-size: min(3.2vw, 1.6vh);
+		grid-template-columns: auto auto;
+	}
+
+	.boot-fetch-chave {
+		color: var(--boot-destaque);
+		font-weight: bold;
+	}
+
+	/* A primeira linha da tabela é o "dharlan@root" com o traço embaixo, como
+	   o fetch imprime. O traço é border, não uma linha de hífens, pra não
+	   depender da largura da fonte. */
+	#boot-fetch-info .boot-fetch-chave:first-child {
+		border-bottom: 1px solid
+			color-mix(in srgb, var(--boot-destaque) 60%, transparent);
+		grid-column: 1 / -1;
+		margin-bottom: 0.2em;
+		padding-bottom: 0.1em;
+	}
+
+	#boot-fetch-titulo {
+		display: none;
+	}
+
+	#boot-paleta {
+		display: flex;
+		justify-content: center;
+		margin: 0.2em 0 0;
+	}
+
+	#boot-paleta span {
+		height: min(2.6vw, 1.4vh);
+		width: min(7vw, 3.6vh);
+	}
+
+	/* A rampa que o fastfetch imprime, montada a partir do tema: do fundo até
+	   a cor do texto, passando pelos três tons da cor principal. */
+	#boot-paleta span:nth-child(1) {
+		background: color-mix(in srgb, var(--clr-main-a30) 25%, var(--boot-fundo));
+	}
+	#boot-paleta span:nth-child(2) {
+		background: color-mix(in srgb, var(--clr-main-a30) 50%, var(--boot-fundo));
+	}
+	#boot-paleta span:nth-child(3) {
+		background: color-mix(in srgb, var(--clr-main-a30) 75%, var(--boot-fundo));
+	}
+	#boot-paleta span:nth-child(4) {
+		background: var(--clr-main-a30);
+	}
+	#boot-paleta span:nth-child(5) {
+		background: var(--clr-main-a40);
+	}
+	#boot-paleta span:nth-child(6) {
+		background: var(--clr-main-a50);
+	}
+	#boot-paleta span:nth-child(7) {
+		background: color-mix(in srgb, var(--clr-main-a50) 45%, var(--boot-texto));
+	}
+	#boot-paleta span:nth-child(8) {
+		background: var(--boot-texto);
+	}
+
+}
+
+/* ---------------------------------------------------------------------
+   Engrenagem e botão do rádio durante o boot.
+
+   Só no celular (≤600px): na fase do terminal os dois ficam apagados e
+   marcados com um X vermelho, viram enfeite até o boot acabar, e o
+   painel de configurações fica travado fechado. Em tablet e desktop a
+   engrenagem funciona normalmente durante o boot inteiro — lá sobra tela,
+   e o boot não ocupa tudo.
+
+   O que vale em QUALQUER largura é a recusa do botão do rádio (som +
+   balançada, no boot-terminal.js): é por ele que dava pra escapar do boot
+   indo direto pra /radio/. Por isso a animação lá embaixo fica fora do
+   @media.
+
+   O gatilho é o body.boot-active, que o próprio boot-terminal.js põe ao
+   começar a sequência e tira no fim — por isso não há nada a limpar aqui
+   quando o boot termina.
+   --------------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+	/* O apagado vai no ícone e na borda, não no elemento inteiro: opacity no
+	   contêiner apagaria o X junto, já que pseudo-elemento herda a opacidade
+	   do pai e não tem como passar dela. */
+	/* Vidro: as duas caixinhas têm fundo opaco nos seus módulos, e no celular
+	   isso tapava justamente as linhas que o boot está escrevendo. Aqui o
+	   fundo fica translúcido e o que passa por trás sai desfocado, então dá
+	   pra ler sem o X se perder no meio do texto.
+
+	   --clr-black-a0 direto, e não var(--boot-fundo): aquela variável é
+	   declarada no #boot-terminal, e estes dois elementos não estão dentro
+	   dele, então não a herdam. É a mesma cor, por outro caminho.
+
+	   O -webkit- ainda é necessário no Safari/iOS e fica colado no sem
+	   prefixo de propósito, fora da ordem alfabética do resto do arquivo. */
+	body.boot-active #settings-gear,
+	body.boot-active #radio-botao {
+		backdrop-filter: blur(0.5px);
+		-webkit-backdrop-filter: blur(0.5px);
+		background: color-mix(in srgb, var(--clr-black-a0) 20%, transparent);
+		border-color: color-mix(in srgb, var(--clr-borda) 22%, transparent);
+		cursor: not-allowed;
+	}
+
+	/* Só a engrenagem precisa virar contêiner pro X: ela é um div comum dentro
+	   do painel. O #radio-botao já é position: fixed, e repetir position aqui
+	   o arrancava do canto inferior esquerdo e jogava no fluxo da página — era
+	   o desalinhamento entre os dois durante o boot. */
+	body.boot-active #settings-gear {
+		position: relative;
+	}
+
+	/* O painel de configurações não abre por clique: o settings-panel.js o abre
+	   no mouseenter da engrenagem, e no celular um toque dispara hover emulado
+	   — daí ele ainda abrir durante o boot, mesmo com o clique sendo recusado.
+	   Fechar por CSS resolve sem mexer naquele módulo, e some sozinho junto
+	   com o boot-active. A engrenagem continua recebendo evento de propósito:
+	   é o que permite a recusa com som e balançada. */
+	body.boot-active #settings-box,
+	body.boot-active #settings-box.open {
+		opacity: 0 !important;
+		pointer-events: none !important;
+		visibility: hidden !important;
+	}
+
+	body.boot-active #settings-gear span svg,
+	body.boot-active #radio-botao svg {
+		opacity: 0.12;
+	}
+
+	body.boot-active #settings-gear::after,
+	body.boot-active #radio-botao::after {
+		background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7' shape-rendering='crispEdges' fill='%23ff2b2b'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='6' y='0' width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3Crect x='5' y='1' width='1' height='1'/%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3Crect x='4' y='2' width='1' height='1'/%3E%3Crect x='3' y='3' width='1' height='1'/%3E%3Crect x='4' y='4' width='1' height='1'/%3E%3Crect x='2' y='4' width='1' height='1'/%3E%3Crect x='5' y='5' width='1' height='1'/%3E%3Crect x='1' y='5' width='1' height='1'/%3E%3Crect x='6' y='6' width='1' height='1'/%3E%3Crect x='0' y='6' width='1' height='1'/%3E%3C/svg%3E") center / 19px 19px no-repeat;
+		content: "";
+		image-rendering: pixelated;
+		inset: 0;
+		opacity: 0.85;
+		pointer-events: none;
+		position: absolute;
+	}
+}
+
+/* Balançada de "não". Mora aqui e não no radio-botao.js porque agora vale
+   pros dois botões, e só existe durante o boot — que só existe nesta folha. */
+#settings-gear.boot-negado,
+#radio-botao.boot-negado {
+	animation: boot-nega 0.4s ease-in-out;
+}
+
+/* Amplitude pequena de propósito: é um "não" de cabeça, não um tremor de
+   erro. */
+@keyframes boot-nega {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	20% {
+		transform: translateX(-3px);
+	}
+	45% {
+		transform: translateX(3px);
+	}
+	70% {
+		transform: translateX(-2px);
+	}
+	88% {
+		transform: translateX(1px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#settings-gear.boot-negado,
+	#radio-botao.boot-negado {
+		animation: none;
 	}
 }
 

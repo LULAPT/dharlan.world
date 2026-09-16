@@ -3,6 +3,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<script src="/assets/js/theme-init.js"></script>
+		<script>
+			// Decide qual arte o boot do mobile mostra (ver boot-terminal.css).
+			// No iOS todo navegador é WebKit por baixo, então o que importa é o
+			// aparelho e não a marca do app — Chrome/Firefox no iPhone também
+			// ganham a bússola. O iPadOS 13+ se diz "Macintosh" no userAgent; o
+			// teste de toque é o que desfaz a mentira.
+			document.documentElement.setAttribute(
+				"data-plataforma",
+				/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+					(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+					? "ios"
+					: "padrao"
+			);
+		</script>
 		<script src="/assets/js/no-inspect.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="darkreader-lock" />
@@ -62,10 +76,141 @@
 ▒▒████████ ████ █████▒▒████████ █████     █████▒▒████████ ████ █████
  ▒▒▒▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒  ▒▒▒▒▒▒▒▒ ▒▒▒▒▒     ▒▒▒▒▒  ▒▒▒▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒
 </pre>
+					<!-- Histórico do terminal — só aparece na pele mobile (ver
+					     boot-terminal.css). É marcação estática de propósito: o boot que roda
+					     de verdade continua sendo o do boot-terminal.js, que escreve ali
+					     embaixo no #boot-output com os mesmos áudios e na mesma ordem de
+					     sempre. Isto aqui é o "que já tinha rolado na sessão" antes dele. -->
+					<div id="boot-historico" aria-hidden="true">
+						<div class="boot-linha boot-saida">Welcome aboard, root. Have a very safe day.</div>
+						<div class="boot-linha boot-saida">Uptime: <span id="boot-uptime">4 hours</span></div>
+
+						<div class="boot-linha boot-cmd"><span class="boot-prompt">dharlan@root:~$</span> rsclock</div>
+						<div id="boot-relogio">
+							<div id="boot-hora">--:--</div>
+							<div class="boot-relogio-data" id="boot-data"></div>
+							<div class="boot-relogio-data" id="boot-dias"></div>
+						</div>
+
+						<div class="boot-linha boot-cmd"><span class="boot-prompt">dharlan@root:~$</span> upower -i (upower -e | grep BAT)</div>
+						<div class="boot-linha boot-saida">Battery is at 85%, Discharged in 19 hours. 28&deg;C.</div>
+
+						<div class="boot-linha boot-cmd"><span class="boot-prompt">dharlan@root:~$</span> ./netinfo.sh</div>
+						<div class="boot-linha boot-saida">Wi-Fi: ON // dharlan.world [81 Mb/s].:</div>
+
+						<div class="boot-linha boot-cmd"><span class="boot-prompt">dharlan@root:~$</span> neofetch --animate</div>
+						<!-- As artes são as do neofetch, ascii puro: desenham na VT323 do
+						     próprio terminal, sem depender de fonte de símbolo do sistema.
+						     Qual das duas aparece depende do data-plataforma que o script do
+						     <head> põe no <html> — iOS ganha a maçã, o resto ganha o robô. -->
+						<div id="boot-fetch">
+							<pre id="boot-arte-android" class="boot-arte" aria-hidden="true">
+       -o           o-
+         +hydNNNNdyh+
+       +mMMMMMMMMMMMMm+
+     `dMMm:NMMMMMMN:mMMd`
+      hMMMMMMMMMMMMMMMMMMh
+  ..  yyyyyyyyyyyyyyyyyyyy  ..
+.mMMm`MMMMMMMMMMMMMMMMMMMM`mMMm.
+:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+-MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM-
+ +yy+ MMMMMMMMMMMMMMMMMMMM +yy+
+      mMMMMMMMMMMMMMMMMMMm
+      `/++MMMMh++hMMMM++/`
+          MMMMo  oMMMM
+          MMMMo  oMMMM
+          oNMm-  -mMNs
+</pre>
+							<pre id="boot-arte-ios" class="boot-arte" aria-hidden="true">
+                    'c.
+                 ,xNMM.
+               .OMMMMo
+               OMMM0,
+     .;loddo:' loolloddol;.
+   cKMMMMMMMMMMNWMMMMMMMMMM0:
+ .KMMMMMMMMMMMMMMMMMMMMMMMWd.
+ XMMMMMMMMMMMMMMMMMMMMMMMX.
+;MMMMMMMMMMMMMMMMMMMMMMMM:
+:MMMMMMMMMMMMMMMMMMMMMMMM:
+.MMMMMMMMMMMMMMMMMMMMMMMMX.
+ kMMMMMMMMMMMMMMMMMMMMMMMMWd.
+ .XMMMMMMMMMMMMMMMMMMMMMMMMMMk
+  .XMMMMMMMMMMMMMMMMMMMMMMMMK.
+    kMMMMMMMMMMMMMMMMMMMMMMd
+     ;KMMMMMMMWXXWMMMMMMMk.
+       .cooc,.    .,coo:.
+</pre>
+							<div id="boot-fetch-info">
+								<span class="boot-fetch-chave">dharlan@root</span><span id="boot-fetch-titulo"></span>
+								<span class="boot-fetch-chave">OS</span><span>dharlan.world</span>
+								<span class="boot-fetch-chave">Host</span><span>vercel edge</span>
+								<span class="boot-fetch-chave">Kernel</span><span>boot.sh 1.0</span>
+								<span class="boot-fetch-chave">Shell</span><span>vanilla js</span>
+								<span class="boot-fetch-chave">WM</span><span>old web</span>
+								<span class="boot-fetch-chave">Tela</span><span id="boot-fetch-tela">--</span>
+								<span class="boot-fetch-chave">Tema</span><span id="boot-fetch-tema">--</span>
+							</div>
+						</div>
+						<!-- Régua de cores do fastfetch: aqueles quadradinhos que ele imprime
+						     embaixo da arte. Puro enfeite. -->
+						<div id="boot-paleta">
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
 					<div id="boot-output"></div>
 				</div>
 			</div>
 		</div>
+		<script>
+			// Preenche o que o histórico do boot mobile mostra de real: hora, data,
+			// dia do ano, resolução e tema. O resto das linhas é gag fixa no HTML.
+			// Roda solto (não espera DOMContentLoaded) porque está depois da
+			// marcação e o boot precisa já nascer com a hora certa.
+			(function () {
+				const pegar = (id) => document.getElementById(id);
+				const agora = new Date();
+				const doisDigitos = (n) => String(n).padStart(2, "0");
+
+				const hora = pegar("boot-hora");
+				if (!hora) return;
+				hora.textContent =
+					doisDigitos(agora.getHours()) + ":" + doisDigitos(agora.getMinutes());
+
+				// Em inglês pra casar com o resto do boot ("Press enter to enter...").
+				const meses = [
+					"January", "February", "March", "April", "May", "June",
+					"July", "August", "September", "October", "November", "December",
+				];
+				const dia = agora.getDate();
+				const sufixo =
+					dia > 3 && dia < 21
+						? "th"
+						: { 1: "st", 2: "nd", 3: "rd" }[dia % 10] || "th";
+				pegar("boot-data").textContent =
+					"Today is the " + dia + sufixo + " of " + meses[agora.getMonth()];
+
+				const inicioDoAno = new Date(agora.getFullYear(), 0, 0);
+				const dias = Math.floor((agora - inicioDoAno) / 86400000);
+				pegar("boot-dias").textContent = dias + " days have passed";
+
+				pegar("boot-fetch-tela").textContent =
+					screen.width + "x" + screen.height;
+				// theme-init.js já rodou e o dark não seta atributo nenhum.
+				pegar("boot-fetch-tema").textContent =
+					document.documentElement.getAttribute("data-theme") || "dark";
+			})();
+		</script>
+
 		<script>
 			// Se o boot já rodou nessa sessão (voltas intencionais pro index, tipo
 			// o ascii "dharlan" da /home), pula direto sem mostrar de novo.
