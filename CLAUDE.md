@@ -30,6 +30,11 @@ Precisa de servidor HTTP (todos os caminhos são absolutos, `/assets/...`, e há
 npx serve
 ```
 
+**`/galeria/cat.jpg/` não abre no `npx serve`** — dá listagem de diretório. A
+pasta se chama `cat.jpg`, e o `serve-handler` vê a extensão no nome e trata o
+diretório como arquivo, sem procurar o `index.html` dentro. Só as pastas com
+ponto no nome sofrem disso. Na Vercel funciona normal — não tente "consertar".
+
 ## Arquitetura das páginas
 
 Cada `.html` é uma página completa e independente. O `<head>` segue sempre o
@@ -221,6 +226,27 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
   passar de volume 1. Safari/iOS já quebrou aqui antes (ver commits
   `debug safari`, `removendo telas quebradas apenas no iOS`) — teste mudanças da
   index no Safari.
+- **O [fade-in.js](assets/js/fade-in.js) não lê nem escreve o shorthand
+  `animation` — e não pode voltar a fazer isso.** Cada motor serializa esse
+  shorthand numa ordem (Blink/Gecko põem o nome por último, WebKit na frente),
+  então filtrar a string por nome dá resultado diferente em cada navegador. Era
+  o que deixava o site **inteiro invisível no Safari/iOS**: o fade-in rodava,
+  o handler do fim apagava a animação que segurava o `opacity: 1` e sobrava o
+  `opacity: 0` da classe. No Chrome o mesmo filtro não casava com nada e o site
+  funcionava por acidente. Hoje as animações vêm do CSS, aplicadas por classe,
+  e no fim as classes saem — a página não depende do `forwards` pra continuar
+  visível. Bug herdado da base original; o repo novo do mozart removeu o fade.
+- **As travas de `setTimeout` do fade são de propósito.** O iOS congela o
+  `requestAnimationFrame` com a aba em segundo plano, e a do fade-out ainda
+  garante que o clique navegue mesmo se o `animationend` não disparar. Por isso
+  elas são armadas *fora* do rAF.
+- **Nada de estado preso entre páginas com o bfcache.** Ao voltar com o botão do
+  navegador, o iOS (e o Chrome) devolvem o documento vivo: o JS não recarrega e
+  as variáveis voltam com o valor de quando se saiu. O `navegando` do fade-out
+  voltava ligado e recusava todo clique — a página voltava com os links todos
+  mortos, menos os que não são link interno comum (o da `/curriculo/`). O
+  `pageshow` do fade-in.js zera essas variáveis; qualquer flag nova que sirva de
+  trava precisa ser zerada lá também.
 - **Favicon animado**: navegadores só mostram o primeiro frame de um `.gif` em
   `<link rel="icon">`. [animated-favicon.js](assets/js/animated-favicon.js)
   contorna isso desenhando frames num canvas.
