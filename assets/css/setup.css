@@ -1,0 +1,197 @@
+/* /setup/ — a página inteira é um terminal rodando `fastfetch`.
+   Sem header, sem footer, sem breadcrumb: só o terminal, o link de volta e os
+   dois botões fixos que o main.js cria (engrenagem e rádio).
+
+   As cores saem das variáveis de tema, como o resto do site. As únicas que
+   escapam são as das porcentagens de uso, lá embaixo: no fastfetch elas são
+   semáforo (verde/amarelo/vermelho), e trocar isso por rosa perderia a
+   informação. */
+
+/* O style.css global centraliza o texto do body e põe letter-spacing nele.
+   Terminal nenhum é centralizado, e espaçamento entre letras estica a arte
+   ASCII — os dois precisam morrer aqui. O background shorthand também zera a
+   textura de linhas diagonais que o global aplica. */
+body {
+	background: var(--clr-black-a0);
+	letter-spacing: normal;
+	margin: 0;
+	min-height: 100vh;
+	min-height: 100dvh;
+	padding: 0;
+	text-align: left;
+}
+
+#setup-tela {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	min-height: 100vh;
+	min-height: 100dvh;
+	padding: 1.5rem 1.5rem 5rem;
+}
+
+/* Único caminho de volta — a página não tem header nem footer. Mesmo papel do
+   .radio-voltar da /radio/. */
+.setup-voltar {
+	color: var(--clr-gray-a30);
+	font-family: var(--fonte-monospace, monospace);
+	font-size: 0.75rem;
+	letter-spacing: 1px;
+	text-decoration: none;
+	width: fit-content;
+}
+
+.setup-voltar:hover {
+	color: var(--clr-main-a40);
+}
+
+#setup-terminal {
+	color: var(--clr-white);
+	font-family: var(--fonte-monospace, monospace);
+	font-size: 0.85rem;
+	line-height: 1.5;
+}
+
+.ff-linha-prompt {
+	white-space: pre-wrap;
+}
+
+.ff-prompt {
+	color: var(--clr-main-a40);
+	font-weight: bold;
+}
+
+.ff-comando {
+	color: var(--clr-white);
+}
+
+.ff-cursor {
+	animation: ff-piscar 1s step-end infinite;
+	color: var(--clr-main-a40);
+}
+
+@keyframes ff-piscar {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}
+
+/* Bloco simples. Era flex (arte à esquerda, dados à direita) enquanto o logo
+   existia, e foi justamente esse flex que, com o <pre> dentro, espremeu a
+   coluna de dados a zero no desktop. Ver o comentário no setup.js. */
+.ff-saida {
+	margin: 1rem 0;
+}
+
+.ff-titulo {
+	color: var(--clr-main-a40);
+	font-weight: bold;
+}
+
+.ff-usuario,
+.ff-host {
+	color: var(--clr-main-a40);
+}
+
+.ff-divisor {
+	color: var(--clr-white);
+	white-space: pre;
+}
+
+/* Rótulo colorido e em negrito, valor em branco: é a assinatura visual do
+   fetch. Duas colunas em vez de espaços, pra não depender da largura da fonte
+   pra alinhar. */
+.ff-linha {
+	display: grid;
+	gap: 0 0.6rem;
+	grid-template-columns: max-content 1fr;
+}
+
+.ff-rotulo {
+	color: var(--clr-main-a40);
+	font-weight: bold;
+}
+
+.ff-valor {
+	color: var(--clr-white);
+	word-break: break-word;
+}
+
+/* Semáforo de uso do fastfetch. Fora do tema de propósito: a cor aqui é o
+   dado (tranquilo / apertando / cheio), não enfeite. */
+.ff-pct[data-uso="tranquilo"] {
+	color: var(--clr-green-a30);
+}
+
+.ff-pct[data-uso="medio"] {
+	color: var(--clr-yellow-a30);
+}
+
+.ff-pct[data-uso="cheio"] {
+	color: #e5484d;
+}
+
+/* A régua de cores que o fastfetch imprime no fim, montada a partir do tema:
+   do fundo até a cor do texto, passando pelos três tons da cor principal. */
+.ff-paleta {
+	display: flex;
+	margin-top: 0.8rem;
+}
+
+.ff-paleta span {
+	height: 13px;
+	width: 26px;
+}
+
+.ff-paleta span:nth-child(1) {
+	background: color-mix(in srgb, var(--clr-main-a30) 25%, var(--clr-black-a0));
+}
+.ff-paleta span:nth-child(2) {
+	background: color-mix(in srgb, var(--clr-main-a30) 50%, var(--clr-black-a0));
+}
+.ff-paleta span:nth-child(3) {
+	background: color-mix(in srgb, var(--clr-main-a30) 75%, var(--clr-black-a0));
+}
+.ff-paleta span:nth-child(4) {
+	background: var(--clr-main-a30);
+}
+.ff-paleta span:nth-child(5) {
+	background: var(--clr-main-a40);
+}
+.ff-paleta span:nth-child(6) {
+	background: var(--clr-main-a50);
+}
+.ff-paleta span:nth-child(7) {
+	background: color-mix(in srgb, var(--clr-main-a50) 45%, var(--clr-white));
+}
+.ff-paleta span:nth-child(8) {
+	background: var(--clr-white);
+}
+
+.ff-erro {
+	color: var(--clr-main-a40);
+}
+
+/* Terminal estreito: o valor desce pra baixo do rótulo. Alinhar à direita numa
+   coluna de 300px só faria o olho pular. O fetch de verdade também perde o
+   alinhamento quando a janela aperta. */
+@media (max-width: 760px) {
+	#setup-tela {
+		padding: 1rem 1rem 5rem;
+	}
+
+	#setup-terminal {
+		font-size: 0.75rem;
+	}
+
+	.ff-linha {
+		gap: 0;
+		grid-template-columns: 1fr;
+		margin-bottom: 0.4rem;
+	}
+}

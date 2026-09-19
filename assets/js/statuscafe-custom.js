@@ -16,7 +16,7 @@
 		// de proxy CORS público de terceiros. allorigins.win fica como reserva
 		// caso o Render esteja "dormindo" ou fora do ar por algum motivo.
 		corsProxies: [
-			"https://nikki-top-custom-api.onrender.com/proxy?url=",
+			"https://nikki-top-custom-api-z51j.onrender.com/proxy?url=",
 			"https://api.allorigins.win/raw?url=",
 		],
 		// local fallback avatar used when remote avatar is missing or fails

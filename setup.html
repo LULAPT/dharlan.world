@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<!-- style.css entra pelas variáveis de tema e pelas fontes: a engrenagem
+		     e o botão do rádio (criados pelo main.js) contam com elas. O visual da
+		     página em si é todo do setup.css. -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/setup.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<!-- Sem header, sem footer e sem breadcrumb: a página é o terminal inteiro.
+	     Só sobrevivem o link de volta e os dois botões fixos que o main.js cria
+	     (engrenagem e rádio). Por não ter #nav-atual, ela está no mapa
+	     SEM_BREADCRUMB do page-title.js. -->
+	<body>
+		<div id="setup-tela">
+			<a class="setup-voltar" href="/home/">&lt; voltar pro site</a>
+
+			<!-- Vazio de propósito: quem escreve o prompt, digita o `fastfetch` e
+			     imprime a saída é o setup.js, a partir do setup-specs.json. -->
+			<div id="setup-terminal"></div>
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script type="module" src="/assets/js/setup.js"></script>
+	</body>
+</html>

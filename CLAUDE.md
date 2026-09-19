@@ -58,7 +58,18 @@ declara os contêineres vazios:
 Sem header nenhum: [index.html](index.html), [2kki.html](2kki.html),
 [anotacoes.html](anotacoes.html), [not_found.html](not_found.html),
 [radio.html](radio.html), [curriculo.html](curriculo.html),
-[mplace/index.html](mplace/index.html) (essa usa a classe `floating-nav`).
+[setup.html](setup.html), [mplace/index.html](mplace/index.html) (essa usa a
+classe `floating-nav`).
+
+A [setup.html](setup.html) é a página inteira fingindo ser um terminal rodando
+`fastfetch`: sem header, footer nem breadcrumb, só o terminal, um link `<
+voltar pro site` (mesmo papel do da `/radio/`) e os dois botões fixos que o
+main.js cria. Ela **carrega** `style.css` e `main.js`, ao contrário da
+`/radio/` — a engrenagem e o botão do rádio dependem das variáveis de tema e
+das fontes de lá. O visual da página em si é todo do
+[setup.css](assets/css/setup.css), e os dados vêm do
+[setup-specs.json](assets/json/setup-specs.json): mexer nas specs não encosta
+no layout. O IP local fica censurado em blocos de propósito.
 
 Quatro páginas fogem do padrão do `<head>` acima e são praticamente autônomas —
 não carregam `style.css` e trazem o próprio visual inteiro:

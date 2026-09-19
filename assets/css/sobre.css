@@ -22,7 +22,7 @@ body.rounded .img-main {
 	/* Impede que o ícone diminua */
 }
 
-div:has(> a#curriculo-btn) {
+div:has(> a#setup-btn) {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -31,7 +31,7 @@ div:has(> a#curriculo-btn) {
 	margin-bottom: 1em;
 }
 
-a#curriculo-btn {
+a#setup-btn {
 	display: inline-flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -46,7 +46,7 @@ a#curriculo-btn {
 	white-space: nowrap;
 }
 
-a#curriculo-btn:hover {
+a#setup-btn:hover {
 	background-color: var(--clr-main-a40);
 	border-color: var(--clr-main-a40);
 	color: var(--clr-black-a10);

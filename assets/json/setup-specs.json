@@ -1,0 +1,66 @@
+{
+	"_comentario": "Saída de um fastfetch real, congelada. O navegador não lê hardware: modelo de CPU, VRAM, discos, monitores e uptime da máquina são impossíveis de obter em JS. Editar aqui não exige mexer no layout nem no JS.",
+	"prompt": "dharlan@world:~$",
+	"comando": "fastfetch",
+	"usuario": "dharlan",
+	"host": "WIN-SPUV9JUQ99V",
+	"logo": [
+		"                                ..,",
+		"                    ....,,:;+ccllll",
+		"      ...,,+:;  cllllllllllllllllll",
+		",cclllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"llllllllllllll  lllllllllllllllllll",
+		"`'ccllllllllll  lllllllllllllllllll",
+		"       `'*::.  :ccllllllllllllllll",
+		"                       ````''*::cll",
+		"                                 ``"
+	],
+	"linhas": [
+		{ "rotulo": "OS", "valor": "Windows 10 Pro (22H2) x86_64" },
+		{ "rotulo": "Host", "valor": "WIN-SPUV9JUQ99V" },
+		{ "rotulo": "Kernel", "valor": "WIN32_NT 10.0.19045.6456" },
+		{ "rotulo": "Uptime", "valor": "8 hours, 21 mins" },
+		{ "rotulo": "Shell", "valor": "CMD 10.0.19041.4355" },
+		{ "rotulo": "Display (24G2W1G4)", "valor": "1920x1080 @ 144 Hz *" },
+		{ "rotulo": "Display (K222HQL)", "valor": "1920x1080 @ 60 Hz" },
+		{ "rotulo": "WM", "valor": "Desktop Window Manager 10.0.19041.4355" },
+		{ "rotulo": "WM Theme", "valor": "Custom - #D7D7D7 (System: Dark, Apps: Dark)" },
+		{ "rotulo": "Theme", "valor": "Fluent" },
+		{ "rotulo": "Icons", "valor": "Recycle Bin" },
+		{ "rotulo": "Font", "valor": "Segoe UI (12pt) [Caption / Menu / Message]" },
+		{ "rotulo": "Cursor", "valor": "mini.cur (32px)" },
+		{ "rotulo": "Terminal", "valor": "Windows Console 10.0.19041.5198" },
+		{ "rotulo": "Terminal Font", "valor": "Consolas (16pt)" },
+		{ "rotulo": "CPU", "valor": "Intel(R) Core(TM) i3-8350K (4) @ 4.00 GHz" },
+		{
+			"rotulo": "GPU",
+			"valor": "NVIDIA GeForce RTX 2060 SUPER (7.82 GiB) @ 2.16 GHz [Discrete]"
+		},
+		{ "rotulo": "Memory", "valor": "7.77 GiB / 15.92 GiB", "percentual": 49 },
+		{ "rotulo": "Swap", "valor": "70.97 MiB / 3.50 GiB", "percentual": 2 },
+		{
+			"rotulo": "Disk (C:\\)",
+			"valor": "133.81 GiB / 447.11 GiB",
+			"percentual": 30,
+			"sufixo": "- NTFS"
+		},
+		{
+			"rotulo": "Disk (D:\\)",
+			"valor": "4.68 GiB / 7.01 GiB",
+			"percentual": 67,
+			"sufixo": "- FAT32 [External]"
+		},
+		{ "rotulo": "Local IP (Wi-Fi)", "valor": "███.███.█.███/24 *" },
+		{ "rotulo": "Locale", "valor": "pt_BR.CP850" }
+	]
+}
