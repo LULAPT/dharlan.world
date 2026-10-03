@@ -76,6 +76,9 @@ export const sitemap = [
               { href: "/picrew/char-somehow/", label: "/char-somehow" },
             ],
           },
+          // { href: "/yt-dlp/", label: "/yt-dlp" }, // desativado até ter servidor próprio - reativar removendo o comentário
+          { href: "/digitacao/", label: "/digitacao" },
+          { href: "/teclado/", label: "/teclado" },
         ],
       },
       { href: "/setup/", label: "/setup" },

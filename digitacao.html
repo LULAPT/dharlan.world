@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<!-- teclas.css: o que a /digitacao/ e a /teclado/ dividem (ajustes e
+		     papel de parede). -->
+		<link rel="stylesheet" href="/assets/css/teclas.css" />
+		<link rel="stylesheet" href="/assets/css/digitacao.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<!-- Teste de digitação no espírito do monkeytype e do boomtypr. Página de
+	     ferramenta: sem breadcrumb e sem footer, fica só a nav em cima — por
+	     isso ela está no mapa SEM_BREADCRUMB do page-title.js. O texto, os
+	     resultados e as opções são montados pelo digitacao.js. -->
+	<body class="pagina-teclas">
+		<div id="container">
+			<header id="header-compacta"></header>
+			<header id="header-mobile"></header>
+
+			<main class="teclas-main dig-main">
+				<section class="dig" aria-label="teste de digitação">
+					<div class="dig-barra">
+						<div class="dig-opcoes" id="dig-opcoes"></div>
+						<p class="dig-regra" id="dig-regra"></p>
+						<!-- Som, tema e fundo: a gaveta da direita, que o botão de ajustes
+						     da barra abre como popup (ver digitacao.css). -->
+						<div class="teclas-ajustes teclas-gaveta" id="teclas-ajustes" role="group" aria-label="som, tema e fundo"></div>
+					</div>
+
+					<div class="dig-centro">
+						<div class="dig-sobre-texto">
+							<div class="dig-contador" id="dig-contador" aria-hidden="true"></div>
+							<button type="button" class="dig-idioma" id="dig-idioma"></button>
+						</div>
+
+						<div class="dig-area" id="dig-area">
+							<!-- O campo de verdade, escondido: é por ele que entram os
+							     caracteres, inclusive os acentuados (ver digitacao.js). -->
+							<input
+								id="dig-entrada"
+								class="dig-entrada"
+								type="text"
+								autocomplete="off"
+								autocapitalize="off"
+								autocorrect="off"
+								spellcheck="false"
+								aria-label="digite o texto aqui"
+							/>
+							<div class="dig-palavras" id="dig-palavras">
+								<div class="dig-trilho" id="dig-trilho">
+									<div class="dig-cursor" id="dig-cursor"></div>
+									<div class="dig-cursor dig-fantasma" id="dig-fantasma" hidden></div>
+								</div>
+							</div>
+							<p class="dig-fonte" id="dig-fonte" hidden></p>
+							<p class="dig-aviso-foco" aria-hidden="true">
+								clique aqui ou aperte qualquer tecla pra focar
+							</p>
+						</div>
+
+						<div class="dig-resultado" id="dig-resultado" hidden aria-live="polite"></div>
+
+						<button type="button" class="dig-reiniciar" id="dig-reiniciar" aria-label="reiniciar o teste"></button>
+					</div>
+
+					<div class="dig-dicas">
+						<p><kbd>tab</kbd> — reiniciar o teste</p>
+						<p>
+							<kbd>esc</kbd> — soltar o foco
+							<span class="dig-dicas-ponto">·</span>
+							<kbd>shift</kbd> + <kbd>enter</kbd> — encerrar o zen
+						</p>
+					</div>
+				</section>
+			</main>
+			<!-- Sem <footer>, de propósito: ver o comentário do <body>. -->
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script type="module" src="/assets/js/digitacao.js"></script>
+	</body>
+</html>

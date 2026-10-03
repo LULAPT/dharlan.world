@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/yt-dlp.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<!-- Gerador de comando, não downloader. O yt-dlp é um programa em Python e
+	     precisa de uma máquina pra rodar; o site é estático e não tem onde
+	     executá-lo, e o navegador não consegue baixar do YouTube direto (CORS).
+	     Um downloader de verdade exigiria servidor — e o YouTube bloqueia IP de
+	     nuvem com frequência, além de um endpoint público de download no domínio
+	     atrair abuso. Então a página monta o comando e quem baixa é o PC de quem
+	     usa. -->
+	<body>
+		<div id="container">
+			<header id="header-compacta"></header>
+			<header id="header-mobile"></header>
+
+			<main>
+				<div id="nav-atual">
+					<a href="/home/">home</a> >
+					<a href="/utils/">utils</a> >
+					<span class="animate-flicker">yt-dlp</span>
+				</div>
+				<div id="col-centro">
+					<h1>yt-dlp</h1>
+					<p class="ytd-intro">
+						Monta o comando pra baixar vídeo ou áudio com o
+						<a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noopener noreferrer">yt-dlp</a>.
+						Cola o link, escolhe o formato e roda o comando no terminal do seu
+						PC. Funciona com YouTube e mais uns mil sites.
+					</p>
+
+					<form id="ytd-form" class="ytd-form" autocomplete="off" novalidate>
+						<label class="ytd-campo ytd-campo-url">
+							<span class="ytd-rotulo">link</span>
+							<input
+								type="url"
+								id="ytd-url"
+								name="url"
+								placeholder="https://www.youtube.com/watch?v=..."
+								spellcheck="false"
+								inputmode="url"
+							/>
+						</label>
+						<p class="ytd-aviso" id="ytd-aviso-url" role="status"></p>
+
+						<fieldset class="ytd-grupo">
+							<legend class="ytd-rotulo">o que baixar</legend>
+							<div class="ytd-alternador">
+								<label><input type="radio" name="modo" value="video" checked /> vídeo</label>
+								<label><input type="radio" name="modo" value="audio" /> só áudio</label>
+							</div>
+						</fieldset>
+
+						<!-- Só no modo vídeo. -->
+						<div class="ytd-bloco" data-modo="video">
+							<label class="ytd-campo">
+								<span class="ytd-rotulo">qualidade</span>
+								<select name="resolucao">
+									<option value="melhor">melhor disponível</option>
+									<option value="2160">até 4K (2160p)</option>
+									<option value="1440">até 1440p</option>
+									<option value="1080">até 1080p</option>
+									<option value="720">até 720p</option>
+									<option value="480">até 480p</option>
+									<option value="360">até 360p</option>
+								</select>
+							</label>
+
+							<label class="ytd-campo">
+								<span class="ytd-rotulo">formato</span>
+								<select name="container">
+									<option value="mp4">mp4 (toca em tudo)</option>
+									<option value="mkv">mkv (melhor qualidade, sem conversão)</option>
+								</select>
+							</label>
+
+							<fieldset class="ytd-grupo">
+								<legend class="ytd-rotulo">legendas</legend>
+								<label class="ytd-marca">
+									<input type="checkbox" name="legendas" />
+									embutir legendas
+								</label>
+								<label class="ytd-marca ytd-dependente">
+									<input type="checkbox" name="legendasAuto" disabled />
+									incluir as geradas automaticamente
+								</label>
+								<label class="ytd-campo ytd-dependente">
+									<span class="ytd-rotulo-mini">idiomas</span>
+									<input type="text" name="idiomas" value="pt.*,en.*" spellcheck="false" disabled />
+								</label>
+							</fieldset>
+						</div>
+
+						<!-- Só no modo áudio. -->
+						<div class="ytd-bloco" data-modo="audio" hidden>
+							<label class="ytd-campo">
+								<span class="ytd-rotulo">formato</span>
+								<select name="audioFormato">
+									<option value="mp3">mp3 (toca em tudo)</option>
+									<option value="m4a">m4a (aac, menor e melhor que mp3)</option>
+									<option value="opus">opus (o original do YouTube, sem perda extra)</option>
+									<option value="flac">flac (sem compressão)</option>
+								</select>
+							</label>
+						</div>
+
+						<fieldset class="ytd-grupo">
+							<legend class="ytd-rotulo">extras</legend>
+							<label class="ytd-marca">
+								<input type="checkbox" name="thumb" checked />
+								capa (thumbnail) no arquivo
+							</label>
+							<label class="ytd-marca">
+								<input type="checkbox" name="metadados" checked />
+								título, canal e data no arquivo
+							</label>
+							<label class="ytd-marca" data-modo="video">
+								<input type="checkbox" name="capitulos" />
+								capítulos do vídeo
+							</label>
+							<label class="ytd-marca">
+								<input type="checkbox" name="sponsor" />
+								cortar trechos de patrocínio (SponsorBlock)
+							</label>
+							<label class="ytd-marca">
+								<input type="checkbox" name="playlist" />
+								se o link for de playlist, baixar a playlist inteira
+							</label>
+						</fieldset>
+
+						<fieldset class="ytd-grupo">
+							<legend class="ytd-rotulo">recortar um trecho</legend>
+							<label class="ytd-marca">
+								<input type="checkbox" name="recorte" />
+								baixar só uma parte
+							</label>
+							<div class="ytd-recorte">
+								<label class="ytd-campo ytd-dependente">
+									<span class="ytd-rotulo-mini">de</span>
+									<input type="text" name="inicio" placeholder="1:30" spellcheck="false" disabled />
+								</label>
+								<label class="ytd-campo ytd-dependente">
+									<span class="ytd-rotulo-mini">até</span>
+									<input type="text" name="fim" placeholder="2:45" spellcheck="false" disabled />
+								</label>
+							</div>
+							<p class="ytd-aviso" id="ytd-aviso-tempo" role="status"></p>
+						</fieldset>
+					</form>
+
+					<section class="ytd-saida" aria-labelledby="ytd-saida-titulo">
+						<h2 id="ytd-saida-titulo" class="ytd-rotulo">comando</h2>
+						<div class="ytd-terminal">
+							<pre id="ytd-comando"><span class="ytd-prompt" aria-hidden="true">$ </span><code id="ytd-codigo"></code></pre>
+							<button type="button" id="ytd-copiar">copiar</button>
+						</div>
+					</section>
+
+					<details class="ytd-instalar">
+						<summary>ainda não tem o yt-dlp instalado?</summary>
+						<p>
+							Precisa do <b>yt-dlp</b> e do <b>ffmpeg</b> — é o ffmpeg que junta
+							áudio e vídeo e converte os formatos.
+						</p>
+						<dl>
+							<dt>Windows</dt>
+							<dd><code>winget install yt-dlp.yt-dlp Gyan.FFmpeg</code></dd>
+							<dt>Arch / CachyOS</dt>
+							<dd><code>sudo pacman -S yt-dlp ffmpeg</code></dd>
+							<dt>macOS</dt>
+							<dd><code>brew install yt-dlp ffmpeg</code></dd>
+						</dl>
+						<p>
+							Se um dia parar de baixar do YouTube, quase sempre é o yt-dlp
+							desatualizado: <code>yt-dlp -U</code> (ou atualize pelo gerenciador
+							de pacotes).
+						</p>
+					</details>
+				</div>
+			</main>
+
+			<footer></footer>
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script type="module" src="/assets/js/yt-dlp.js"></script>
+	</body>
+</html>

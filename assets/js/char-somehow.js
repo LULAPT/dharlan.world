@@ -34,6 +34,19 @@
 		"#3a6b52", "#5f9668", "#9aa87a", "#8f9499",
 	];
 
+	// Tons de pele, do mais claro ao mais escuro. Cada cor é o tom do meio da
+	// pele (o que o desenho original pinta de rosado); luz e sombra saem dela.
+	const CORES_PELE = [
+		["#f6dccd", "muito clara"],
+		["#eac1a3", "clara"],
+		["#d9a47e", "morena clara"],
+		["#c08559", "parda"],
+		["#a5693f", "morena"],
+		["#8a5230", "morena escura"],
+		["#6b3d24", "negra"],
+		["#4a2a1a", "negra retinta"],
+	];
+
 	function caminho(dir, arquivo) {
 		return "/assets/img/char-somehow/" + dir + "/" + arquivo;
 	}
@@ -135,13 +148,91 @@
 		return fora;
 	}
 
-	async function obterCamada(src, hex) {
+	// A pele precisa de outra conta. O colorizar() acima preserva a claridade
+	// do desenho, o que serve pro cabelo mas não aqui: a pele original é clara,
+	// e um tom escuro sairia desbotado. Aqui a claridade de cada pixel é
+	// escalada pela razão entre o tom escolhido e o tom de pele do desenho —
+	// sombra e contorno continuam proporcionalmente mais escuros, e o brilho
+	// continua mais claro, só que mais contido em pele escura.
+	//
+	// Todo pixel da camada acompanha o tom escolhido, inclusive os acinzentados
+	// da borda (a transição entre a pele e o contorno, ou o transparente): de
+	// fora, eles ficavam claros e pontilhavam a borda de pele escura.
+	//
+	// O "rosto pálido" tem uma sombra azul por cima da pele, com uma transição
+	// lilás. Esses tons frios guardam a cor (senão o rosto perde o efeito), mas
+	// escurecem na mesma proporção da pele: em pele escura, o azul claro
+	// destoava em vez de ler como sombra.
+	//
+	// O tom-base da pele no desenho, por camada: o artista pinta o rosto claro
+	// (o rosado é só a bochecha) e braços e pernas em salmão. Com uma
+	// referência só, um dos dois saía errado — rosto laranja e brilhante, ou
+	// braço quase preto. Cada camada medida pela sua, os dois caem no tom
+	// escolhido.
+	const PELE_DO_DESENHO = {
+		head: hexParaHsl("#f8e8e0"),
+		body_back: hexParaHsl("#f0a098"),
+	};
+
+	function colorizarPele(img, hex, dir) {
+		const base = PELE_DO_DESENHO[dir] || PELE_DO_DESENHO.body_back;
+		const alvo = hexParaHsl(hex);
+		const fora = document.createElement("canvas");
+		fora.width = img.naturalWidth || img.width;
+		fora.height = img.naturalHeight || img.height;
+		const fctx = fora.getContext("2d", { willReadFrequently: true });
+		fctx.drawImage(img, 0, 0);
+
+		const dados = fctx.getImageData(0, 0, fora.width, fora.height);
+		const px = dados.data;
+		const baseL = base.l;
+
+		for (let i = 0; i < px.length; i += 4) {
+			if (px[i + 3] === 0) continue;
+			const { h, s, l } = hexParaHsl(
+				"#" + ((1 << 24) | (px[i] << 16) | (px[i + 1] << 8) | px[i + 2]).toString(16).slice(1)
+			);
+			const frio = h > 0.45 && h < 0.9 && s > 0.08;
+
+			const nl =
+				l <= baseL
+					? (l * alvo.l) / baseL
+					: alvo.l + ((l - baseL) / (1 - baseL)) * (1 - alvo.l) * 0.5;
+
+			let nh, ns;
+			if (frio) {
+				// Mesma cor, só mais contida quanto mais escura a pele.
+				nh = h;
+				ns = s * (0.5 + 0.5 * Math.min(1, alvo.l / baseL));
+			} else {
+				// A saturação acompanha a do pixel em relação à da pele original,
+				// pra sombra e brilho não ficarem todos iguais — mas sem passar da
+				// do tom escolhido, senão a bochecha rosada vira laranja em pele
+				// escura.
+				nh = alvo.h;
+				ns = alvo.s * Math.min(1, s / base.s);
+			}
+
+			const q = nl < 0.5 ? nl * (1 + ns) : nl + ns - nl * ns;
+			const p = 2 * nl - q;
+			px[i] = Math.round(matizParaCanal(p, q, nh + 1 / 3) * 255);
+			px[i + 1] = Math.round(matizParaCanal(p, q, nh) * 255);
+			px[i + 2] = Math.round(matizParaCanal(p, q, nh - 1 / 3) * 255);
+		}
+
+		fctx.putImageData(dados, 0, 0);
+		return fora;
+	}
+
+	// pele: a pasta da camada (head, body_back) quando ela é de pele.
+	async function obterCamada(src, hex, pele) {
 		if (!hex) return carregarImagem(src);
-		const chave = src + "|" + hex;
+		const chave = src + "|" + (pele ? "pele|" : "") + hex;
 		if (cacheColorido.has(chave)) return cacheColorido.get(chave);
 
 		const p = carregarImagem(src).then(function (img) {
-			return img ? colorizar(img, hex) : null;
+			if (!img) return null;
+			return pele ? colorizarPele(img, hex, pele) : colorizar(img, hex);
 		});
 		cacheColorido.set(chave, p);
 		return p;
@@ -182,6 +273,7 @@
 					// grupo de cor ela pertence. É por isso que mudar o cabelo
 					// pega frente e trás de uma vez, sem eu fixar nada aqui.
 					cor: camada.grupoCor ? cores[camada.grupoCor] || null : null,
+					pele: camada.grupoCor === "color-skin" ? camada.dir : null,
 				});
 			});
 		});
@@ -194,7 +286,7 @@
 		const meu = ++desenhoAtual;
 		const fila = filaDeDesenho();
 		const camadas = await Promise.all(fila.map(function (p) {
-			return obterCamada(p.src, p.cor);
+			return obterCamada(p.src, p.cor, p.pele);
 		}));
 		// Outro desenho começou enquanto este carregava: descarta.
 		if (meu !== desenhoAtual) return;
@@ -209,7 +301,8 @@
 	// Interface
 	// ---------------------------------------------------------------
 
-	function montarPainelCor(grupo) {
+	// paleta: lista de [hex, nome] — o nome vira o título da amostra.
+	function montarPainelCor(grupo, paleta, livreInicial) {
 		const painel = document.createElement("div");
 		painel.className = "painel painel-cor";
 		painel.dataset.grupo = grupo.id;
@@ -240,12 +333,12 @@
 		});
 		conteudo.appendChild(original);
 
-		CORES_CABELO.forEach(function (hex) {
+		paleta.forEach(function ([hex, nome]) {
 			const b = document.createElement("button");
 			b.type = "button";
 			b.className = "amostra";
 			b.style.backgroundColor = hex;
-			b.title = hex;
+			b.title = nome;
 			b.addEventListener("click", function () {
 				cores[grupo.id] = hex;
 				marcar(b);
@@ -259,7 +352,7 @@
 		livre.type = "color";
 		livre.className = "amostra-livre";
 		livre.title = "Escolher outra cor";
-		livre.value = "#8b5a2b";
+		livre.value = livreInicial;
 		livre.addEventListener("input", function () {
 			cores[grupo.id] = livre.value;
 			marcar(null);
@@ -318,7 +411,20 @@
 				const grupo = spec.gruposDeCor.find(function (g) {
 					return g.id === "color-hair";
 				});
-				if (grupo) painels.appendChild(montarPainelCor(grupo));
+				if (grupo) {
+					const paleta = CORES_CABELO.map(function (hex) { return [hex, hex]; });
+					painels.appendChild(montarPainelCor(grupo, paleta, "#8b5a2b"));
+				}
+			}
+
+			// A cor da pele entra logo depois do Rosto, que é onde ela mais
+			// aparece. Ela pinta o rosto e a pele do corpo juntos (as duas
+			// camadas são do grupo color-skin no acervo).
+			if (cat.id === "head") {
+				const grupo = spec.gruposDeCor.find(function (g) {
+					return g.id === "color-skin";
+				});
+				if (grupo) painels.appendChild(montarPainelCor(grupo, CORES_PELE, "#c08559"));
 			}
 		});
 	}

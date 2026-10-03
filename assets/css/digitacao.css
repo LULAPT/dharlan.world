@@ -1,0 +1,510 @@
+/* /digitacao/ — teste de digitação. Desenho no espírito do monkeytype: barra
+   de pílulas em cima, o texto grande no meio da tela, atalhos no pé. Fonte e
+   cores do site.
+
+   Página de ferramenta: sem breadcrumb e sem footer. O <main> já cresce até o
+   fim da tela (flex: 1 no style.css); daqui pra dentro é tudo coluna. */
+
+.dig-main {
+	padding-bottom: 1.2rem;
+}
+
+/* Barra, texto e instruções formam um bloco só, centralizado na área abaixo
+   da nav. Antes cada um ficava num extremo — barra no topo, instruções no
+   pé — e a página parecia espalhada. */
+.dig {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 2.4rem;
+	justify-content: center;
+	padding: 1.5rem 0;
+}
+
+/* Dois buracos do estilo global de <button> que só aparecem aqui:
+   - ele não herda a fonte da página, e os botões saíam na fonte do sistema;
+   - o style.css dá cor de texto (--clr-white) e borda, mas não fundo. Fica o
+     cinza-claro padrão do navegador, e nos temas escuro e steam-green o texto,
+     claro, some em cima dele. No tema claro o --clr-white é escuro, por isso
+     lá o botão aparecia. O hover rosa do style.css continua valendo: ele é
+     mais específico que esta regra.
+   Ver a nota sobre isso no CLAUDE.md. */
+.dig button {
+	background-color: transparent;
+	font: inherit;
+}
+
+/* --- barra de pílulas --- */
+
+.dig-barra {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	position: relative;
+}
+
+.dig-opcoes {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1em;
+	gap: 0.6rem 1.2rem;
+	justify-content: center;
+}
+
+/* Cada grupo é uma pílula própria, separada das outras por vão — não por traço. */
+.dig-grupo {
+	align-items: center;
+	background: var(--clr-black-a10);
+	border-radius: 9px;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 0.45rem 0.85rem;
+}
+
+/* O style.css dá borda, padding e fundo rosa no hover a todo <button>, por
+   `button:not(:has(span.icone))` — especificidade (0,1,2), que ganha de uma
+   classe sozinha. O :not() repetido aqui empata a conta e a classe desempata.
+   Sem isso o chip ficava com borda e largo demais. */
+.dig-chip:not(:has(span.icone)),
+.dig-chip:hover:not(:has(span.icone)) {
+	align-items: center;
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	gap: 0.4em;
+	padding: 0.2rem 0.55rem;
+}
+
+.dig-chip:hover:not(:has(span.icone)) {
+	color: var(--clr-white);
+}
+
+.dig-chip.ativo:not(:has(span.icone)),
+.dig-chip.ativo:hover:not(:has(span.icone)) {
+	color: var(--clr-main-a40);
+}
+
+.dig-ic {
+	display: inline-flex;
+}
+
+.dig-ic svg {
+	fill: none;
+	height: 1em;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.6;
+	width: 1em;
+}
+
+.dig-desafio {
+	align-items: center;
+	color: var(--clr-gray-a40);
+	display: flex;
+	gap: 0.5rem;
+	padding: 0 0.3rem 0 0.4rem;
+}
+
+.dig-desafio select {
+	background: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	border-radius: 4px;
+	color: var(--clr-white);
+	font: inherit;
+	padding: 0.1rem 0.3rem;
+}
+
+.dig-regra {
+	color: var(--clr-gray-a40);
+	font-size: 0.8em;
+	margin: 0;
+	min-height: 1.2em;
+	text-align: center;
+}
+
+/* A gaveta de ajustes (som, tema, fundo) é a mesma da /teclado/ e mora no
+   teclas.css. */
+
+/* --- o meio da tela --- */
+
+.dig-centro {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+}
+
+/* A linha de cima do texto: contador à esquerda, idioma no centro. */
+.dig-sobre-texto {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	min-height: 2rem;
+	position: relative;
+}
+
+.dig-contador {
+	color: var(--clr-main-a40);
+	font-family: var(--fonte-monospace);
+	font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+	left: 0;
+	position: absolute;
+	white-space: pre;
+}
+
+.dig-contador[hidden] {
+	display: none;
+}
+
+/* O idioma só aparece antes de começar; durante o teste quem fala é o
+   contador. O espaço continua reservado, então nada pula. */
+.dig-idioma:not(:has(span.icone)),
+.dig-idioma:hover:not(:has(span.icone)) {
+	align-items: center;
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	gap: 0.5em;
+	padding: 0.2rem 0.5rem;
+}
+
+.dig-idioma:hover:not(:has(span.icone)) {
+	color: var(--clr-white);
+}
+
+.dig-idioma[hidden] {
+	display: none;
+}
+
+body:not(.dig-esperando) .dig-idioma,
+body.dig-esperando .dig-contador {
+	visibility: hidden;
+}
+
+.dig-area {
+	cursor: text;
+	position: relative;
+}
+
+.dig-area[hidden] {
+	display: none;
+}
+
+/* O campo de verdade fica invisível no canto da área — em 0,0, pra o foco
+   não arrastar a página a lugar nenhum. */
+.dig-entrada {
+	border: 0;
+	height: 1px;
+	left: 0;
+	opacity: 0;
+	padding: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 1px;
+}
+
+/* Três linhas à vista. A altura da linha é medida pelo digitacao.js (a
+   --altura-linha) porque depende da fonte e do tamanho da tela. */
+.dig-palavras {
+	font-family: var(--fonte-monospace);
+	font-size: clamp(1.3rem, 2vw, 1.9rem);
+	height: calc(var(--altura-linha, 2.4em) * 3);
+	letter-spacing: normal;
+	overflow: hidden;
+	position: relative;
+	transition: filter 200ms ease;
+}
+
+.dig-trilho {
+	display: flex;
+	flex-wrap: wrap;
+	position: relative;
+	transition: transform 150ms ease;
+}
+
+.palavra {
+	line-height: 1.5;
+	margin: 0 0.6em 0.4em 0;
+}
+
+/* Letra por digitar: apagada. Digitada certa: cor do texto. O tom de espera
+   fica entre dois cinzas do tema: o gray-a30 sozinho sumia no fundo escuro, e
+   o gray-a40 ficava perto demais do branco das letras já digitadas — o olho
+   precisa distinguir as duas na hora. */
+.letra {
+	color: color-mix(in srgb, var(--clr-gray-a30) 45%, var(--clr-gray-a40));
+	transition: color 60ms;
+}
+
+.letra.correta {
+	color: var(--clr-white);
+}
+
+.letra.errada {
+	color: #e5484d;
+}
+
+/* Letra a mais que a palavra não tinha. */
+.letra.extra {
+	color: color-mix(in srgb, #e5484d 65%, var(--clr-black-a0));
+}
+
+/* Palavra fechada com erro ganha sublinhado, como no monkeytype. */
+.palavra.com-erro {
+	text-decoration: underline 2px color-mix(in srgb, #e5484d 70%, transparent);
+	text-underline-offset: 0.25em;
+}
+
+/* --- cursores --- */
+
+.dig-cursor {
+	background: var(--clr-main-a40);
+	border-radius: 1px;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	transition: transform 90ms ease;
+	width: 2px;
+}
+
+.dig-cursor[hidden] {
+	display: none;
+}
+
+body.dig-esperando .dig-cursor:not(.dig-fantasma) {
+	animation: dig-piscar 1s step-end infinite;
+}
+
+@keyframes dig-piscar {
+	50% {
+		opacity: 0;
+	}
+}
+
+.dig-fantasma {
+	background: var(--clr-gray-a40);
+	opacity: 0.7;
+	transition: transform 60ms linear;
+}
+
+/* --- citação --- */
+
+.dig-fonte {
+	color: var(--clr-gray-a40);
+	font-size: 0.85em;
+	margin: 0.4rem 0 0;
+	text-align: right;
+}
+
+.dig-fonte[hidden] {
+	display: none;
+}
+
+/* --- sem foco --- */
+
+.dig-aviso-foco {
+	align-items: center;
+	color: var(--clr-white);
+	display: none;
+	inset: 0;
+	justify-content: center;
+	margin: 0;
+	position: absolute;
+}
+
+body.dig-sem-foco .dig-area:not([hidden]) .dig-palavras {
+	filter: blur(5px);
+	opacity: 0.6;
+}
+
+body.dig-sem-foco .dig-area:not([hidden]) .dig-aviso-foco {
+	display: flex;
+}
+
+/* --- reiniciar --- */
+
+.dig-reiniciar:not(:has(span.icone)),
+.dig-reiniciar:hover:not(:has(span.icone)) {
+	align-self: center;
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	font-size: 1.15rem;
+	padding: 0.5rem;
+}
+
+.dig-reiniciar:hover:not(:has(span.icone)),
+.dig-reiniciar:focus-visible {
+	color: var(--clr-white);
+}
+
+/* --- desafios que mudam o desenho --- */
+
+/* Às cegas: errado fica com cara de certo, e a palavra errada não sublinha. */
+body[data-desafio="as-cegas"] .letra.errada,
+body[data-desafio="as-cegas"] .letra.extra {
+	color: var(--clr-white);
+}
+
+body[data-desafio="as-cegas"] .palavra.com-erro {
+	text-decoration: none;
+}
+
+/* Neblina: só a palavra atual e a próxima. */
+body[data-desafio="neblina"] .palavra {
+	visibility: hidden;
+}
+
+body[data-desafio="neblina"] .palavra.atual,
+body[data-desafio="neblina"] .palavra.atual + .palavra {
+	visibility: visible;
+}
+
+/* --- resultado --- */
+
+.dig-resultado {
+	display: flex;
+	flex-direction: column;
+	gap: 1.2rem;
+}
+
+.dig-resultado[hidden] {
+	display: none;
+}
+
+.dig-principal,
+.dig-detalhes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem 3rem;
+}
+
+.dig-numero {
+	display: flex;
+	flex-direction: column;
+}
+
+.dig-numero-rotulo {
+	color: var(--clr-gray-a40);
+	font-size: 0.85em;
+}
+
+.dig-numero-valor {
+	color: var(--clr-white);
+	font-family: var(--fonte-monospace);
+	font-size: 1.3em;
+}
+
+.dig-numero.grande .dig-numero-rotulo {
+	font-size: 1.1em;
+}
+
+.dig-numero.grande .dig-numero-valor {
+	color: var(--clr-main-a40);
+	font-size: clamp(2.5rem, 5vw, 4rem);
+	line-height: 1;
+}
+
+.dig-recorde {
+	color: var(--clr-main-a40);
+	margin: 0;
+}
+
+.dig-falhou {
+	color: #e5484d;
+	margin: 0;
+}
+
+.dig-grafico {
+	height: auto;
+	max-height: 12rem;
+	overflow: visible;
+	width: 100%;
+}
+
+.dig-grafico polyline {
+	fill: none;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+}
+
+.dig-grafico-wpm {
+	stroke: var(--clr-main-a40);
+	stroke-width: 2.5;
+}
+
+.dig-grafico-raw {
+	stroke: var(--clr-gray-a30);
+	stroke-dasharray: 4 4;
+	stroke-width: 1.5;
+}
+
+.dig-grafico-erro {
+	fill: #e5484d;
+}
+
+.dig-acoes-resultado {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.8rem;
+	justify-content: center;
+}
+
+/* --- atalhos no pé da página --- */
+
+.dig-dicas {
+	align-items: center;
+	color: var(--clr-gray-a40);
+	display: flex;
+	flex-direction: column;
+	font-size: 0.78em;
+	gap: 0.4rem;
+}
+
+.dig-dicas p {
+	margin: 0;
+}
+
+.dig-dicas-ponto {
+	margin: 0 0.5rem;
+}
+
+.dig-dicas kbd {
+	background: var(--clr-gray-a20);
+	border-radius: 3px;
+	color: var(--clr-white);
+	font-family: var(--fonte-monospace);
+	font-size: 0.95em;
+	padding: 0.05em 0.4em;
+}
+
+@media (max-width: 600px) {
+	.dig {
+		gap: 1.6rem;
+	}
+
+	.dig-opcoes {
+		gap: 0.5rem;
+	}
+
+	.dig-principal,
+	.dig-detalhes {
+		gap: 0.8rem 1.6rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dig-cursor,
+	.dig-trilho,
+	.letra {
+		transition: none;
+	}
+
+	body.dig-esperando .dig-cursor:not(.dig-fantasma) {
+		animation: none;
+	}
+}

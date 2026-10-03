@@ -3,7 +3,18 @@
 		"date": "2026-10-03",
 		"items": [
 			"página <a href=\"/portfolio/\">/portfolio</a> criada, com os projetos recentes: sites gravados rodando de verdade e os terminais das APIs chamando os servidores ao vivo",
-			"seção nova na <a href=\"/sobre/\">/sobre</a> contando o que eu ando fazendo, com o botão pro portfolio"
+			"seção nova na <a href=\"/sobre/\">/sobre</a> contando o que eu ando fazendo, com o botão pro portfolio",
+			"páginas <a href=\"/digitacao/\">/digitacao</a> e <a href=\"/teclado/\">/teclado</a> criadas em /utils",
+			"<a href=\"/digitacao/\">/digitacao</a> é um teste de digitação no estilo monkeytype, com modos por tempo, palavras, citação e zen, recordes salvos e desafios: sem errar, sem apagar, às cegas, neblina, fantasma e maratona",
+			"<a href=\"/teclado/\">/teclado</a> é um testador de teclado no estilo kbt, nos desenhos ABNT2, ABNT e americano, em tamanho completo, TKL ou 60%",
+			"as duas têm sons de switch feitos na hora pelo navegador (creamy, red, brown, blue, máquina de escrever e 8-bit), tema e papel de parede, numa gaveta de ajustes que abre pela direita",
+			"botão novo <a href=\"/setup/\">Terminal</a> na navegação, destacado em rosa",
+			"<a href=\"/setup/\">/setup</a> maior, com as specs reais do fastfetch, o HD secundário com o CachyOS e a gunnm com a bandeira em dither rosa balançando no canto",
+			"o terminal da <a href=\"/setup/\">/setup</a> agora aceita comandos de verdade: help, clear, fastfetch, cmatrix, unimatrix, sitemap, bagels e exit",
+			"bagels no terminal: controle de gastos em tela cheia no estilo da cli original, com tabelas, gráfico e calendário, por enquanto com dados de exemplo",
+			"sitemap no terminal, desenhado em árvore",
+			"11 fotos novas na <a href=\"/galeria/fotografia/\">/galeria/fotografia</a>",
+			"<a href=\"/curriculo/\">/curriculo</a> ajustada pro celular: o currículo abre inteiro na tela e o zoom fica por conta de quem lê"
 		]
 	},
 	{

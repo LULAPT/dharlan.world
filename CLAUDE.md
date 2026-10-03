@@ -76,6 +76,52 @@ das fontes de lá. O visual da página em si é todo do
 [setup-specs.json](assets/json/setup-specs.json): mexer nas specs não encosta
 no layout. O IP local fica censurado em blocos de propósito.
 
+**A saída da `/setup/`** ([setup-saida.js](assets/js/setup-saida.js)): o comando
+`exit` (vai pra `/sobre/`) e o link "voltar pro site" (vai pra `/home/`) disparam
+uma cena de ~6s. Antes dela, um `clear` de mentira: digitado no prompt e
+rodado, deixando só o prompt piscando no topo (quem escreve no terminal é o
+setup-comandos.js, que se registra no setup-saida.js por `registrarClear`).
+Aí a boneca do canto acorda e passa pra frente do terminal
+(plano 998), solta a bandeira, pula das pedras, atravessa a tela e soca a
+borda esquerda. **Só no soco** tudo cai — terminal, engrenagem, botão do rádio
+e pedras. Ela fica um segundo sozinha de punho na borda e a página troca
+seca, sem transição (uma cortina que havia parecia a tela sendo puxada).
+
+- Os movimentos dela são o
+  [gunnm-saida-dither.webp](assets/img/gunnm-saida-dither.webp), um WebP
+  animado (15 fps, toca uma vez) feito de um vídeo de IA (Higgsfield) com o
+  próprio PNG de quadro inicial, num fundo verde. O pipeline foi um script node
+  + ffmpeg fora do repo: recorte do verde (`g − max(r, b) ≥ 70`), parede da IA
+  apagada (tudo à esquerda de x=158 do vídeo), quadros ampliados pra escala do
+  PNG (1049/640) e repontilhados em Bayer 8×8 nas duas cores do PNG, e
+  `libwebp_anim` sem perdas.
+- **O soco cai na borda em qualquer largura de tela** porque ela desliza pra
+  esquerda o que faltar **durante o pulo** (quadros 27 a 33), sem pé no chão
+  pra patinar. Pra as pedras não irem junto, do quadro 25 em diante elas foram
+  tiradas do WebP e viraram a imagem parada
+  [gunnm-saida-pedras.webp](assets/img/gunnm-saida-pedras.webp) (recortada do
+  quadro 27, o primeiro com ela no ar), que entra por baixo do WebP no quadro
+  23. Em janela estreita ou alta não sobra o que deslizar — o soco cairia fora
+  da tela —, e ela encolhe no lugar ao acordar.
+- A troca PNG → WebP é seca, no mesmo quadro (o primeiro quadro bate com o PNG
+  a 1px), com o WebP posicionado em cima da caixa medida do PNG. WebP e pedras
+  ficam num contêiner (`.setup-cena`) com a **mesma opacidade do PNG parado,
+  0.55, a cena inteira** — o dono quer o tom de rosa idêntico ao do PNG, sem
+  ficar mais rosa em momento nenhum. As medidas do
+  `ANIMACAO` do setup-saida.js estão em pixels do PNG e os instantes em
+  quadros; refazer o WebP exige atualizar tudo isso.
+- O som do soco é o [soco-terminal.mp3](assets/wav/soco-terminal.mp3), feito
+  no Bfxr pelo dono (projeto `Thunderworks1.bfxr`, exportado em wav e
+  convertido). Toca por Web Audio com o contexto destravado no gesto do
+  `exit`/clique — com `<audio>` tocado 4s depois, o Safari/iOS recusaria.
+- O WebP (~1 MB) e as pedras são baixados quando a página sossega, só onde a
+  boneca aparece. Se não chegarem a tempo, a cena vira só o terminal caindo.
+- O vídeo original (`.mp4` na raiz) não sobe: o `.gitignore` ignora `*.mp4`.
+
+Qualquer tecla ou clique pula a cena; sem a boneca (celular) só o terminal cai;
+com `prefers-reduced-motion` vai direto. Voltando pelo botão do navegador, a
+página **recarrega** (bfcache devolveria o terminal no chão).
+
 Quatro páginas fogem do padrão do `<head>` acima e são praticamente autônomas —
 não carregam `style.css` e trazem o próprio visual inteiro:
 [anotacoes.html](anotacoes.html) (só `anotacoes.css`, favicon próprio, filtro SVG
@@ -173,8 +219,9 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 ## Chaves de localStorage / sessionStorage
 
 `current-theme`, `switchCRT`, `festiveEffects`, `nsfwBlur`, `mplace-chunks`,
-`radio-estado`, `radio-tema`, `radio-flutuar` (localStorage) ·
-`bootTerminalSeen`, `confettiDone` (sessionStorage).
+`radio-estado`, `radio-tema`, `radio-flutuar`, `bagels-dados`, `teclas-config`,
+`teclas-papel`, `digitacao-config`, `digitacao-recordes`, `teclado-config`
+(localStorage) · `bootTerminalSeen`, `confettiDone` (sessionStorage).
 
 ## Detalhes que costumam pegar
 
@@ -266,6 +313,23 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
   atrapalha depuração: se algo estranho acontecer com o clique direito, é ele.
 - `<meta name="darkreader-lock" />` em todas as páginas impede o Dark Reader de
   estragar os temas.
+- **Todo `<button>` de página nova sai quebrado** — já aconteceu em toda
+  página criada recentemente. O estilo global em [style.css](assets/css/style.css)
+  (`button:not(:has(span.icone))`) dá cor de texto (`--clr-white`) e borda,
+  mas **não dá fundo nem fonte**. Resultado: fica o cinza-claro padrão do
+  navegador, e nos temas escuro e steam-green o texto (claro) some em cima
+  dele; no tema claro o `--clr-white` é `#333` e por isso lá parece certo. E a
+  fonte sai a do sistema, porque `<button>` não herda a da página. Além disso
+  esse seletor tem especificidade (0,1,2) — uma classe sozinha não ganha dele.
+  **Hoje a correção é por página**, no CSS dela: `background-color:
+  transparent; font: inherit;` nos botões (ver `.dig button` no
+  [digitacao.css](assets/css/digitacao.css) e `.tec button` no
+  [teclado.css](assets/css/teclado.css)), e pra sobrescrever borda/padding,
+  repetir o `:not(:has(span.icone))` no seletor. **Não foi consertado no
+  style.css de propósito:** o dono prefere não mexer agora, com medo de mudar o
+  botão de páginas antigas. Quando ele decidir, a correção global é pôr essas
+  duas propriedades na regra do style.css e conferir as páginas que têm
+  `<button>` comum.
 - **Tooltips**: use o atributo `title`; o script move o texto pra
   `data-smt-title` e remove o `title`. Setar `el.title` depois faz o tooltip
   nativo voltar por cima do customizado — atualize `dataset.smtTitle`.
@@ -337,6 +401,12 @@ senão o rádio não acompanharia quem sai da `/radio/` sem apertar nada antes.
 Ainda assim o import é condicional: sem `radio-estado` salvo (ou seja, quem
 nunca abriu a `/radio/`) ninguém paga por ele nem ganha deck parado no canto.
 
+O comando `radio` do terminal da `/setup/` ([setup-comandos.js](assets/js/setup-comandos.js))
+monta esse mesmo mini player sem passar pela `/radio/`: liga o `radio-flutuar`,
+marca `tocando: true` no `radio-estado` (o Enter conta como gesto pro
+autoplay) e chama o `iniciarRadioMini()`. Daí em diante ele acompanha a
+navegação como qualquer rádio flutuante.
+
 A chave se chamava `radio-destacado` e foi renomeada quando o padrão virou
 ligado: quem já tinha `"false"` guardado do tempo em que o modo nascia
 desligado continuaria com o botão em off pra sempre. O [radio.js](assets/js/radio.js)
@@ -363,6 +433,30 @@ o elemento não existe em HTML nenhum, quem o cria é o próprio módulo. Quem
 esconde chrome do site (o `vestirFolha()` da `/curriculo/`, por exemplo) precisa
 remover `#radio-botao` junto com `#settings-panel` — `<style>` injetado não some
 quando se desligam os `<link>`.
+
+## A `/digitacao/` e a `/teclado/`
+
+Duas ferramentas em Utils: teste de digitação no estilo monkeytype (modos
+tempo, palavras, citação e zen, mais os desafios) e testador de teclado no
+estilo kbt. **Sem `<footer>`, de propósito** — são páginas de ferramenta,
+fica só a nav em cima.
+
+- Dividem a **gaveta de ajustes** (som do switch, volume, tema e papel de
+  parede): um popup curvo que entra pela direita, aberto pelo botão no fim da
+  barra de cima. Código num lugar só — estilo no [teclas.css](assets/css/teclas.css),
+  abrir/fechar no `ligarGaveta` do [teclas-config.js](assets/js/teclas-config.js).
+  Mexer num muda os dois.
+- **Os sons são sintetizados** no Web Audio pelo
+  [teclas-som.js](assets/js/teclas-som.js), não são arquivos: nada de pacote de
+  som de terceiro com licença nebulosa, e cada tecla soa um pouco diferente.
+- **O texto entra por um `<input>` escondido, não por `keydown`.** É o que faz
+  acento funcionar: no ABNT2 o "é" é tecla morta + "e", e só o `input` entrega o
+  caractere composto. Com keydown toda palavra acentuada daria erro.
+- O testador identifica a tecla pelo `event.code` (posição física), não pelo
+  `event.key` — é o que o faz valer pra qualquer idioma. Os rótulos vêm do
+  `navigator.keyboard.getLayoutMap()` quando o navegador informa (só
+  Chrome/Edge); senão, da lista em [teclado-layouts.js](assets/js/teclado-layouts.js).
+- As citações da `/digitacao/` são só domínio público ou provérbio.
 
 ## A `/portfolio/`
 

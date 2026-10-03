@@ -665,3 +665,41 @@ body {
 	font-weight: normal;
 	margin-right: 0.6ch;
 }
+
+/* ---------------------------------------------------------------------------
+   A saída da /setup/ (setup-saida.js): a boneca animada e o clarão do soco.
+   Criados só na hora da cena, por cima de tudo — inclusive da engrenagem e
+   do botão do rádio (997).
+   --------------------------------------------------------------------------- */
+
+/* O palco da boneca animada: o WebP dela e as pedras, que viram uma imagem
+   parada à parte quando ela pula. O plano é o mesmo que o JS dá à
+   #setup-gunnm quando a cena começa — sai de trás do terminal e atravessa a
+   tela na frente dele — e a opacidade é a dela parada (0.55, lá em cima):
+   o tom de rosa não muda na troca nem depois. Mexeu numa, mexa na outra. */
+.setup-cena {
+	inset: 0;
+	opacity: 0.55;
+	pointer-events: none;
+	position: fixed;
+	z-index: 998;
+}
+
+/* Posição e tamanho vêm do JS, medidos em cima da #setup-gunnm. */
+.setup-animacao,
+.setup-pedras {
+	margin: 0;
+	max-width: none;
+	pointer-events: none;
+	position: fixed;
+	user-select: none;
+}
+
+.setup-clarao {
+	background: var(--clr-white);
+	inset: 0;
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	z-index: 1000;
+}

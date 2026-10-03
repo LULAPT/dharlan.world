@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/teclas.css" />
+		<link rel="stylesheet" href="/assets/css/teclado.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<!-- Testador de teclado no espírito do kbt. O teclado é desenhado pelo
+	     teclado.js a partir do teclado-layouts.js; aqui só os contêineres. -->
+	<body class="pagina-teclas">
+		<div id="container">
+			<header id="header-compacta"></header>
+			<header id="header-mobile"></header>
+
+			<main class="teclas-main tec-main">
+				<!-- Sem breadcrumb: é ferramenta, fica só a nav. Por isso a página está
+				     no mapa SEM_BREADCRUMB do page-title.js. -->
+				<section class="tec" aria-label="testador de teclado">
+					<div class="tec-topo">
+						<div class="tec-seletores">
+							<label>formato <select id="tec-formato"></select></label>
+							<label>tamanho <select id="tec-tamanho"></select></label>
+							<label>idioma das teclas <select id="tec-idioma"></select></label>
+							<!-- Abre a gaveta de som, tema e fundo. No fim da barra de cima, no
+							     mesmo lugar que na /digitacao/. O ícone entra pelo teclado.js. -->
+							<button
+								type="button"
+								class="teclas-botao-ajustes"
+								id="tec-botao-ajustes"
+								aria-controls="teclas-ajustes"
+								aria-expanded="false"
+								aria-label="som, tema e fundo"
+							></button>
+						</div>
+					</div>
+
+					<div class="tec-moldura">
+						<div class="tec-teclado" id="tec-teclado" aria-hidden="true"></div>
+					</div>
+
+					<p class="tec-celular">
+						Isto precisa de um teclado físico — o teclado da tela do celular
+						não manda as teclas de um jeito que dê pra testar.
+					</p>
+
+					<div class="tec-painel">
+						<dl class="tec-ultima">
+							<div><dt>key</dt><dd id="tec-key">—</dd></div>
+							<div><dt>code</dt><dd id="tec-code">—</dd></div>
+							<div><dt>keyCode</dt><dd id="tec-keycode">—</dd></div>
+							<div><dt>lado</dt><dd id="tec-local">—</dd></div>
+						</dl>
+						<dl class="tec-contagem">
+							<div><dt>seguradas agora</dt><dd id="tec-seguradas">—</dd></div>
+							<div><dt>máximo de uma vez</dt><dd id="tec-maximo">0</dd></div>
+							<div>
+								<dt>testadas</dt>
+								<dd>
+									<span id="tec-testadas">0</span>
+									<span class="tec-barra" id="tec-barra" aria-hidden="true"></span>
+								</dd>
+							</div>
+							<div><dt>fora do desenho</dt><dd id="tec-fora">—</dd></div>
+						</dl>
+						<button type="button" id="tec-zerar">zerar</button>
+					</div>
+
+					<details class="tec-saiba">
+						<summary>o que este teste não consegue ver</summary>
+						<ul>
+							<li>
+								<b>Fn</b> nunca acende: ela é resolvida dentro do próprio teclado e
+								nem chega ao computador.
+							</li>
+							<li>
+								Atalhos que o sistema toma antes da página — Ctrl+Alt+Del, Alt+F4,
+								Win+L, Ctrl+W — não chegam aqui.
+							</li>
+							<li>
+								No Windows o <b>Print Screen</b> só avisa quando é solto, e a tecla
+								<b>Win</b> pode abrir o menu Iniciar.
+							</li>
+							<li>
+								Tecla que não acende quando você segura várias juntas não é
+								defeito do teste: é o limite de teclas simultâneas do teclado
+								(rollover) ou ghosting.
+							</li>
+						</ul>
+					</details>
+				</section>
+
+				<!-- A gaveta de ajustes, que o botão da barra abre como popup. Mesmo
+				     desenho e mesmo código da /digitacao/ (teclas.css e teclas-config.js). -->
+				<div class="teclas-ajustes teclas-gaveta" id="teclas-ajustes" role="group" aria-label="som, tema e fundo"></div>
+			</main>
+			<!-- Sem <footer>, de propósito: é uma página de ferramenta, como a
+			     /setup/ — o conteúdo é o <main> e fica só a navegação em cima. O
+			     footer.js não reclama da falta dele. -->
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script type="module" src="/assets/js/teclado.js"></script>
+	</body>
+</html>

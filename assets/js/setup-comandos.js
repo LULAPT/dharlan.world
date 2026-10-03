@@ -13,6 +13,7 @@
 
 import { criarBagels } from "./setup-bagels.js";
 import { montarSitemap } from "./setup-sitemap.js";
+import { registrarClear, sairDaSetup } from "./setup-saida.js";
 
 // Os três ajudantes do setup.js chegam por parâmetro em vez de `import`: o
 // setup.js já importa este arquivo, e importar de volta fecharia um ciclo entre
@@ -20,6 +21,24 @@ import { montarSitemap } from "./setup-sitemap.js";
 // folha, não importa ninguém, então nele o `import` normal serve.)
 
 const DICA = 'digite "help" pra ver os comandos';
+
+const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// O `radio`: o mesmo player flutuante que acompanha quem sai da /radio/,
+// montado aqui sem precisar passar por lá. Import sob demanda, como no main.js
+// — quem nunca digita o comando não baixa o rádio.
+async function ligarRadio() {
+	const { lerEstado, setDestacado } = await import("./radio.js");
+	setDestacado(true);
+	// Já nasce tocando: o Enter do comando é o gesto que o navegador pede pra
+	// deixar sair som. Se ele barrar mesmo assim, o player pisca pedindo um
+	// clique (ver o bloqueadoPorAutoplay no radio.js).
+	try {
+		localStorage.setItem("radio-estado", JSON.stringify({ ...lerEstado(), tocando: true }));
+	} catch {}
+	const { iniciarRadioMini } = await import("./radio-mini.js");
+	await iniciarRadioMini();
+}
 
 // Quanto da tela o rastro do cmatrix apaga por quadro. Baixo demais e o rastro
 // nunca some; alto demais e vira chuva sem cauda.
@@ -280,15 +299,70 @@ export function iniciarComandos({
 			descricao: "a árvore do site, igual à da /sitemap/",
 			rodar: () => montarSitemap({ tela, imprimir }),
 		},
+		radio: {
+			descricao: "liga o rádio aqui mesmo, flutuando no canto da tela",
+			rodar() {
+				if (document.getElementById("web-deck-player")) {
+					imprimir("radio: já está ligado, no canto inferior direito");
+					return;
+				}
+				// A resposta sai na hora, e o player chega logo depois: a linha não
+				// pode esperar o YouTube, senão o prompt novo ficaria preso.
+				imprimir("radio: sintonizando... o player aparece no canto inferior direito");
+				ligarRadio().catch((erro) => console.error("radio:", erro));
+			},
+		},
 		clear: {
 			descricao: "limpa o terminal",
 			rodar() {
 				tela.textContent = "";
 			},
 		},
+		// O prompt não volta: a cena da saída termina navegando pra /sobre/.
+		exit: {
+			descricao: "sai do terminal e volta pro site (/sobre/)",
+			rodar: () => suspender(() => sairDaSetup("/sobre/")),
+		},
 	};
 
 	const bagels = criarBagels({ criar, imprimir, tela, suspender });
+
+	// O exit e o "voltar pro site" passam por aqui antes da cena da saída: um
+	// `clear` digitado e rodado, como se o terminal se limpasse pra ela passar.
+	// Mesma velocidade da digitação do fastfetch no setup.js.
+	registrarClear(async () => {
+		travado = true;
+		let digitado;
+		if (linhaAtiva) {
+			// O "voltar pro site" chega com o prompt aberto: o que estiver
+			// escrito nele dá lugar ao clear.
+			linhaAtiva.querySelector(".ff-dica")?.remove();
+			linhaAtiva.querySelector("input")?.remove();
+			digitado = linhaAtiva.querySelector(".ff-digitado");
+			digitado.textContent = "";
+		} else {
+			// O exit já fechou a linha dele: o clear ganha uma nova.
+			linhaAtiva = montarPrompt(textoPrompt);
+			digitado = criar("span", "ff-digitado");
+			linhaAtiva.append(digitado, criar("span", "ff-cursor", "▋"));
+			tela.appendChild(linhaAtiva);
+		}
+		rolarProFim();
+		for (const caractere of "clear") {
+			digitado.textContent += caractere;
+			await esperar(70);
+		}
+		await esperar(260);
+
+		// Limpo, sobra só o prompt no topo, com o cursor piscando.
+		tela.textContent = "";
+		const limpo = montarPrompt(textoPrompt);
+		limpo.append(criar("span", "ff-cursor", "▋"));
+		tela.appendChild(limpo);
+		linhaAtiva = null;
+		entrada = null;
+		await esperar(400);
+	});
 
 	// Para o prompt enquanto algo toma a tela (a chuva, o bagels) e devolve
 	// ele quando esse algo sai. O "sem-prompt" avisa o executar() pra não
@@ -351,10 +425,10 @@ export function iniciarComandos({
 	// texto arrastando. No click a seleção já aconteceu e dá pra respeitá-la.
 	document.addEventListener("click", (evento) => {
 		if (travado || !entrada || !comMouse.matches) return;
-		// Link, botão, campo e a engrenagem têm clique próprio.
+		// Link, botão, campo, a engrenagem e o rádio têm clique próprio.
 		if (
 			evento.target.closest(
-				"a, button, input, select, textarea, label, #settings-panel"
+				"a, button, input, select, textarea, label, #settings-panel, #web-deck-player"
 			)
 		) {
 			return;

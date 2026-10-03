@@ -1,0 +1,11 @@
+{
+  "synth_type": "Mixr",
+  "version": "1.0.0",
+  "file_name": "Thunderworks1",
+  "params": {
+    "masterVolume": 0.5,
+    "seed": 0.020909632981570114,
+    "balance": 0.23,
+    "sources": "[{\"synth\":\"Bfxr\",\"name\":\"Hit/Hurt\",\"params\":{\"masterVolume\":0.5,\"waveType\":9,\"attackTime\":0,\"sustainTime\":0.01757511836788127,\"sustainPunch\":0,\"decayTime\":0.19640041382042422,\"compressionAmount\":0,\"frequency_start\":0.2870234387992081,\"frequency_slide\":-0.5,\"frequency_acceleration\":0,\"min_frequency_relative_to_starting_frequency\":0,\"vibratoDepth\":0,\"vibratoSpeed\":0,\"pitch_jump_repeat_speed\":0,\"pitch_jump_amount\":0,\"pitch_jump_onset_percent\":0,\"pitch_jump_2_amount\":0,\"pitch_jump_onset2_percent\":0,\"overtones\":0,\"overtoneFalloff\":0,\"squareDuty\":0,\"dutySweep\":0,\"repeatSpeed\":0,\"flangerOffset\":0,\"flangerSweep\":0,\"lpFilterCutoff\":1,\"lpFilterCutoffSweep\":0,\"lpFilterResonance\":0,\"hpFilterCutoff\":0,\"hpFilterCutoffSweep\":0,\"bitCrush\":0,\"bitCrushSweep\":0},\"generator\":\"*\",\"selectedGenerator\":\"generate_hit_hurt\",\"renderSeed\":0.6851137040407789},{\"synth\":\"Fractr\",\"name\":\"Brittle Armor\",\"params\":{\"masterVolume\":0.5,\"seed\":0.4573064443225626,\"material\":5,\"duration\":1.2622106111563844,\"fragments\":10,\"fragmentSize\":0.40861202289966797,\"spread\":0.10879336503177092,\"decay\":0.2640084953272433,\"gravity\":0.927889141741756,\"bounce\":0.6873612245734069,\"stress\":0.43129201743037937,\"shards\":0.35,\"fracture\":0.8610958246504654},\"generator\":\"*\",\"selectedGenerator\":\"generate_brittle_armor\",\"renderSeed\":0.1565386558585522}]"
+  }
+}

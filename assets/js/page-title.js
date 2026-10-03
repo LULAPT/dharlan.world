@@ -6,6 +6,8 @@ const SEM_BREADCRUMB = {
 	"/anotacoes/": ["anotacoes"],
 	"/curriculo/": ["curriculo"],
 	"/setup/": ["setup"],
+	"/digitacao/": ["utils", "digitacao"],
+	"/teclado/": ["utils", "teclado"],
 	"/wishlist/": ["outros", "wishlist"],
 	"/picrew/char-somehow/": ["utils", "picrew", "char-somehow"],
 };

@@ -1,0 +1,264 @@
+/* /teclado/ — testador de teclado. O teclado é desenhado em "u" (a largura de
+   uma tecla de letra), e o --u é calculado pelo teclado.js a partir da largura
+   disponível, pra caber inteiro do 60% ao completo. */
+
+/* O conteúdo inteiro fica no centro da tela, nos dois eixos: o <main> já
+   cresce até o fim da tela (flex: 1 no style.css), e a seção ocupa ele todo e
+   centraliza o que tem dentro. */
+.tec {
+	align-items: center;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 1.4rem;
+	justify-content: center;
+	padding: 2rem 0;
+}
+
+/* A margem de cada lado do teclado na tela larga (ver o @media no fim). */
+.tec-main {
+	--margem-lateral: 14.8rem;
+}
+
+/* Mesmo buraco do estilo global de <button> que a /digitacao/ tinha: sem
+   fundo, o botão herda o cinza-claro do navegador e o texto some nos temas
+   escuros. Ver o comentário no digitacao.css. */
+.tec button {
+	background-color: transparent;
+	font: inherit;
+}
+
+.tec-seletores {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem 1.6rem;
+}
+
+.tec-seletores label {
+	align-items: center;
+	color: var(--clr-gray-a40);
+	display: flex;
+	font-size: 0.9em;
+	gap: 0.5rem;
+}
+
+.tec-seletores select {
+	background: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	color: var(--clr-white);
+	font: inherit;
+	padding: 0.15rem 0.3rem;
+}
+
+/* --- o teclado --- */
+
+/* A moldura estica na largura toda mesmo com a seção centralizando os filhos:
+   é a largura DELA que o teclado.js usa pra calcular o --u. Encolhida até o
+   teclado, uma dependeria da outra e o teclado travaria no tamanho inicial,
+   sem crescer nem encolher com a janela. O teclado centraliza aqui dentro
+   (margin: auto no .tec-teclado). */
+.tec-moldura {
+	align-self: stretch;
+	background: color-mix(in srgb, var(--clr-black-a10) 85%, transparent);
+	border: var(--borda-padrao);
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+.tec-teclado {
+	--u: 40px;
+	height: calc(var(--altura) * var(--u));
+	margin: 0 auto;
+	position: relative;
+	width: calc(var(--largura) * var(--u));
+}
+
+/* Cada tecla ocupa a célula dela com uma folga de 3px em volta: é o vão entre
+   as teclas. */
+.tec-tecla {
+	align-items: flex-start;
+	background: var(--clr-black-a0);
+	border: 1px solid var(--clr-gray-a20);
+	border-bottom-width: 3px;
+	border-radius: 5px;
+	box-sizing: border-box;
+	color: var(--clr-gray-a40);
+	display: flex;
+	font-family: var(--fonte-monospace);
+	font-size: calc(var(--u) * 0.28);
+	height: calc(var(--h) * var(--u) - 6px);
+	justify-content: flex-start;
+	left: calc(var(--x) * var(--u) + 3px);
+	/* O body do site tem letter-spacing de 0.75px: num rótulo de 5 letras são
+	   quase 4px a mais, numa tecla que já é apertada. Aqui não serve. */
+	letter-spacing: 0;
+	line-height: 1;
+	overflow: hidden;
+	padding: 0.3em 0.35em;
+	position: absolute;
+	top: calc(var(--y) * var(--u) + 3px);
+	transition:
+		background 80ms,
+		border-color 80ms,
+		color 80ms,
+		transform 60ms;
+	width: calc(var(--w) * var(--u) - 6px);
+}
+
+/* inline-block pra ter largura medível: o teclado.js encolhe a fonte de quem
+   não cabe na tecla (ver encaixarRotulos). */
+.tec-rotulo {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+/* Testada: fica marcada com a cor do tema, mas apagada. */
+.tec-tecla.testada {
+	border-color: var(--clr-main-a20);
+	color: var(--clr-main-a40);
+}
+
+/* Apertada agora: acesa, e afunda um pouco (a borda grossa de baixo some). */
+.tec-tecla.pressionada {
+	background: var(--clr-main-a40);
+	border-bottom-width: 1px;
+	border-color: var(--clr-main-a50);
+	color: var(--clr-black-a0);
+	transform: translateY(2px);
+}
+
+/* As duas metades do Enter ISO se encostam pra formar o "L": a de cima perde
+   a borda e o canto de baixo, a de baixo perde a de cima, e as duas esticam
+   por cima do vão que separaria as linhas. */
+.tec-tecla.enter-cima {
+	border-bottom: 0;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	height: calc(var(--u) - 3px);
+}
+
+.tec-tecla.enter-baixo {
+	border-top: 0;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	height: calc(var(--u) - 3px);
+	top: calc(var(--y) * var(--u));
+}
+
+/* --- painel --- */
+
+.tec-painel {
+	align-items: flex-start;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem 3rem;
+	justify-content: center;
+}
+
+.tec-ultima,
+.tec-contagem {
+	display: grid;
+	gap: 0.3rem 1.2rem;
+	grid-template-columns: max-content 1fr;
+	margin: 0;
+}
+
+.tec-ultima > div,
+.tec-contagem > div {
+	display: contents;
+}
+
+.tec-painel dt {
+	color: var(--clr-gray-a40);
+	font-size: 0.85em;
+}
+
+.tec-painel dd {
+	color: var(--clr-white);
+	font-family: var(--fonte-monospace);
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+
+#tec-key {
+	color: var(--clr-main-a40);
+	font-size: 1.2em;
+}
+
+.tec-barra {
+	--feito: 0;
+	background: var(--clr-gray-a20);
+	display: inline-block;
+	height: 0.45em;
+	margin-left: 0.6rem;
+	position: relative;
+	vertical-align: middle;
+	width: 8rem;
+}
+
+.tec-barra::after {
+	background: var(--clr-main-a40);
+	content: "";
+	inset: 0;
+	position: absolute;
+	transform: scaleX(var(--feito));
+	transform-origin: left;
+	transition: transform 120ms ease;
+}
+
+.tec-saiba {
+	color: var(--clr-gray-a50);
+	font-size: 0.9em;
+}
+
+.tec-saiba summary {
+	color: var(--clr-gray-a40);
+	cursor: pointer;
+}
+
+.tec-saiba summary:hover {
+	color: var(--clr-main-a40);
+}
+
+.tec-saiba ul {
+	margin: 0.6rem 0 0;
+	padding-left: 1.2rem;
+}
+
+/* Só aparece em aparelho sem teclado físico de verdade. */
+.tec-celular {
+	color: var(--clr-yellow-a30);
+	display: none;
+	font-size: 0.9em;
+	margin: 0;
+}
+
+@media (hover: none) and (pointer: coarse) {
+	.tec-celular {
+		display: block;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tec-tecla {
+		transition: none;
+	}
+
+	.tec-tecla.pressionada {
+		transform: none;
+	}
+}
+
+/* --- largura ---
+
+   Sem o teto de 74rem das outras páginas: o teclado ganha quase a largura toda
+   da tela, com a mesma margem dos dois lados pra continuar no centro. Os
+   ajustes não ocupam espaço aqui — são a gaveta popup do teclas.css, que abre
+   por cima. Abaixo de 1100px vale a largura normal das páginas. */
+@media (min-width: 1100px) {
+	.tec-main {
+		max-width: none;
+		padding: 0 1rem;
+		width: calc(100vw - 2 * var(--margem-lateral));
+	}
+}

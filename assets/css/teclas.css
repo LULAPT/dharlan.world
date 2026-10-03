@@ -1,0 +1,192 @@
+/* teclas.css — o que a /digitacao/ e a /teclado/ dividem: a barra de ajustes
+   e o papel de parede. */
+
+/* As duas páginas não têm a caixa #col-centro: o conteúdo fica solto sobre o
+   fundo, pra o papel de parede aparecer de verdade. */
+.teclas-main {
+	align-content: flex-start;
+	flex-direction: column;
+	flex-wrap: nowrap;
+}
+
+.teclas-main > * {
+	width: 100%;
+}
+
+/* --- papel de parede ---
+
+   Vai no próprio <body>, por cima de uma camada da cor de fundo do tema: é
+   ela que o "escurecer" regula, e é o que mantém o texto legível sobre uma foto
+   clara. Substitui também a textura de linhas diagonais do style.css. */
+body.com-papel {
+	background-attachment: fixed;
+	background-image:
+		linear-gradient(
+			color-mix(in srgb, var(--clr-black-a0) calc(var(--teclas-escurecer, 0.78) * 100%), transparent),
+			color-mix(in srgb, var(--clr-black-a0) calc(var(--teclas-escurecer, 0.78) * 100%), transparent)
+		),
+		var(--teclas-papel);
+	background-position: center;
+	background-size: cover;
+}
+
+/* --- barra de ajustes --- */
+
+.teclas-ajustes {
+	align-items: center;
+	background: var(--clr-black-a10);
+	border: var(--borda-padrao);
+	border-radius: var(--b-radius);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.85em;
+	gap: 0.6rem 1.4rem;
+	margin: 2rem 0 1rem;
+	padding: 0.7rem 1rem;
+}
+
+.teclas-ajuste {
+	align-items: center;
+	color: var(--clr-gray-a40);
+	display: flex;
+	gap: 0.5rem;
+}
+
+.teclas-ajuste[hidden] {
+	display: none;
+}
+
+.teclas-ajuste select {
+	background: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	color: var(--clr-white);
+	font: inherit;
+	max-width: 16rem;
+	padding: 0.15rem 0.3rem;
+}
+
+.teclas-ajuste input[type="range"] {
+	accent-color: var(--clr-main-a40);
+	width: 6rem;
+}
+
+/* --- a gaveta de ajustes (popup na direita) ---
+
+   Usada igual pelas duas páginas: o botão de ajustes, no fim da barra de
+   cima, abre e fecha (teclas-config.js, ligarGaveta).
+
+   O formato é desenhado só com raios elípticos, sem imagem:
+   - em cima, raio horizontal de 100% — a curva sai do canto superior direito
+     e desce até 22% da altura, onde a gaveta atinge a largura toda;
+   - embaixo, 72% na horizontal — ela curva de volta pra direita e sobra uma
+     faixa estreita (28%) descendo até o pé da tela.
+   Em porcentagem, a curva acompanha a altura da janela. O miolo, onde a
+   largura é cheia, é onde ficam os controles.
+
+   Fechada, ela fica com visibility: hidden e não com display: none: display
+   não anima, e o visibility ainda tira os controles do alcance do Tab e do
+   leitor de tela, que é o que importa numa gaveta fechada. Ao fechar, o
+   visibility espera o deslize terminar (o atraso na transição). */
+.teclas-gaveta {
+	align-items: stretch;
+	background: color-mix(in srgb, var(--clr-black-a10) 96%, transparent);
+	border: 1px solid var(--clr-gray-a20);
+	border-radius: 100% 0 0 72% / 22% 0 0 14%;
+	border-right: 0;
+	bottom: 0;
+	box-shadow: -14px 0 36px rgba(0, 0, 0, 0.35);
+	flex-direction: column;
+	/* A barra base quebra linha; numa coluna de altura fixa isso viraria uma
+	   segunda coluna de controles em janela baixa. */
+	flex-wrap: nowrap;
+	font-size: 0.9em;
+	gap: 1rem;
+	justify-content: center;
+	margin: 0;
+	padding: 0 1.4rem 0 2.6rem;
+	position: fixed;
+	right: 0;
+	top: 0;
+	transform: translateX(105%);
+	transition:
+		transform 280ms cubic-bezier(0.23, 1, 0.32, 1),
+		visibility 0s linear 280ms;
+	visibility: hidden;
+	width: 14rem;
+	z-index: 50;
+}
+
+.teclas-gaveta.aberta {
+	transform: none;
+	transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1);
+	visibility: visible;
+}
+
+/* Rótulo em cima, controle embaixo: numa coluna estreita, lado a lado
+   espremeria o select. */
+.teclas-gaveta .teclas-ajuste {
+	align-items: stretch;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.teclas-gaveta .teclas-ajuste select,
+.teclas-gaveta .teclas-ajuste input[type="range"] {
+	max-width: none;
+	width: 100%;
+}
+
+/* <button> do site: sem fundo nem fonte próprios no estilo global (ver a nota
+   no CLAUDE.md), então os dois vêm aqui. */
+.teclas-gaveta button {
+	background-color: transparent;
+	font: inherit;
+}
+
+.teclas-fechar {
+	align-self: center;
+	margin-top: 0.4rem;
+}
+
+/* O botão que abre a gaveta, no fim da barra de cima das duas páginas. O
+   :not() repetido é pra ganhar do estilo global de <button> do style.css,
+   que tem especificidade (0,1,2) — sem ele o botão ficava com borda. */
+.teclas-botao-ajustes:not(:has(span.icone)),
+.teclas-botao-ajustes:hover:not(:has(span.icone)) {
+	align-items: center;
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	font: inherit;
+	padding: 0.2rem 0.55rem;
+}
+
+.teclas-botao-ajustes:hover:not(:has(span.icone)) {
+	color: var(--clr-white);
+}
+
+.teclas-botao-ajustes.ativo:not(:has(span.icone)),
+.teclas-botao-ajustes.ativo:hover:not(:has(span.icone)) {
+	color: var(--clr-main-a40);
+}
+
+.teclas-ic {
+	display: inline-flex;
+}
+
+.teclas-ic svg {
+	fill: none;
+	height: 1em;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.6;
+	width: 1em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.teclas-gaveta,
+	.teclas-gaveta.aberta {
+		transition: none;
+	}
+}

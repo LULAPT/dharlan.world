@@ -393,6 +393,9 @@ export function carregarNavbar() {
 				{ label: "Kaomojis", href: "/kaomojis/" },
 				{ label: "Avatar", href: "/avatar/" },
 				{ label: "Picrew", href: "/picrew/" },
+				// { label: "yt-dlp", href: "/yt-dlp/" }, // desativado até ter servidor próprio - reativar removendo o comentário
+				{ label: "Digitação", href: "/digitacao/" },
+				{ label: "Teclado", href: "/teclado/" },
 			],
 		},
 		// Sem children: a /setup/ é uma página só. Entra depois de Utils por ser
