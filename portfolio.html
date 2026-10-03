@@ -129,7 +129,7 @@
 									width="1280"
 									height="800"
 									poster="/assets/img/portfolio/combo-desktop.webp"
-									aria-label="Gravação da landing do Combo Lanches no computador: a logo vira um hambúrguer que se abre camada por camada enquanto a página rola"
+									aria-label="Gravação do Combo Lanches no computador: a logo vira um hambúrguer que se abre na rolagem, a nav lateral abre, um lanche ganha carne e molho extras no cardápio, a sacola muda de quantidade, o tema troca, um combo é montado e o pedido é pago por Pix simulado até o rastreio da entrega"
 								>
 									<source
 										src="/assets/video/portfolio/combo-desktop.mp4"
@@ -155,7 +155,7 @@
 									width="780"
 									height="1688"
 									poster="/assets/img/portfolio/combo-celular.webp"
-									aria-label="Gravação do app do Combo Lanches no celular: abertura, cardápio, montagem de um combo e a sacola"
+									aria-label="Gravação do app do Combo Lanches no celular: abertura, troca de tema, lanche com adicionais empilhados, combo montado, loja, sacola, Pix simulado e o rastreio do pedido"
 								>
 									<source
 										src="/assets/video/portfolio/combo-celular.mp4"
@@ -183,9 +183,15 @@
 								</p>
 								<p>
 									Não é um site responsivo, são duas experiências — o celular
-									nem baixa o código da landing, e vice-versa. Por enquanto o
-									pagamento é simulado e o pedido de verdade continua no iFood
-									da loja. Foi o projeto em que eu aprendi React.
+									nem baixa o código da landing, e vice-versa. Os dois têm tema
+									claro e escuro, cada um com o seu.
+								</p>
+								<p>
+									Por enquanto o pagamento é simulado: o Pix gera um QR de
+									mentira, confirma sozinho e o pedido anda por recebido, em
+									preparo, saiu pra entrega e entregue, com a motinho no canto
+									da tela. O pedido de verdade continua no iFood da loja. Foi o
+									projeto em que eu aprendi React.
 								</p>
 								<ul class="projeto-stack" aria-label="Tecnologias">
 									<li>react 19</li>
@@ -207,9 +213,8 @@
 					</article>
 
 					<!-- 02 · Magal's Cap -->
-					<!-- Só o lockscreen aparece aqui de propósito: até o drop, a loja
-					     (boné, estampas, preço) fica escondida até no código que o site
-					     entrega. Mostrar print dela antes da hora furaria o drop. -->
+					<!-- O vídeo começa no lockscreen e entra na loja pelo cookie da
+					     equipe. O cookie em si não aparece na página. -->
 					<article class="projeto" id="magals-cap">
 						<div class="projeto-barra">
 							<span class="projeto-num">02</span>
@@ -219,14 +224,27 @@
 
 						<div class="projeto-palco">
 							<figure class="tela">
-								<figcaption>desktop — lockscreen</figcaption>
-								<img
-									src="/assets/img/portfolio/magals-cap.webp"
+								<figcaption>desktop</figcaption>
+								<video
+									class="tela-video"
+									muted
+									loop
+									playsinline
+									preload="none"
 									width="1280"
 									height="800"
-									loading="lazy"
-									alt="Lockscreen da loja Magal's Cap: tela verde de terminal com scanlines, o rosto do Mitch em arte de linha e uma contagem regressiva em dias, horas, minutos e segundos"
-								/>
+									poster="/assets/img/portfolio/magals-cap.webp"
+									aria-label="Gravação da Magal's Cap: o lockscreen com contagem regressiva trocando de tema, depois a loja liberada, com o boné 3D girando, trocando de estampa e o formulário de compra"
+								>
+									<source
+										src="/assets/video/portfolio/magals-cap.mp4"
+										type='video/mp4; codecs="avc1.640020"'
+									/>
+									<source
+										src="/assets/video/portfolio/magals-cap.webm"
+										type='video/webm; codecs="vp9"'
+									/>
+								</video>
 							</figure>
 						</div>
 
@@ -238,7 +256,7 @@
 									width="780"
 									height="1688"
 									loading="lazy"
-									alt="O mesmo lockscreen do Magal's Cap no celular"
+									alt="A loja do Magal's Cap no celular, com o boné vermelho e o cartão de compra"
 								/>
 							</figure>
 
@@ -254,10 +272,12 @@
 								</p>
 								<p>
 									Do lado de dentro, o boné é um modelo 3D que gira sozinho e dá
-									pra arrastar. O checkout com Pix (Asaas + Edge Functions da
-									Supabase, com webhook e e-mail de confirmação) já está pronto
-									no código, esperando o plano pago; enquanto isso, o pedido sai
-									montado e formatado direto pro WhatsApp da loja.
+									pra arrastar, e cada uma das três estampas é desenhada direto
+									no tecido dele. Lockscreen e loja têm tema claro e escuro. O
+									checkout com Pix (Asaas + Edge Functions da Supabase, com
+									webhook e e-mail de confirmação) já está pronto no código,
+									esperando o plano pago; enquanto isso, o pedido sai montado e
+									formatado direto pro WhatsApp da loja.
 								</p>
 								<ul class="projeto-stack" aria-label="Tecnologias">
 									<li>react 19</li>
@@ -271,7 +291,12 @@
 									<a class="button" href="https://aluado.store/" target="_blank"
 										>aluado.store</a
 									>
-									<span class="projeto-obs">código fechado</span>
+									<a
+										class="button"
+										href="https://github.com/LULAPT/magals-cap"
+										target="_blank"
+										>código no github</a
+									>
 								</div>
 							</div>
 						</div>
@@ -297,7 +322,7 @@
 									width="1280"
 									height="800"
 									poster="/assets/img/portfolio/lidera360.webp"
-									aria-label="Gravação do site da Lidera360: intro contando até 360 sobre um fundo animado e depois a landing inteira rolando"
+									aria-label="Gravação da Lidera360: intro contando até 360, a landing rolando no tema claro, o login, o dashboard do aluno com uma trilha aberta e o perfil"
 								>
 									<source
 										src="/assets/video/portfolio/lidera360.mp4"

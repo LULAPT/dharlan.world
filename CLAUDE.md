@@ -376,15 +376,21 @@ o breadcrumb também passa pela `/sobre/`.
   `assets/video/portfolio/`. Cada vídeo tem **duas fontes**: mp4 H.264 primeiro
   e webm VP9 de reserva — o Chromium do Playwright e alguns Chromium/Firefox de
   Linux não tocam H.264. O `codecs` no `type` tem que bater com o perfil e o
-  nível do arquivo (`ffprobe`) se o vídeo for refeito.
+  nível do arquivo (`ffprobe`) se o vídeo for refeito. O `.gitignore` ignora
+  `*.mp4` no repo todo; `assets/video/portfolio/` é a exceção, e sem ela o
+  Safari/iOS fica sem vídeo.
 - Os vídeos foram gravados com os projetos rodando de verdade (Playwright
-  rolando a página) e comprimidos no ffmpeg. Nascem com `preload="none"` e o
+  clicando e rolando) e comprimidos no ffmpeg. Nascem com `preload="none"` e o
   [portfolio.js](assets/js/portfolio.js) só dá play enquanto estão na tela;
   com `prefers-reduced-motion`, ficam o pôster e os controles nativos.
-- **Magal's Cap mostra só o lockscreen, de propósito.** Até o drop, a loja
-  (boné, estampas, preço) não é nem baixada pelo navegador — print dela aqui
-  furaria o drop. O repositório dela é privado, por isso o link é pro site e
-  não pro GitHub. Também não se fala do cookie que pula o lockscreen.
+- Dois truques de gravação, caso precise refazer: o rastreio do pedido do
+  Combo leva 2,5 min de verdade, então o relógio da página foi adiantado
+  (`page.clock.fastForward`) pra mostrar as etapas em segundos. E a loja do
+  Magal's Cap (boné em WebGL) roda a ~4 fps em navegador sem GPU, então ela foi
+  gravada **quadro a quadro**: relógio pausado, avança 1/30 s, print, repete.
+- **Magal's Cap**: o vídeo entra na loja pelo cookie que pula o lockscreen,
+  mas o cookie em si (nome e valor) não aparece na página. Até o drop, a loja
+  não é nem baixada pelo navegador de quem não tem o cookie.
 - Os terminais das APIs chamam o discordUserStatus e o proxy do nikki.top **ao
   vivo**, quando aparecem na tela. Os dois estão no plano grátis do Render, que
   dorme: a espera vai até 55s, e sem resposta volta o exemplo escrito no HTML.

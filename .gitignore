@@ -75,6 +75,9 @@ $RECYCLE.BIN/
 *.mkv
 *.flv
 *.wmv
+# Exceção: os vídeos da /portfolio/ são do site, já comprimidos. O mp4 é o
+# único formato que o Safari/iOS toca, o webm do lado não substitui.
+!assets/video/portfolio/*.mp4
 
 # assets/img/favoritos/*
 # assets/img/designs/*
