@@ -1,0 +1,441 @@
+/* /portfolio/ — os projetos recentes, cada um numa "janela" com barra de
+   título. Vídeo e print de projeto são a única coisa do site que não pode ser
+   pixelada: são gravações de tela reduzidas, e o `image-rendering: pixelated`
+   global serrilha texto de interface encolhido até ficar ilegível. Por isso as
+   mídias daqui voltam pro `auto`, como os selos da /sobre/. */
+
+#col-centro.portfolio {
+	gap: 0;
+}
+
+.port-intro {
+	color: var(--clr-gray-a50);
+	margin: 0 0 1.4em;
+	max-width: 62ch;
+}
+
+/* ----------------------------------------------
+ * Índice com cara de `dir`
+ * ---------------------------------------------- */
+
+.port-indice {
+	background-color: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	margin-bottom: 1rem;
+	padding: 12px 14px;
+}
+
+.port-prompt {
+	color: var(--clr-gray-a40);
+	margin: 0 0 0.5em;
+}
+
+.port-indice ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Uma linha por projeto, colunas alinhadas como numa listagem de diretório.
+   O fundo some do `main a` global: lá ele desenha o sublinhado animado, que
+   aqui brigaria com o realce da linha inteira. */
+.port-indice a:link,
+.port-indice a:visited,
+.port-indice a:active {
+	background-image: none;
+	color: var(--clr-white);
+	display: grid;
+	gap: 0 1.2em;
+	grid-template-columns: 2ch minmax(0, 1fr) auto 4ch;
+	margin: 0;
+	padding: 0.15em 0.4em;
+}
+
+.port-indice a:hover,
+.port-indice a:focus-visible {
+	background-color: var(--clr-main-a40);
+	color: var(--clr-black-a0);
+	filter: none;
+}
+
+.indice-num {
+	color: var(--clr-main-a40);
+}
+
+.port-indice a:hover .indice-num,
+.port-indice a:focus-visible .indice-num {
+	color: inherit;
+}
+
+.indice-nome {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.indice-tipo,
+.indice-ano {
+	opacity: 0.6;
+	text-align: right;
+}
+
+/* ----------------------------------------------
+ * Seções
+ * ---------------------------------------------- */
+
+h2.port-secao {
+	border-bottom: 1px dashed var(--clr-gray-a30);
+	margin: 2.2rem 0 1rem;
+	padding-bottom: 0.3em;
+}
+
+h2.port-secao::before {
+	color: var(--clr-main-a40);
+	content: "/";
+}
+
+/* ----------------------------------------------
+ * Projeto
+ * ---------------------------------------------- */
+
+.projeto {
+	border: var(--borda-padrao);
+	margin-bottom: 1.4rem;
+	scroll-margin-top: 16px;
+}
+
+.projeto-barra {
+	align-items: baseline;
+	background-color: var(--clr-gray-a0);
+	border-bottom: var(--borda-padrao);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3em 0.8em;
+	padding: 0.5em 0.9em;
+}
+
+.projeto-num {
+	color: var(--clr-main-a40);
+}
+
+/* O h3 global é sublinhado e minúsculo; nome de projeto tem caixa própria
+   (discordUserStatus). */
+.projeto-barra h3 {
+	font-size: 1.15em;
+	margin: 0;
+	text-decoration: none;
+	text-transform: none;
+}
+
+.projeto-meta {
+	color: var(--clr-gray-a40);
+	font-size: 0.85em;
+	margin-left: auto;
+}
+
+.projeto-selo {
+	border: 1px dashed var(--clr-gray-a40);
+	color: var(--clr-gray-a40);
+	font-size: 0.75em;
+	padding: 0 0.5em;
+}
+
+.projeto-palco {
+	padding: 14px;
+}
+
+/* Mídia secundária (celular, logo) do lado do texto. */
+.projeto-corpo {
+	align-items: start;
+	display: grid;
+	gap: 18px;
+	grid-template-columns: 260px minmax(0, 1fr);
+	padding: 0 14px 14px;
+}
+
+.projeto-lado {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.projeto > .projeto-info {
+	padding: 0 14px 14px;
+}
+
+.projeto-info {
+	text-align: left;
+}
+
+.projeto-info p {
+	margin: 0 0 1em;
+}
+
+p.projeto-resumo {
+	color: var(--clr-white);
+	font-size: 1.05em;
+}
+
+.projeto-stack {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0 0 1em;
+	padding: 0;
+}
+
+/* Desliga a setinha que o style.css põe em todo `ul > li`. */
+.projeto-stack li {
+	border: 1px dashed var(--clr-gray-a30);
+	color: var(--clr-gray-a50);
+	font-size: 0.8em;
+	line-height: 1.6;
+	padding: 0 0.6em;
+}
+
+.projeto-stack li::before {
+	content: none;
+}
+
+.projeto-links {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+/* A setinha de link externo do style.css só pega link dentro de texto
+   (p, li, títulos); botão solto fica sem. É o mesmo desenho, aqui. */
+.projeto-links a.button[href^="http"]::after {
+	--svg: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M244.39-235.61 189-291l402-402H238.39v-78h486v486h-78v-352.61l-402 402Z"/></svg>');
+	background-color: currentColor;
+	content: "";
+	display: inline-block;
+	height: 1.1em;
+	mask: var(--svg) no-repeat center / contain;
+	transition: transform var(--transition-time);
+	width: 1.1em;
+	-webkit-mask: var(--svg) no-repeat center / contain;
+}
+
+.projeto-links a.button[href^="http"]:hover::after {
+	transform: rotate(45deg);
+}
+
+.projeto-obs {
+	color: var(--clr-gray-a40);
+	font-size: 0.85em;
+}
+
+.projeto-arquivo .projeto-info {
+	padding: 14px;
+}
+
+.port-fim {
+	border-top: 1px dashed var(--clr-gray-a30);
+	margin-top: 1rem;
+	padding-top: 1.4rem;
+	text-align: left;
+}
+
+.port-fim p {
+	margin-top: 0;
+}
+
+/* ----------------------------------------------
+ * Telas (janelas com vídeo, print ou terminal)
+ * ---------------------------------------------- */
+
+.tela {
+	background-color: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	margin: 0;
+	position: relative;
+}
+
+.tela figcaption {
+	align-items: center;
+	border-bottom: var(--borda-padrao);
+	color: var(--clr-gray-a40);
+	display: flex;
+	font-size: 0.75em;
+	justify-content: space-between;
+	letter-spacing: 1px;
+	line-height: 1.8;
+	padding: 0 0.6em;
+	user-select: none;
+}
+
+/* Os três quadradinhos de janela no canto da barra: um só elemento, os
+   outros dois são sombras. */
+.tela figcaption::after {
+	border: 1px solid currentColor;
+	box-shadow:
+		-11px 0 0 -1px var(--clr-black-a0),
+		-11px 0 0 0 currentColor,
+		-22px 0 0 -1px var(--clr-black-a0),
+		-22px 0 0 0 currentColor;
+	content: "";
+	height: 7px;
+	margin-left: 30px;
+	width: 7px;
+}
+
+.tela img,
+.tela video {
+	display: block;
+	height: auto;
+	image-rendering: auto;
+	width: 100%;
+}
+
+.tela a:link,
+.tela a:visited {
+	background-image: none;
+	display: block;
+	margin: 0;
+}
+
+.tela-video {
+	background-color: #000;
+	cursor: pointer;
+}
+
+.tela-video[controls] {
+	cursor: auto;
+}
+
+/* Pausado com um clique: o aviso fica até o próximo clique. */
+.tela.pausado::after {
+	background-color: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	bottom: 10px;
+	color: var(--clr-white);
+	content: "▮▮ pausado";
+	font-size: 0.75em;
+	padding: 0 0.6em;
+	pointer-events: none;
+	position: absolute;
+	right: 10px;
+}
+
+/* A marca da Lidera360 é branca e verde, desenhada pro navy do projeto. O
+   fundo fica no navy em qualquer tema do site — no claro ela sumiria. */
+.tela-marca {
+	background-color: #0f1272;
+}
+
+.tela-marca img {
+	box-sizing: border-box;
+	padding: 18% 14%;
+}
+
+/* ----------------------------------------------
+ * Terminal das APIs
+ * ---------------------------------------------- */
+
+/* O `pre` global é feito pra ASCII art: overflow escondido, sem quebra de
+   linha e fonte que encolhe com a tela. Terminal com JSON precisa do oposto. */
+pre.terminal {
+	color: var(--clr-white);
+	font-family: var(--fonte-monospace);
+	font-size: 0.8rem;
+	line-height: 1.55;
+	margin: 0;
+	min-height: 13em;
+	overflow: auto;
+	overflow-wrap: anywhere;
+	padding: 12px 14px;
+	text-align: left;
+	white-space: pre-wrap;
+}
+
+.t-prompt {
+	color: var(--clr-main-a40);
+}
+
+.t-comentario,
+.t-html {
+	color: var(--clr-gray-a40);
+}
+
+.t-chave {
+	color: var(--clr-main-a30);
+}
+
+.t-erro {
+	color: var(--clr-red-a30);
+}
+
+.t-status-online {
+	color: var(--clr-green-a30);
+}
+
+.t-status-idle {
+	color: var(--clr-yellow-a30);
+}
+
+.t-status-dnd {
+	color: var(--clr-red-a30);
+}
+
+.t-status-offline {
+	color: var(--clr-gray-a40);
+}
+
+.t-cursor {
+	animation: blinkUnderline 1s infinite linear;
+	color: var(--clr-main-a40);
+}
+
+/* O button global só cuida da borda e do hover; fundo e fonte ficariam os
+   do navegador (branco, sans-serif). */
+.terminal-rodar {
+	background-color: var(--clr-black-a10);
+	color: var(--clr-white);
+	font-family: var(--fonte-corpo);
+	font-size: 0.8em;
+	margin: 0 14px 12px;
+}
+
+/* ----------------------------------------------
+ * Responsividade
+ * ---------------------------------------------- */
+
+@media (max-width: 770px) {
+	.projeto-corpo {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.tela-celular,
+	.projeto-lado {
+		justify-self: center;
+		max-width: 280px;
+		width: 100%;
+	}
+
+	.projeto-palco {
+		padding: 10px;
+	}
+
+	.projeto-corpo,
+	.projeto > .projeto-info {
+		padding: 0 10px 10px;
+	}
+
+	.port-indice a:link,
+	.port-indice a:visited,
+	.port-indice a:active {
+		grid-template-columns: 2ch minmax(0, 1fr) 4ch;
+	}
+
+	.indice-tipo {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.t-cursor {
+		animation: none;
+	}
+}

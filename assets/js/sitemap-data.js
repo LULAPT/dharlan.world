@@ -5,7 +5,12 @@ export const sitemap = [
     group: true,
     items: [
       { href: "/home/", label: "/home" },
-      { href: "/sobre/", label: "/sobre" },
+      {
+        href: "/sobre/",
+        label: "/sobre",
+        // A /portfolio/ não está na navbar: a porta dela é o botão da /sobre/.
+        children: [{ href: "/portfolio/", label: "/portfolio" }],
+      },
       {
         href: "/galeria/",
         label: "/galeria",

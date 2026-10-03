@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="/assets/js/theme-init.js"></script>
+		<script src="/assets/js/no-inspect.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="darkreader-lock" />
+		<meta name="author" content="dharlan" />
+
+		<title>dharlan</title>
+		<link rel="icon" type="image/gif" href="/assets/img/favicon.gif" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="/assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/portfolio.css" />
+
+		<!-- Fontes Externas -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Script -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<div id="container">
+			<header id="header-compacta"></header>
+			<header id="header-mobile"></header>
+
+			<main>
+				<div id="nav-atual">
+					<a href="/home/">home</a>
+					>
+					<a href="/sobre/">sobre</a>
+					>
+					<span class="animate-flicker">portfolio</span>
+				</div>
+				<div id="col-centro" class="portfolio">
+					<h1>Portfolio</h1>
+
+					<p class="port-intro">
+						O que eu ando construindo fora daqui: design, front-end e umas APIs
+						pequenas pra fazer as coisas conversarem. Os vídeos foram gravados
+						com os projetos rodando de verdade, rolando a página do jeito que
+						qualquer um rolaria.
+					</p>
+
+					<!-- Índice com cara de `dir`. Os números batem com os de cada
+					     projeto lá embaixo. -->
+					<nav class="port-indice" aria-label="Projetos">
+						<p class="port-prompt">C:\DHARLAN\PROJETOS&gt; dir /o-d</p>
+						<ol>
+							<li>
+								<a href="#combo-lanches">
+									<span class="indice-num">01</span>
+									<span class="indice-nome">combo-lanches</span>
+									<span class="indice-tipo">site + app</span>
+									<span class="indice-ano">2026</span>
+								</a>
+							</li>
+							<li>
+								<a href="#magals-cap">
+									<span class="indice-num">02</span>
+									<span class="indice-nome">magals-cap</span>
+									<span class="indice-tipo">loja</span>
+									<span class="indice-ano">2026</span>
+								</a>
+							</li>
+							<li>
+								<a href="#lidera360">
+									<span class="indice-num">03</span>
+									<span class="indice-nome">lidera360</span>
+									<span class="indice-tipo">site + marca</span>
+									<span class="indice-ano">2026</span>
+								</a>
+							</li>
+							<li>
+								<a href="#discord-user-status">
+									<span class="indice-num">04</span>
+									<span class="indice-nome">discordUserStatus</span>
+									<span class="indice-tipo">api / bot</span>
+									<span class="indice-ano">2026</span>
+								</a>
+							</li>
+							<li>
+								<a href="#nikki-top-api">
+									<span class="indice-num">05</span>
+									<span class="indice-nome">nikki.top-custom-api</span>
+									<span class="indice-tipo">api</span>
+									<span class="indice-ano">2026</span>
+								</a>
+							</li>
+							<li>
+								<a href="#bia-bio">
+									<span class="indice-num">06</span>
+									<span class="indice-nome">bia-bio</span>
+									<span class="indice-tipo">arquivo</span>
+									<span class="indice-ano">2025</span>
+								</a>
+							</li>
+						</ol>
+					</nav>
+
+					<!-- ============================================== -->
+					<h2 class="port-secao">sites</h2>
+
+					<!-- 01 · Combo Lanches -->
+					<article class="projeto" id="combo-lanches">
+						<div class="projeto-barra">
+							<span class="projeto-num">01</span>
+							<h3>combo lanches</h3>
+							<span class="projeto-meta">site + app · 2026</span>
+						</div>
+
+						<div class="projeto-palco">
+							<!-- Duas fontes por vídeo: o mp4 (H.264) toca em quase tudo e vem
+							     primeiro; o webm (VP9) é a reserva de quem não tem H.264, como
+							     alguns Chromium e Firefox de Linux. O `codecs` no type deixa o
+							     navegador escolher sem baixar nada. -->
+							<figure class="tela">
+								<figcaption>desktop</figcaption>
+								<video
+									class="tela-video"
+									muted
+									loop
+									playsinline
+									preload="none"
+									width="1280"
+									height="800"
+									poster="/assets/img/portfolio/combo-desktop.webp"
+									aria-label="Gravação da landing do Combo Lanches no computador: a logo vira um hambúrguer que se abre camada por camada enquanto a página rola"
+								>
+									<source
+										src="/assets/video/portfolio/combo-desktop.mp4"
+										type='video/mp4; codecs="avc1.640020"'
+									/>
+									<source
+										src="/assets/video/portfolio/combo-desktop.webm"
+										type='video/webm; codecs="vp9"'
+									/>
+								</video>
+							</figure>
+						</div>
+
+						<div class="projeto-corpo">
+							<figure class="tela tela-celular">
+								<figcaption>celular</figcaption>
+								<video
+									class="tela-video"
+									muted
+									loop
+									playsinline
+									preload="none"
+									width="780"
+									height="1688"
+									poster="/assets/img/portfolio/combo-celular.webp"
+									aria-label="Gravação do app do Combo Lanches no celular: abertura, cardápio, montagem de um combo e a sacola"
+								>
+									<source
+										src="/assets/video/portfolio/combo-celular.mp4"
+										type='video/mp4; codecs="avc1.640028"'
+									/>
+									<source
+										src="/assets/video/portfolio/combo-celular.webm"
+										type='video/webm; codecs="vp9"'
+									/>
+								</video>
+							</figure>
+
+							<div class="projeto-info">
+								<p class="projeto-resumo">
+									Cardápio com sacola pra uma lanchonete de bairro em Abreu e
+									Lima (PE). Em breve vai ser vendido pra ela.
+								</p>
+								<p>
+									O mesmo cardápio, a mesma sacola e a mesma marca vestem duas
+									caras. No computador é uma landing de seções empilhadas: o
+									hambúrguer da logo se desmonta enquanto você rola e mostra o
+									que vai dentro de cada camada. No celular vira um app de
+									verdade, com abas embaixo, telas curtas e o lanche voando até
+									a sacola quando entra no pedido.
+								</p>
+								<p>
+									Não é um site responsivo, são duas experiências — o celular
+									nem baixa o código da landing, e vice-versa. Por enquanto o
+									pagamento é simulado e o pedido de verdade continua no iFood
+									da loja. Foi o projeto em que eu aprendi React.
+								</p>
+								<ul class="projeto-stack" aria-label="Tecnologias">
+									<li>react 19</li>
+									<li>vite</li>
+									<li>tailwind v4</li>
+									<li>motion</li>
+									<li>gsap</li>
+								</ul>
+								<div class="projeto-links">
+									<a
+										class="button"
+										href="https://github.com/LULAPT/combo-lanches"
+										target="_blank"
+										>código no github</a
+									>
+								</div>
+							</div>
+						</div>
+					</article>
+
+					<!-- 02 · Magal's Cap -->
+					<!-- Só o lockscreen aparece aqui de propósito: até o drop, a loja
+					     (boné, estampas, preço) fica escondida até no código que o site
+					     entrega. Mostrar print dela antes da hora furaria o drop. -->
+					<article class="projeto" id="magals-cap">
+						<div class="projeto-barra">
+							<span class="projeto-num">02</span>
+							<h3>magal's cap</h3>
+							<span class="projeto-meta">loja · 2026</span>
+						</div>
+
+						<div class="projeto-palco">
+							<figure class="tela">
+								<figcaption>desktop — lockscreen</figcaption>
+								<img
+									src="/assets/img/portfolio/magals-cap.webp"
+									width="1280"
+									height="800"
+									loading="lazy"
+									alt="Lockscreen da loja Magal's Cap: tela verde de terminal com scanlines, o rosto do Mitch em arte de linha e uma contagem regressiva em dias, horas, minutos e segundos"
+								/>
+							</figure>
+						</div>
+
+						<div class="projeto-corpo">
+							<figure class="tela tela-celular">
+								<figcaption>celular</figcaption>
+								<img
+									src="/assets/img/portfolio/magals-cap-celular.webp"
+									width="780"
+									height="1688"
+									loading="lazy"
+									alt="O mesmo lockscreen do Magal's Cap no celular"
+								/>
+							</figure>
+
+							<div class="projeto-info">
+								<p class="projeto-resumo">
+									A loja de um drop só: o boné do Magal's Cap.
+								</p>
+								<p>
+									Até a hora do drop, quem abre o site cai num terminal de
+									Fallout com contagem regressiva. E não é só uma capa por cima:
+									o navegador nem chega a baixar a parte da loja, então não dá
+									pra espiar o boné, as estampas e o preço antes da hora.
+								</p>
+								<p>
+									Do lado de dentro, o boné é um modelo 3D que gira sozinho e dá
+									pra arrastar. O checkout com Pix (Asaas + Edge Functions da
+									Supabase, com webhook e e-mail de confirmação) já está pronto
+									no código, esperando o plano pago; enquanto isso, o pedido sai
+									montado e formatado direto pro WhatsApp da loja.
+								</p>
+								<ul class="projeto-stack" aria-label="Tecnologias">
+									<li>react 19</li>
+									<li>three.js</li>
+									<li>react-three-fiber</li>
+									<li>motion</li>
+									<li>supabase</li>
+									<li>asaas</li>
+								</ul>
+								<div class="projeto-links">
+									<a class="button" href="https://aluado.store/" target="_blank"
+										>aluado.store</a
+									>
+									<span class="projeto-obs">código fechado</span>
+								</div>
+							</div>
+						</div>
+					</article>
+
+					<!-- 03 · Lidera360 -->
+					<article class="projeto" id="lidera360">
+						<div class="projeto-barra">
+							<span class="projeto-num">03</span>
+							<h3>lidera360</h3>
+							<span class="projeto-meta">site + marca · senac · 2026</span>
+						</div>
+
+						<div class="projeto-palco">
+							<figure class="tela">
+								<figcaption>desktop</figcaption>
+								<video
+									class="tela-video"
+									muted
+									loop
+									playsinline
+									preload="none"
+									width="1280"
+									height="800"
+									poster="/assets/img/portfolio/lidera360.webp"
+									aria-label="Gravação do site da Lidera360: intro contando até 360 sobre um fundo animado e depois a landing inteira rolando"
+								>
+									<source
+										src="/assets/video/portfolio/lidera360.mp4"
+										type='video/mp4; codecs="avc1.640020"'
+									/>
+									<source
+										src="/assets/video/portfolio/lidera360.webm"
+										type='video/webm; codecs="vp9"'
+									/>
+								</video>
+							</figure>
+						</div>
+
+						<div class="projeto-corpo">
+							<div class="projeto-lado">
+								<figure class="tela tela-marca">
+									<figcaption>logomarca</figcaption>
+									<img
+										src="/assets/img/portfolio/lidera360-logo.webp"
+										width="444"
+										height="416"
+										loading="lazy"
+										alt="Logomarca da Lidera360: uma montanha em contorno branco cortada por uma seta verde subindo"
+									/>
+								</figure>
+								<figure class="tela">
+									<figcaption>dashboard do aluno</figcaption>
+									<a
+										href="/assets/img/portfolio/lidera360-dash.webp"
+										target="_blank"
+										title="abrir em tamanho cheio"
+									>
+										<img
+											src="/assets/img/portfolio/lidera360-dash.webp"
+											width="1280"
+											height="800"
+											loading="lazy"
+											alt="Dashboard do aluno na Lidera360, com as trilhas de desenvolvimento e o progresso de cada uma"
+										/>
+									</a>
+								</figure>
+							</div>
+
+							<div class="projeto-info">
+								<p class="projeto-resumo">
+									Plataforma de treinamento pra vendedores e futuros líderes,
+									nascida num curso de vendas do Senac.
+								</p>
+								<p>
+									A turma chegou à conclusão de que o problema central era o mau
+									preparo dos vendedores, e daí saiu a Lidera360: trilhas por
+									cargo, módulos com avaliação e certificado, e um
+									acompanhamento que aponta quem tem perfil de liderança dentro
+									do próprio time.
+								</p>
+								<p>
+									Eu tomei a frente no design: a logomarca — a montanha com a
+									seta subindo — e o front inteiro, da landing ao dashboard e ao
+									perfil do aluno. HTML, CSS e JavaScript puro: a intro conta
+									até 360 sobre um shader em WebGL, os cards inclinam seguindo o
+									mouse, e o marca-texto verde que aparece quando você seleciona
+									um texto é desenhado por script.
+								</p>
+								<ul class="projeto-stack" aria-label="Tecnologias">
+									<li>html</li>
+									<li>css</li>
+									<li>javascript</li>
+									<li>webgl</li>
+									<li>identidade visual</li>
+								</ul>
+								<div class="projeto-links">
+									<a
+										class="button"
+										href="https://github.com/LULAPT/Lidera360---Senac"
+										target="_blank"
+										>código no github</a
+									>
+								</div>
+							</div>
+						</div>
+					</article>
+
+					<!-- ============================================== -->
+					<h2 class="port-secao">apis &amp; bots</h2>
+
+					<p class="port-intro">
+						As duas rodam no plano grátis do Render, que põe o servidor pra
+						dormir depois de um tempo parado. Os terminais abaixo chamam as APIs
+						de verdade quando aparecem na tela — se demorar, é ele acordando.
+					</p>
+
+					<!-- 04 · discordUserStatus -->
+					<!-- O conteúdo do <pre> é o exemplo que fica se o JS não rodar ou se
+					     a API não responder. O portfolio.js troca pela resposta ao vivo. -->
+					<article class="projeto" id="discord-user-status">
+						<div class="projeto-barra">
+							<span class="projeto-num">04</span>
+							<h3>discordUserStatus</h3>
+							<span class="projeto-meta">api / bot · 2026</span>
+						</div>
+
+						<div class="projeto-palco">
+							<figure class="tela tela-terminal" data-api="discord">
+								<figcaption>terminal</figcaption>
+								<pre
+									class="terminal"
+								><span class="t-prompt">dharlan@world:~$</span> curl -s discorduserstatus-2-0.onrender.com/status/682694935631233203
+<span class="t-saida"><span class="t-comentario"># exemplo de resposta</span>
+{
+  "userId": "682694935631233203",
+  "status": "online",
+  "avatarUrl": "https://cdn.discordapp.com/avatars/682694935631233203/…",
+  "badges": [ … ],
+  "timestamp": "…"
+}</span></pre>
+								<button type="button" class="terminal-rodar" hidden>
+									rodar de novo
+								</button>
+							</figure>
+						</div>
+
+						<div class="projeto-info">
+							<p class="projeto-resumo">
+								Bot de Discord que diz se eu (e uns amigos) estamos online.
+							</p>
+							<p>
+								Fica logado num servidor acompanhando presença, avatar e badges
+								de uma lista de usuários, e serve isso como JSON com o CORS
+								liberado. É ele que acende a bolinha de status do Discord na
+								<a href="/home/">home</a> deste site. Nasceu pro
+								<a href="#bia-bio">bia-bio</a> e depois foi parar em todo lugar.
+							</p>
+							<p>
+								As badges "de perfil" (nitro, quest, orb) a Discord não entrega
+								pra bot nenhum, então ele monta o que dá de forma legítima: as
+								flags públicas do usuário e o tier de boost calculado pelo tempo
+								de impulso no servidor.
+							</p>
+							<ul class="projeto-stack" aria-label="Tecnologias">
+								<li>node</li>
+								<li>discord.js</li>
+								<li>express</li>
+								<li>render</li>
+							</ul>
+							<div class="projeto-links">
+								<a
+									class="button"
+									href="https://github.com/LULAPT/discordUserStatus"
+									target="_blank"
+									>código no github</a
+								>
+							</div>
+						</div>
+					</article>
+
+					<!-- 05 · nikki.top-custom-api -->
+					<article class="projeto" id="nikki-top-api">
+						<div class="projeto-barra">
+							<span class="projeto-num">05</span>
+							<h3>nikki.top-custom-api</h3>
+							<span class="projeto-meta">api · 2026</span>
+						</div>
+
+						<div class="projeto-palco">
+							<figure class="tela tela-terminal" data-api="nikki">
+								<figcaption>terminal</figcaption>
+								<pre
+									class="terminal"
+								><span class="t-prompt">dharlan@world:~$</span> curl -s "nikki-top-custom-api-z51j.onrender.com/proxy?url=https://nikki.top/api.php?id=376&amp;limit=1"
+<span class="t-saida"><span class="t-comentario"># exemplo: a resposta é um pedaço de HTML com o meu último recado,
+# agora legível por qualquer site — o nikki.top sozinho não deixa.</span></span></pre>
+								<button type="button" class="terminal-rodar" hidden>
+									rodar de novo
+								</button>
+							</figure>
+						</div>
+
+						<div class="projeto-info">
+							<p class="projeto-resumo">
+								Proxy que traz pra cá o que eu escrevo no
+								<a href="https://nikki.top/profile.php?id=376" target="_blank"
+									>meu perfil do nikki.top</a
+								>.
+							</p>
+							<p>
+								O nikki.top não manda cabeçalho de CORS, então o navegador
+								proíbe outro site de ler ele direto. Essa API busca a página do
+								lado do servidor, onde CORS não existe, e devolve com o acesso
+								liberado. Tem lista de hosts permitidos, pra não virar um proxy
+								aberto que qualquer um usa pra qualquer coisa.
+							</p>
+							<p>
+								É ela que alimenta o recado da <a href="/home/">home</a>, no
+								lugar do status.cafe, que está com o cadastro quebrado.
+							</p>
+							<ul class="projeto-stack" aria-label="Tecnologias">
+								<li>node</li>
+								<li>express</li>
+								<li>render</li>
+							</ul>
+							<div class="projeto-links">
+								<a
+									class="button"
+									href="https://github.com/LULAPT/nikki.top-custom-api"
+									target="_blank"
+									>código no github</a
+								>
+							</div>
+						</div>
+					</article>
+
+					<!-- ============================================== -->
+					<h2 class="port-secao">arquivo</h2>
+
+					<!-- 06 · bia-bio -->
+					<article class="projeto projeto-arquivo" id="bia-bio">
+						<div class="projeto-barra">
+							<span class="projeto-num">06</span>
+							<h3>bia-bio</h3>
+							<span class="projeto-meta">bio · 2025</span>
+							<span class="projeto-selo">descontinuado</span>
+						</div>
+
+						<div class="projeto-info">
+							<p>
+								Página de bio pra uma amiga: tela de "click to unlock", player
+								de música, cursor com neve, texto se digitando sozinho e o
+								status do Discord ao vivo. Foi onde o
+								<a href="#discord-user-status">discordUserStatus</a> rodou pela
+								primeira vez. Ganhou variantes — a minha e a do berg — e todas
+								foram descontinuadas.
+							</p>
+							<div class="projeto-links">
+								<a
+									class="button"
+									href="https://github.com/LULAPT/bia-bio"
+									target="_blank"
+									>bia-bio</a
+								>
+								<a
+									class="button"
+									href="https://github.com/LULAPT/dharlan-bio"
+									target="_blank"
+									>dharlan-bio</a
+								>
+								<a
+									class="button"
+									href="https://github.com/LULAPT/berg-bio"
+									target="_blank"
+									>berg-bio</a
+								>
+							</div>
+						</div>
+					</article>
+
+					<div class="port-fim">
+						<p>
+							E tem este site, claro: escrito à mão, sem build e sem framework.
+							O código dele também é aberto.
+						</p>
+						<div class="projeto-links">
+							<a
+								class="button"
+								href="https://github.com/LULAPT/dharlan.world"
+								target="_blank"
+								>dharlan.world</a
+							>
+							<a
+								class="button"
+								href="https://github.com/LULAPT?tab=repositories"
+								target="_blank"
+								>tudo no github</a
+							>
+						</div>
+					</div>
+				</div>
+			</main>
+
+			<footer></footer>
+		</div>
+
+		<script type="module" src="/assets/js/main.js"></script>
+		<script type="module" src="/assets/js/portfolio.js"></script>
+	</body>
+</html>

@@ -22,7 +22,8 @@ body.rounded .img-main {
 	/* Impede que o ícone diminua */
 }
 
-div:has(> a#setup-btn) {
+div:has(> a#setup-btn),
+div:has(> a#portfolio-btn) {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -31,7 +32,8 @@ div:has(> a#setup-btn) {
 	margin-bottom: 1em;
 }
 
-a#setup-btn {
+a#setup-btn,
+a#portfolio-btn {
 	display: inline-flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -46,7 +48,8 @@ a#setup-btn {
 	white-space: nowrap;
 }
 
-a#setup-btn:hover {
+a#setup-btn:hover,
+a#portfolio-btn:hover {
 	background-color: var(--clr-main-a40);
 	border-color: var(--clr-main-a40);
 	color: var(--clr-black-a10);

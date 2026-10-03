@@ -364,6 +364,37 @@ esconde chrome do site (o `vestirFolha()` da `/curriculo/`, por exemplo) precisa
 remover `#radio-botao` junto com `#settings-panel` — `<style>` injetado não some
 quando se desligam os `<link>`.
 
+## A `/portfolio/`
+
+Os projetos recentes do dharlan (Combo Lanches, Magal's Cap, Lidera360, as duas
+APIs e o bia-bio). **Não está no `links` do navbar.js**: a porta é o botão
+`#portfolio-btn` na caixa "o que eu ando fazendo" da [sobre.html](sobre.html).
+Está no [sitemap-data.js](assets/js/sitemap-data.js) como filha da `/sobre/`, e
+o breadcrumb também passa pela `/sobre/`.
+
+- As mídias moram em `assets/img/portfolio/` (pôsteres e prints em webp) e
+  `assets/video/portfolio/`. Cada vídeo tem **duas fontes**: mp4 H.264 primeiro
+  e webm VP9 de reserva — o Chromium do Playwright e alguns Chromium/Firefox de
+  Linux não tocam H.264. O `codecs` no `type` tem que bater com o perfil e o
+  nível do arquivo (`ffprobe`) se o vídeo for refeito.
+- Os vídeos foram gravados com os projetos rodando de verdade (Playwright
+  rolando a página) e comprimidos no ffmpeg. Nascem com `preload="none"` e o
+  [portfolio.js](assets/js/portfolio.js) só dá play enquanto estão na tela;
+  com `prefers-reduced-motion`, ficam o pôster e os controles nativos.
+- **Magal's Cap mostra só o lockscreen, de propósito.** Até o drop, a loja
+  (boné, estampas, preço) não é nem baixada pelo navegador — print dela aqui
+  furaria o drop. O repositório dela é privado, por isso o link é pro site e
+  não pro GitHub. Também não se fala do cookie que pula o lockscreen.
+- Os terminais das APIs chamam o discordUserStatus e o proxy do nikki.top **ao
+  vivo**, quando aparecem na tela. Os dois estão no plano grátis do Render, que
+  dorme: a espera vai até 55s, e sem resposta volta o exemplo escrito no HTML.
+  A resposta do nikki é HTML de terceiro — entra sempre por `textContent`.
+- `image-rendering: auto` nas mídias é proposital: screenshot de interface
+  reduzido com `pixelated` fica ilegível. Mesma exceção dos selos da `/sobre/`.
+- Quem rola as páginas é o `body`, não a janela (`html, body { height: 100% }`
+  + `overflow-y: scroll` no body). `window.scrollTo` não faz nada aqui — em
+  teste automatizado, role o `document.body` ou use `scrollIntoView`.
+
 ## Sobras do site original
 
 Ainda referenciam o dono anterior ou a hospedagem antiga; corrija junto quando

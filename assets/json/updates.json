@@ -1,5 +1,12 @@
 [
 	{
+		"date": "2026-10-03",
+		"items": [
+			"página <a href=\"/portfolio/\">/portfolio</a> criada, com os projetos recentes: sites gravados rodando de verdade e os terminais das APIs chamando os servidores ao vivo",
+			"seção nova na <a href=\"/sobre/\">/sobre</a> contando o que eu ando fazendo, com o botão pro portfolio"
+		]
+	},
+	{
 		"date": "2026-09-12",
 		"items": [
 			"página <a href=\"/radio/\">/radio</a> criada — um deck de rádio tocando playlist do youtube, com visor, controles e 8 temas",
