@@ -3,8 +3,8 @@
 // socar a borda esquerda. O soco derruba tudo e, depois de uma pausa com ela
 // sozinha na tela, vem a próxima página.
 //
-// Dispara pelo comando `exit` (vai pra /sobre/) e pelo link "< voltar pro site"
-// (vai pra /home/). Quem dispara decide o destino; a cena é a mesma.
+// Dispara pelo comando `exit` e pelo link "< voltar pro site", e os dois
+// terminam na /home/.
 //
 // Os movimentos dela são de verdade: o gunnm-saida-dither.webp é um WebP
 // animado, feito de um vídeo gerado por IA que usou o próprio PNG dela como
@@ -20,11 +20,11 @@ const sorteio = (min, max) => min + Math.random() * (max - min);
 const reduzido = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let saindo = false;
-let destinoAtual = "/home/";
+const DESTINO = "/home/";
 
 // Pula a cena: qualquer tecla ou clique durante ela vai direto pro destino.
 function irAgora() {
-	window.location.href = destinoAtual;
+	window.location.href = DESTINO;
 }
 
 // Acima do terminal e dos dois botões fixos (997), abaixo do clarão: durante
@@ -346,10 +346,9 @@ function clarao() {
 
 /* ------------------------------------------------------------ a cena */
 
-export async function sairDaSetup(destino) {
+export async function sairDaSetup() {
 	if (saindo) return;
 	saindo = true;
-	destinoAtual = destino;
 
 	// Ainda dentro do gesto (o Enter ou o clique): é aqui que o navegador
 	// deixa o áudio destravar. Precisa vir antes de qualquer `await`.
@@ -410,7 +409,7 @@ voltar?.addEventListener("click", (e) => {
 	// Pra o fade-out do fade-in.js (que escuta cliques em link no document)
 	// não navegar por cima da cena.
 	e.stopPropagation();
-	sairDaSetup(voltar.getAttribute("href"));
+	sairDaSetup();
 });
 
 // Baixa o WebP da cena quando a página já terminou o que tinha pra fazer.

@@ -318,10 +318,10 @@ export function iniciarComandos({
 				tela.textContent = "";
 			},
 		},
-		// O prompt não volta: a cena da saída termina navegando pra /sobre/.
+		// O prompt não volta: a cena da saída termina navegando pra /home/.
 		exit: {
-			descricao: "sai do terminal e volta pro site (/sobre/)",
-			rodar: () => suspender(() => sairDaSetup("/sobre/")),
+			descricao: "sai do terminal e volta pro site (/home/)",
+			rodar: () => suspender(() => sairDaSetup()),
 		},
 	};
 

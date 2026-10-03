@@ -77,7 +77,7 @@ das fontes de lá. O visual da página em si é todo do
 no layout. O IP local fica censurado em blocos de propósito.
 
 **A saída da `/setup/`** ([setup-saida.js](assets/js/setup-saida.js)): o comando
-`exit` (vai pra `/sobre/`) e o link "voltar pro site" (vai pra `/home/`) disparam
+`exit` e o link "voltar pro site" (os dois vão pra `/home/`) disparam
 uma cena de ~6s. Antes dela, um `clear` de mentira: digitado no prompt e
 rodado, deixando só o prompt piscando no topo (quem escreve no terminal é o
 setup-comandos.js, que se registra no setup-saida.js por `registrarClear`).
