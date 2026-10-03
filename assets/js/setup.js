@@ -9,6 +9,8 @@
 // (deviceMemory, WEBGL_debug_renderer_info) vem arredondado ou mascarado. Então
 // é a saída de um fastfetch de verdade, congelada no JSON.
 
+import { iniciarComandos } from "./setup-comandos.js";
+
 const CAMINHO = "/assets/json/setup-specs.json";
 const VELOCIDADE_DIGITACAO = 70;
 const PAUSA_ANTES_DA_SAIDA = 260;
@@ -21,7 +23,7 @@ function semAnimacao() {
 	return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function criar(tag, classe, texto) {
+export function criar(tag, classe, texto) {
 	const el = document.createElement(tag);
 	if (classe) el.className = classe;
 	if (texto !== undefined) el.textContent = texto;
@@ -66,24 +68,26 @@ function montarPaleta() {
 	return paleta;
 }
 
-function montarSaida(dados) {
+export function montarSaida(dados) {
 	const saida = criar("div", "ff-saida");
 
-	// A arte do Windows está DESLIGADA. Como <pre> dentro do flex ela ocupava a
-	// largura inteira do contêiner (1212px medidos no Brave, pra 35 colunas de
-	// ~6px cada), espremia a coluna de dados a zero e jogava tudo pra fora da
-	// tela. No celular não dava pra perceber, porque o @media já escondia a
-	// arte — por isso quebrava só no desktop.
+	// Arte à esquerda, dados à direita — a divisão clássica de qualquer fetch.
 	//
-	// O fetch do caelestia, que é a referência desta página, também roda sem
-	// logo ("logo": null no config dele). A arte continua no setup-specs.json:
-	// religar é descomentar as quatro linhas abaixo (e resolver a largura).
+	// Ela já esteve desligada: como <pre> dentro de um flex, ocupava a largura
+	// inteira do contêiner (1212px medidos no Brave, pra 35 colunas), espremia
+	// a coluna de dados a zero e jogava tudo pra fora da tela. No celular não
+	// dava pra perceber, porque o @media escondia a arte — por isso quebrava só
+	// no desktop.
 	//
-	// if (Array.isArray(dados.logo) && dados.logo.length) {
-	// 	const logo = criar("pre", "ff-logo", dados.logo.join("\n"));
-	// 	logo.setAttribute("aria-hidden", "true");
-	// 	saida.appendChild(logo);
-	// }
+	// O conserto mora no setup.css: a .ff-saida virou grid de duas colunas,
+	// `max-content minmax(0, 1fr)`. O max-content mede o <pre> pela linha mais
+	// longa em vez de deixá-lo crescer, e o minmax(0, ...) deixa a coluna de
+	// dados encolher em vez de empurrar o resto pra fora. Não voltar pro flex.
+	if (Array.isArray(dados.logo) && dados.logo.length) {
+		const logo = criar("pre", "ff-logo", dados.logo.join("\n"));
+		logo.setAttribute("aria-hidden", "true");
+		saida.appendChild(logo);
+	}
 
 	const infos = criar("div", "ff-infos");
 
@@ -105,7 +109,7 @@ function montarSaida(dados) {
 	return saida;
 }
 
-function montarPrompt(textoPrompt) {
+export function montarPrompt(textoPrompt) {
 	const linha = criar("div", "ff-linha-prompt");
 	linha.appendChild(criar("span", "ff-prompt", textoPrompt));
 	linha.appendChild(document.createTextNode(" "));
@@ -158,10 +162,15 @@ export async function montarSetup() {
 	// 2) a saída, de uma vez — é assim que o fastfetch imprime de verdade
 	tela.appendChild(montarSaida(dados));
 
-	// 3) o prompt de volta, esperando um comando que não vai vir
-	const linhaFinal = montarPrompt(textoPrompt);
-	linhaFinal.appendChild(criar("span", "ff-cursor", "▋"));
-	tela.appendChild(linhaFinal);
+	// 3) o prompt de volta — agora esperando um comando de verdade
+	iniciarComandos({
+		tela,
+		dados,
+		textoPrompt,
+		criar,
+		montarPrompt,
+		montarSaida,
+	});
 }
 
 document.addEventListener("DOMContentLoaded", montarSetup);

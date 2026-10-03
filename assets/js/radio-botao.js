@@ -105,9 +105,10 @@ export function iniciarBotaoRadio() {
 	const botao = document.createElement("a");
 	botao.id = "radio-botao";
 	botao.href = "/radio/";
-	// title vira tooltip customizado (o script troca por data-smt-title e
-	// remove o title); o aria-label é o que sobra pro leitor de tela.
-	botao.title = "Rádio";
+	// Sem `title`, ou seja, sem tooltip — decisão do dono. O tooltip deste
+	// botão foi o que revelou o bug de o tooltip esticar o documento e fazer
+	// nascer barra de rolagem no hover (ver jquery.style-my-tooltips.js, que já
+	// está corrigido). Quem explica o botão agora é só o aria-label.
 	botao.setAttribute("aria-label", "Abrir a página do rádio");
 	botao.innerHTML = ICONE;
 

@@ -28,7 +28,14 @@ body {
 	gap: 1.5rem;
 	min-height: 100vh;
 	min-height: 100dvh;
-	padding: 1.5rem 1.5rem 5rem;
+
+	/* O respiro de baixo não é estética: a engrenagem e o botão do rádio são
+	   fixos e ocupam de 20px a 60px da borda inferior, bem em cima da margem
+	   esquerda — justamente onde o prompt começa. Rolado até o fim, o prompt
+	   para a esta distância do fim da página, então ela precisa passar dos
+	   60px dos botões com folga. Com os 5rem de antes sobravam 10px, e
+	   qualquer diferença de métrica de fonte fazia o prompt sumir atrás deles. */
+	padding: 1.5rem 1.5rem 8rem;
 }
 
 /* Único caminho de volta — a página não tem header nem footer. Mesmo papel do
@@ -46,11 +53,62 @@ body {
 	color: var(--clr-main-a40);
 }
 
+/* Fluido: num monitor grande o fetch tem que ocupar a tela, não ficar num
+   cantinho. O piso segura a legibilidade no celular e o teto evita que vire
+   cartaz em ultrawide. */
 #setup-terminal {
 	color: var(--clr-white);
 	font-family: var(--fonte-monospace, monospace);
-	font-size: 0.85rem;
+	font-size: clamp(0.85rem, 1vw, 1.2rem);
 	line-height: 1.5;
+
+	/* Item de um flex column (#setup-tela), então o min-width: auto padrão o
+	   deixaria crescer até o conteúdo mais largo e empurrar a página pra fora
+	   da tela no celular. */
+	min-width: 0;
+
+	/* Empilhamento explícito: a #setup-gunnm é fixed e passaria por cima do
+	   texto numa janela mais estreita. */
+	position: relative;
+	z-index: 1;
+}
+
+/* A gunnm com a bandeira, mesmo dither rosa da que está na /sobre/ (e único
+   lugar do site que usa este PNG). Enfeite puro: fora do fluxo, sem captar
+   clique e escondida dos leitores de tela.
+
+   `fixed` e não `absolute` porque ela é cenário, não conteúdo — fica plantada
+   no canto enquanto o terminal rola, igual à engrenagem e ao botão do rádio do
+   canto oposto. O transform-origin embaixo faz o .tilt virar um balanço a
+   partir dos pés, em vez de um giro em torno da barriga: no topo da imagem o
+   1.3deg vira uns 15px de vaivém, que é o movimento que a bandeira pede. */
+#setup-gunnm {
+	bottom: 0;
+	/* Altura da tela inteira: ela vai do rodapé até o topo do viewport. Nessa
+	   altura ela passa por trás da coluna de dados nas linhas mais longas — é
+	   intencional, por isso o z-index do #setup-terminal e a opacidade baixa. */
+	height: 100vh;
+	height: 100dvh;
+	opacity: 0.55;
+	pointer-events: none;
+	position: fixed;
+	/* `rem` e não `vw`: o tooltip do botão do rádio é position: absolute e, no
+	   quadro entre aparecer e ser posicionado, chega a esticar a área rolável e
+	   piscar uma barra de rolagem. Barra de rolagem entra na conta do vw, então
+	   com `2vw` ela dava um pulo lateral de uns 8px nesse quadro. Em rem não
+	   depende da largura do viewport e fica parada. */
+	right: 2rem;
+	transform-origin: bottom center;
+	user-select: none;
+	width: auto;
+
+	/* Ela é um PNG grande, girando pelo .tilt e com o `image-rendering:
+	   pixelated` global — ou seja, re-rasterizada a cada repintura. Sem a
+	   camada própria, qualquer repintura alheia (o hover do botão do rádio
+	   animando o ícone, o tooltip entrando no DOM) a repinta junto e aparece
+	   como uma piscada. O will-change fixa a camada. */
+	will-change: transform;
+	z-index: 0;
 }
 
 .ff-linha-prompt {
@@ -81,11 +139,32 @@ body {
 	}
 }
 
-/* Bloco simples. Era flex (arte à esquerda, dados à direita) enquanto o logo
-   existia, e foi justamente esse flex que, com o <pre> dentro, espremeu a
-   coluna de dados a zero no desktop. Ver o comentário no setup.js. */
+/* Arte à esquerda, dados à direita — a divisão de qualquer fetch.
+
+   Grid, não flex: foi o flex que, com o <pre> dentro, espremeu a coluna de
+   dados a zero no desktop e tirou a arte do ar por um tempo. O `max-content`
+   mede o <pre> pela linha mais longa em vez de deixá-lo crescer, e o
+   `minmax(0, 1fr)` deixa a coluna de dados encolher em vez de empurrar o
+   resto pra fora da tela. Ver o comentário no setup.js. */
 .ff-saida {
-	margin: 1rem 0;
+	align-items: start;
+	display: grid;
+	gap: 0 2.5rem;
+	grid-template-columns: max-content minmax(0, 1fr);
+	margin: 1.5rem 0;
+}
+
+/* A bandeira do Windows em ASCII, como o fastfetch imprime. O `min` com vw é
+   o que a mantém inteira em tela estreita: ela tem 35 colunas fixas, então o
+   tamanho do caractere é que precisa ceder. Entrelinha perto de 1 porque o
+   desenho sai esticado na vertical com o 1.5 do terminal. */
+.ff-logo {
+	color: var(--clr-main-a40);
+	max-width: 100%;
+	font-size: min(1.2em, 2.6vw);
+	line-height: 1.05;
+	margin: 0;
+	white-space: pre;
 }
 
 .ff-titulo {
@@ -119,7 +198,7 @@ body {
 
 .ff-valor {
 	color: var(--clr-white);
-	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 /* Semáforo de uso do fastfetch. Fora do tema de propósito: a cor aqui é o
@@ -144,8 +223,8 @@ body {
 }
 
 .ff-paleta span {
-	height: 13px;
-	width: 26px;
+	height: 1.1em;
+	width: 2.2em;
 }
 
 .ff-paleta span:nth-child(1) {
@@ -177,16 +256,33 @@ body {
 	color: var(--clr-main-a40);
 }
 
+/* Tablet: não cabem as duas colunas, então a arte sobe pra cima dos dados (o
+   `min` do font-size já a encolhe sozinha). A gunnm sai junto — a partir daqui
+   o terminal usa a largura toda e ela só ficaria por baixo do texto. */
+@media (max-width: 1100px) {
+	.ff-saida {
+		gap: 1rem 0;
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	#setup-gunnm {
+		display: none;
+	}
+}
+
 /* Terminal estreito: o valor desce pra baixo do rótulo. Alinhar à direita numa
    coluna de 300px só faria o olho pular. O fetch de verdade também perde o
    alinhamento quando a janela aperta. */
 @media (max-width: 760px) {
 	#setup-tela {
-		padding: 1rem 1rem 5rem;
+		padding: 1rem 1rem 8rem;
 	}
 
-	#setup-terminal {
-		font-size: 0.75rem;
+	/* Celular: a bandeira sai de cena. Nessa largura ela só cabe encolhida a
+	   ponto de virar borrão, e empurra a tabela — que é o conteúdo — pra baixo
+	   da dobra. Decisão do dono. */
+	.ff-logo {
+		display: none;
 	}
 
 	.ff-linha {
@@ -194,4 +290,378 @@ body {
 		grid-template-columns: 1fr;
 		margin-bottom: 0.4rem;
 	}
+}
+
+/* O balanço da gunnm é decoração pura — quem pediu menos movimento no sistema
+   fica com ela parada, não sem ela. */
+@media (prefers-reduced-motion: reduce) {
+	#setup-gunnm {
+		animation: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   O prompt que aceita comandos (setup-comandos.js)
+   --------------------------------------------------------------------------- */
+
+/* O <input> de verdade fica invisível e é ele que tem o foco — é o que faz o
+   teclado do celular abrir e a acentuação funcionar. Quem aparece é o <span>
+   .ff-digitado, espelhando o valor dele, porque num input não dá pra desenhar
+   o cursor em bloco do jeito que o resto da página usa.
+
+   Fica em 0,0 e com 1px de propósito: um absolute solto no fim do fluxo
+   estica a altura do documento e faz nascer barra de rolagem — foi esse o bug
+   do tooltip que mexia a gunnm.
+
+   O 0,0 é relativo à .ff-linha-entrada (ver o position: relative lá embaixo),
+   nunca ao #setup-terminal. Ao digitar, o navegador rola o cursor de texto pra
+   dentro da vista por conta própria, e isso o `preventScroll` do focus() não
+   alcança — com o input ancorado no terminal inteiro, cada tecla jogava a
+   página pro topo. Ancorado na linha, rolar até ele é rolar até onde já
+   estamos, e nada se mexe. */
+#setup-entrada {
+	background: transparent;
+	border: 0;
+	height: 1px;
+	left: 0;
+	opacity: 0;
+	outline: none;
+	padding: 0;
+	position: absolute;
+	top: 0;
+	width: 1px;
+}
+
+/* O `relative` é o que prende o #setup-entrada a esta linha — ver o comentário
+   dele acima. Sem isso o input cai no #setup-terminal e digitar sobe a página. */
+.ff-linha-entrada {
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 0.5ch;
+	position: relative;
+}
+
+.ff-digitado {
+	color: var(--clr-white);
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+/* Apagada e discreta: é um convite, não conteúdo. Some assim que se digita
+   qualquer coisa e não volta depois do primeiro comando. */
+.ff-dica {
+	color: var(--clr-gray-a30);
+	font-style: italic;
+	margin-left: 1ch;
+	opacity: 0.65;
+	user-select: none;
+}
+
+.ff-saida-texto {
+	color: var(--clr-white);
+	margin: 0.2rem 0;
+}
+
+/* A lista do `help` reusa a grade de duas colunas das linhas do fetch, só com
+   um recuo pra ficar claro que é resposta de comando, não mais uma spec. */
+.ff-ajuda {
+	margin: 0.4rem 0 0.8rem;
+	padding-left: 2ch;
+}
+
+/* --- cmatrix --- */
+
+/* Abaixo da engrenagem e do botão do rádio (997), acima do terminal (1) e da
+   gunnm (0): sair do cmatrix não pode custar o acesso ao resto da página. */
+#setup-cmatrix {
+	inset: 0;
+	position: fixed;
+	z-index: 500;
+}
+
+.setup-cmatrix-aviso {
+	bottom: 20px;
+	color: var(--clr-main-a40);
+	font-family: var(--fonte-monospace, monospace);
+	font-size: 0.85rem;
+	left: 50%;
+	letter-spacing: 1px;
+	opacity: 0.7;
+	pointer-events: none;
+	position: fixed;
+	transform: translateX(-50%);
+	user-select: none;
+	z-index: 501;
+}
+
+/* ---------------------------------------------------------------------------
+   bagels — o controle de gastos (setup-bagels.js)
+   --------------------------------------------------------------------------- */
+
+.bagels-titulo {
+	color: var(--clr-main-a40);
+	font-weight: bold;
+	margin: 0.6rem 0 0.3rem;
+}
+
+/* Colunas de largura automática em vez de espaços contados: a barra e os
+   valores alinham sozinhos, e em tela estreita o @media lá embaixo desmonta.
+
+   Quantas colunas é o setup-bagels.js que decide, em style inline, porque
+   depende da tabela (o `list` tem cinco, o `cat` tem quatro). O valor abaixo
+   é só o que vale antes do JS escrever o dele. */
+.bagels-tabela {
+	display: grid;
+	gap: 0 1.5ch;
+	grid-template-columns: max-content 1fr;
+	margin: 0.2rem 0 0.8rem;
+	padding-left: 2ch;
+}
+
+.bagels-linha {
+	display: contents;
+}
+
+.bagels-id {
+	color: var(--clr-gray-a30);
+}
+
+.bagels-dia {
+	color: var(--clr-gray-a30);
+}
+
+.bagels-categoria {
+	color: var(--clr-main-a40);
+}
+
+.bagels-descricao {
+	color: var(--clr-white);
+	overflow-wrap: anywhere;
+}
+
+/* Verde e vermelho fogem do tema pela mesma razão das porcentagens do fastfetch
+   lá em cima: aqui a cor é o dado (entrou / saiu), não enfeite. */
+.bagels-positivo {
+	color: var(--clr-green-a30);
+}
+
+.bagels-negativo {
+	color: #e5484d;
+}
+
+/* Blocos █ e ░ em vez de uma barra desenhada em CSS: é ASCII, como o resto do
+   terminal, e sobrevive a copiar e colar a saída. */
+.bagels-barra {
+	color: var(--clr-main-a30);
+	letter-spacing: -0.05em;
+	white-space: pre;
+}
+
+.bagels-fatia {
+	color: var(--clr-gray-a30);
+}
+
+/* Terminal estreito: a grade de cinco colunas não cabe. Cada lançamento vira
+   uma linha corrida, que é como o próprio Bagels se vira em janela pequena. */
+@media (max-width: 760px) {
+	/* !important porque o número de colunas vem em style inline do JS, e no
+	   celular ele tem que perder pra essa coluna única. */
+	.bagels-tabela {
+		grid-template-columns: 1fr !important;
+		padding-left: 1ch;
+	}
+
+	.bagels-linha {
+		display: block;
+		margin-bottom: 0.3rem;
+	}
+
+	.bagels-linha span + span::before {
+		content: " ";
+	}
+
+	.bagels-barra {
+		display: block;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   sitemap — a árvore ramificada do comando `sitemap` (setup-sitemap.js)
+
+   Desenho do "branched menu": tronco vertical, cotovelo saindo pra cada item.
+   O tronco não é uma linha só: cada nó desenha o próprio pedaço, do topo dele
+   até o meio da própria linha. É isso que faz o tronco terminar exatamente no
+   último filho, sem ninguém precisar medir altura em JS — e é o que aguenta
+   uma seção aninhada, cuja altura varia conforme abre e fecha.
+   --------------------------------------------------------------------------- */
+
+.mapa {
+	--mapa-linha: 1.6em;
+	--mapa-recuo: 1.6em;
+	--mapa-tronco: 0.55em;
+	--mapa-curva: 0.5em;
+	--mapa-traco: var(--clr-gray-a20);
+
+	display: flex;
+	flex-direction: column;
+	margin: 0.4rem 0 1rem;
+	padding-left: 0.5ch;
+}
+
+.mapa-no {
+	position: relative;
+}
+
+/* O tronco e os cotovelos só existem dentro de um bloco de filhos; nos nós de
+   primeiro nível não há de onde ramificar. */
+.mapa-ramos > .mapa-no {
+	padding-left: var(--mapa-recuo);
+}
+
+/* Do topo do nó até o meio da linha dele, virando pra direita: o cotovelo. */
+.mapa-ramos > .mapa-no::before {
+	border-bottom: 1px solid var(--mapa-traco);
+	border-bottom-left-radius: var(--mapa-curva);
+	border-left: 1px solid var(--mapa-traco);
+	content: "";
+	height: calc(var(--mapa-linha) / 2);
+	left: var(--mapa-tronco);
+	position: absolute;
+	top: 0;
+	transition: border-color 200ms ease;
+	width: calc(var(--mapa-recuo) - var(--mapa-tronco) - 0.4em);
+}
+
+/* E do meio da linha até o fim do nó, continuando o tronco pro próximo irmão.
+   O último não tem: é o que faz a linha parar no lugar certo. */
+.mapa-ramos > .mapa-no:not(:last-child)::after {
+	border-left: 1px solid var(--mapa-traco);
+	bottom: 0;
+	content: "";
+	left: var(--mapa-tronco);
+	position: absolute;
+	top: calc(var(--mapa-linha) / 2);
+}
+
+/* Passar o mouse acende o caminho inteiro até a raiz, porque o :hover sobe
+   pelos ancestrais — mostra de onde a página pendura. */
+.mapa-ramos > .mapa-no:hover::before,
+.mapa-ramos > .mapa-no:focus-within::before {
+	border-color: var(--clr-main-a40);
+}
+
+/* --- as linhas --- */
+
+.mapa-item,
+.mapa-cabeca,
+.mapa-atalho {
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	font: inherit;
+	line-height: var(--mapa-linha);
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	transition: color 200ms ease;
+}
+
+.mapa-item {
+	display: inline-block;
+}
+
+.mapa-item:hover,
+.mapa-item:focus-visible {
+	color: var(--clr-main-a40);
+	text-decoration: underline;
+}
+
+.mapa-fora {
+	color: var(--clr-gray-a30);
+	margin-left: 0.4ch;
+}
+
+/* --- seção que abre e fecha --- */
+
+.mapa-secao {
+	display: grid;
+	grid-template-columns: max-content max-content;
+}
+
+.mapa-cabeca {
+	align-items: center;
+	cursor: pointer;
+	display: flex;
+	gap: 0.5ch;
+}
+
+.mapa-cabeca:hover,
+.mapa-cabeca:focus-visible {
+	color: var(--clr-white);
+}
+
+.mapa-secao[data-aberta] > .mapa-cabeca {
+	color: var(--clr-white);
+}
+
+.mapa-seta {
+	color: var(--clr-main-a40);
+	display: inline-block;
+	transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mapa-secao[data-aberta] > .mapa-cabeca .mapa-seta {
+	transform: rotate(90deg);
+}
+
+/* O rótulo da seção também é página, mas o clique no nome abre a seção. Este é
+   o jeito de ir até ela. Discreto até o mouse chegar perto. */
+.mapa-atalho {
+	color: transparent;
+	margin-left: 1.5ch;
+}
+
+.mapa-secao:hover > .mapa-atalho,
+.mapa-atalho:focus-visible {
+	color: var(--clr-gray-a30);
+}
+
+.mapa-atalho:hover {
+	color: var(--clr-main-a40);
+	text-decoration: underline;
+}
+
+/* A dobra: `grid-template-rows` de 0fr pra 1fr é o que anima a altura sem
+   ninguém precisar saber quanto ela vale. */
+.mapa-corpo {
+	display: grid;
+	grid-column: 1 / -1;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mapa-secao[data-aberta] > .mapa-corpo {
+	grid-template-rows: 1fr;
+}
+
+.mapa-dobra {
+	min-height: 0;
+	overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mapa-corpo,
+	.mapa-seta,
+	.mapa-ramos > .mapa-no::before {
+		transition: none;
+	}
+}
+
+/* O ">" que marca cada comando na lista do `help`. Apagado de propósito: ele é
+   marcador, e quem tem que saltar aos olhos é o nome do comando ao lado. */
+.ff-seta {
+	color: var(--clr-gray-a30);
+	font-weight: normal;
+	margin-right: 0.6ch;
 }

@@ -13,6 +13,14 @@ export function enableTooltips({ tipFollowsCursor = true, tipDelay = 0, tipFadeS
       display: "none",
       pointerEvents: "none",
       zIndex: 9999,
+      // Âncora em 0,0 de propósito: um absolute sem top/left usa a posição
+      // estática, que aqui é o fim do fluxo do <body>. Exibido assim, ele
+      // estica a altura do documento, faz nascer uma barra de rolagem, o
+      // viewport encolhe e TODO position: fixed da página anda alguns pixels
+      // pro lado. Era o que mexia a gunnm da /setup/ quando o mouse passava
+      // no botão do rádio.
+      left: "0px",
+      top: "0px",
     });
     document.body.appendChild(tooltip);
   }
@@ -71,9 +79,14 @@ export function enableTooltips({ tipFollowsCursor = true, tipDelay = 0, tipFadeS
     el.dataset.smtTitle = title;
     el.removeAttribute(attribute);
 
-    el.addEventListener("mouseenter", () => {
+    el.addEventListener("mouseenter", (evento) => {
       currentElement = el;
-      tooltipTimeout = setTimeout(() => showTooltip(el), tipDelay);
+      tooltipTimeout = setTimeout(() => {
+        showTooltip(el);
+        // Posiciona na mesma tarefa do display: block, pra não existir um
+        // quadro pintado com o tooltip visível e ainda no canto.
+        updateTooltipPosition(evento);
+      }, tipDelay);
       if (tipFollowsCursor) {
         document.addEventListener("mousemove", updateTooltipPosition);
       }

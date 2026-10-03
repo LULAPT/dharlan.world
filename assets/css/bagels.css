@@ -1,0 +1,726 @@
+/* bagels.css — a tela cheia do controle de gastos da /setup/.
+   Porte visual do TUI do Bagels (https://github.com/EnhancedJax/Bagels), feito
+   em Textual.
+
+   Os painéis são divs com borda e o título encaixado na borda de cima: é o que
+   o Textual desenha com os caracteres de caixa. Aqui é CSS e não ASCII porque
+   esse desenho precisa esticar junto com o painel, e caractere de caixa tem
+   largura fixa — esticaria em degraus ou entortaria conforme a fonte.
+
+   As cores do original (roxo e laranja) não vieram: tudo sai das variáveis de
+   tema do site, então isto acompanha dark, light e steam-green sem regra extra.
+   Mesma escolha do resto da /setup/. */
+
+.bg-tui {
+	background: var(--clr-black-a0);
+	color: var(--clr-white);
+	display: flex;
+	flex-direction: column;
+	font-family: var(--fonte-monospace, monospace);
+	font-size: clamp(0.72rem, 0.85vw, 0.95rem);
+	gap: 0.5rem;
+	inset: 0;
+	letter-spacing: normal;
+	line-height: 1.45;
+	padding: 0.75rem;
+	position: fixed;
+	/* Abaixo da engrenagem e do botão do rádio (997): abrir o bagels não pode
+	   custar o acesso ao resto da página. */
+	z-index: 600;
+}
+
+/* ------------------------------------------------------------------- topo */
+
+.bg-topo {
+	align-items: center;
+	display: flex;
+	flex-shrink: 0;
+	gap: 1.5rem;
+}
+
+.bg-marca {
+	align-items: baseline;
+	display: flex;
+	gap: 0.4rem;
+}
+
+.bg-seta,
+.bg-nome {
+	color: var(--clr-main-a40);
+	font-weight: bold;
+}
+
+.bg-versao {
+	color: var(--clr-gray-a30);
+}
+
+.bg-abas {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.bg-aba {
+	background: none;
+	border: 0;
+	border-bottom: 2px solid transparent;
+	color: var(--clr-gray-a40);
+	cursor: pointer;
+	font: inherit;
+	padding: 0.1rem 0.5rem;
+}
+
+.bg-aba.ativa {
+	background: var(--clr-main-a30);
+	border-bottom-color: var(--clr-main-a50);
+	color: var(--clr-black-a0);
+}
+
+.bg-instancia {
+	color: var(--clr-gray-a30);
+	margin-left: auto;
+}
+
+/* ----------------------------------------------------------------- painel */
+
+/* A borda corre inteira; o título ganha o fundo da página e apaga o trecho de
+   borda que ficaria embaixo dele. É assim que o desenho do Textual sai sem
+   caractere nenhum. */
+.bg-painel {
+	border: 1px solid var(--clr-gray-a20);
+	border-radius: 6px;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	min-width: 0;
+	padding: 0.1rem 0.7rem 0.6rem;
+	position: relative;
+}
+
+/* O style.css global põe text-transform: lowercase e sublinhado em todo h2.
+   Aqui o título é rótulo de painel, não cabeçalho de texto. */
+.bg-painel-titulo {
+	background: var(--clr-black-a0);
+	text-decoration: none;
+	text-transform: none;
+	color: var(--clr-gray-a40);
+	font: inherit;
+	left: 0.8rem;
+	margin: 0;
+	padding: 0 0.4rem;
+	position: absolute;
+	top: 0;
+	transform: translateY(-50%);
+}
+
+.bg-painel-corpo {
+	margin-top: 0.7rem;
+	min-height: 0;
+	overflow: auto;
+}
+
+.bg-vazio {
+	color: var(--clr-gray-a30);
+	padding: 0.4rem 0;
+}
+
+/* ------------------------------------------------------------------ corpo */
+
+.bg-corpo {
+	display: grid;
+	/* Ocupa toda a altura entre o topo e o rodapé. Sem isto os painéis param na
+	   altura do conteúdo e sobra um buraco no meio da tela. */
+	flex: 1;
+	gap: 0.6rem;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+	min-height: 0;
+}
+
+.bg-coluna {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	min-height: 0;
+}
+
+.bg-dupla {
+	display: grid;
+	gap: 0.6rem;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+}
+
+.bg-pilha {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	min-width: 0;
+}
+
+/* Quem cresce: a tabela de lançamentos e a de categorias (coluna direita) e o
+   último painel da coluna esquerda — Insights na Home, Orçamento no Manager.
+   O resto fica do tamanho que pede. É o que mantém o desenho parecido com o
+   original em qualquer altura de janela. */
+.bg-registros,
+.bg-categorias,
+.bg-coluna-esquerda > .bg-painel:last-child {
+	flex: 1;
+	min-height: 0;
+}
+
+/* ----------------------------------------------------------------- contas */
+
+.bg-conta {
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	padding: 0.15rem 0;
+}
+
+.bg-conta-nome {
+	color: var(--clr-white);
+}
+
+.bg-conta-saldo {
+	color: var(--clr-main-a40);
+}
+
+/* ------------------------------------------------ alternador saída/entrada */
+
+.bg-alternador {
+	display: flex;
+	gap: 0.3rem;
+}
+
+.bg-opcao {
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	cursor: pointer;
+	flex: 1;
+	font: inherit;
+	padding: 0.15rem 0.5rem;
+}
+
+.bg-opcao.ativa {
+	background: var(--clr-main-a30);
+	color: var(--clr-black-a0);
+}
+
+/* -------------------------------------------------------------- calendário */
+
+.bg-periodo-nav {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
+
+.bg-passo {
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	cursor: pointer;
+	font: inherit;
+	padding: 0 0.2rem;
+}
+
+.bg-passo:hover {
+	color: var(--clr-main-a40);
+}
+
+.bg-periodo-rotulo {
+	color: var(--clr-white);
+}
+
+.bg-calendario {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	margin-top: 0.3rem;
+	text-align: center;
+}
+
+.bg-cal-cabecalho {
+	color: var(--clr-gray-a30);
+}
+
+.bg-cal-dia {
+	background: none;
+	border: 0;
+	color: var(--clr-gray-a40);
+	cursor: pointer;
+	font: inherit;
+	padding: 0;
+}
+
+.bg-cal-dia.ativo {
+	background: var(--clr-main-a30);
+	color: var(--clr-black-a0);
+}
+
+.bg-cal-dia.hoje {
+	outline: 1px solid var(--clr-main-a50);
+}
+
+.bg-cal-dia.fora {
+	cursor: default;
+}
+
+/* ---------------------------------------------------------------- insights */
+
+.bg-insight-topo {
+	display: flex;
+	gap: 1.5rem;
+	justify-content: space-between;
+}
+
+.bg-insight-rotulo {
+	color: var(--clr-gray-a30);
+	display: block;
+}
+
+.bg-insight-valor {
+	color: var(--clr-white);
+	font-size: 1.3em;
+}
+
+/* Faixa proporcional das categorias. Os pedaços são flex-grow e não largura em
+   %, pra não precisar arredondar nada e nunca sobrar 1px de buraco no fim. */
+.bg-faixa {
+	display: flex;
+	gap: 2px;
+	height: 0.9rem;
+	margin: 0.6rem 0 0.5rem;
+}
+
+.bg-faixa-parte {
+	min-width: 2px;
+}
+
+.bg-faixa-vazia {
+	background: var(--clr-gray-a10);
+	flex: 1;
+}
+
+.bg-legenda {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+}
+
+.bg-legenda-item {
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
+}
+
+.bg-ponto::before {
+	content: "●";
+}
+
+.bg-amostra {
+	display: inline-block;
+	height: 0.7em;
+	width: 0.7em;
+}
+
+.bg-legenda-nome {
+	color: var(--clr-white);
+}
+
+.bg-legenda-pct,
+.bg-legenda-valor {
+	color: var(--clr-gray-a30);
+}
+
+/* ----------------------------------------------------------------- modelos */
+
+.bg-modelos {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.bg-modelo {
+	align-items: center;
+	background: none;
+	border: 1px solid var(--clr-gray-a20);
+	border-radius: 4px;
+	color: var(--clr-white);
+	cursor: pointer;
+	display: flex;
+	font: inherit;
+	gap: 0.4rem;
+	padding: 0.15rem 0.6rem;
+}
+
+.bg-modelo:hover {
+	border-color: var(--clr-main-a30);
+}
+
+.bg-modelo-tecla {
+	color: var(--clr-gray-a30);
+}
+
+/* ------------------------------------------------------------- lançamentos */
+
+.bg-tabela {
+	display: grid;
+	grid-template-columns: minmax(0, 1.2fr) max-content minmax(0, 1.4fr) max-content;
+}
+
+/* display: contents faz cada linha emprestar as colunas da grade de cima, então
+   as quatro colunas alinham na tabela inteira sem largura fixa em lugar nenhum. */
+.bg-tabela-cabecalho,
+.bg-tabela-linha,
+.bg-tabela-divisao,
+.bg-tabela-total {
+	display: contents;
+}
+
+.bg-tabela-cabecalho > span {
+	background: var(--clr-main-a30);
+	color: var(--clr-black-a0);
+	padding: 0 0.4rem;
+}
+
+.bg-tabela-dia {
+	color: var(--clr-gray-a30);
+	font-style: italic;
+	grid-column: 1 / -1;
+	padding: 0.25rem 0.4rem 0;
+}
+
+.bg-tabela-linha > * {
+	padding: 0.05rem 0.4rem;
+}
+
+.bg-tabela-linha:hover > * {
+	background: var(--clr-black-a10);
+	cursor: pointer;
+}
+
+.bg-tabela-linha.selecionada > * {
+	background: var(--clr-gray-a10);
+}
+
+.bg-tabela-divisao > *,
+.bg-tabela-total > * {
+	color: var(--clr-gray-a30);
+	padding: 0 0.4rem;
+}
+
+.bg-tabela-total > * {
+	font-style: italic;
+}
+
+.bg-celula-categoria {
+	align-items: center;
+	display: flex;
+	gap: 0.4rem;
+}
+
+.bg-celula-valor {
+	display: flex;
+	gap: 0.3rem;
+	justify-content: flex-end;
+}
+
+.bg-celula-rotulo,
+.bg-celula-conta {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Verde e vermelho fogem do tema de propósito, como as porcentagens do fastfetch
+   logo acima: aqui a cor é o dado (entrou / saiu), não enfeite. */
+.bg-sinal-mais {
+	color: var(--clr-green-a30);
+}
+
+.bg-sinal-menos {
+	color: #e5484d;
+}
+
+/* ----------------------------------------------------------------- gráfico */
+
+/* Altura fixa de propósito: com altura elástica o painel do gráfico comia a
+   coluna inteira e empurrava o Orçamento pra fora da tela. */
+.bg-grafico-moldura {
+	border-left: 1px solid var(--clr-gray-a20);
+	display: grid;
+	grid-template-areas: "teto grafico" "piso grafico";
+	grid-template-columns: max-content 1fr;
+	grid-template-rows: auto 1fr;
+	height: 9rem;
+}
+
+/* O vector-effect é o que salva o traço da distorção do preserveAspectRatio:
+   sem ele a espessura e o tracejado esticariam junto com o eixo X. */
+.bg-grafico {
+	fill: none;
+	grid-area: grafico;
+	height: 100%;
+	stroke: var(--clr-main-a40);
+	stroke-dasharray: 1 3;
+	stroke-linecap: round;
+	stroke-width: 2;
+	vector-effect: non-scaling-stroke;
+	width: 100%;
+}
+
+.bg-grafico polyline {
+	vector-effect: non-scaling-stroke;
+}
+
+.bg-grafico-teto {
+	color: var(--clr-gray-a30);
+	grid-area: teto;
+	padding-right: 0.5rem;
+}
+
+.bg-grafico-piso {
+	align-self: end;
+	color: var(--clr-gray-a30);
+	grid-area: piso;
+	padding-right: 0.5rem;
+}
+
+.bg-grafico-eixo {
+	color: var(--clr-gray-a30);
+	padding-top: 0.3rem;
+	text-align: center;
+}
+
+/* --------------------------------------------------------------- orçamento */
+
+.bg-orcamento-topo {
+	display: flex;
+	gap: 1.5rem;
+	justify-content: space-between;
+}
+
+.bg-barra {
+	display: flex;
+	gap: 2px;
+	height: 1rem;
+	margin: 0.6rem 0 0.5rem;
+}
+
+.bg-barra-parte {
+	min-width: 2px;
+}
+
+/* Hachura em vez de cor chapada no "quero" e no "guardar", como as barras
+   listradas do original — e assim o que separa as três não é só o matiz. */
+.bg-barra-preciso {
+	background: var(--clr-main-a30);
+}
+
+.bg-barra-quero {
+	background: repeating-linear-gradient(
+		45deg,
+		var(--clr-orange-a30) 0 3px,
+		transparent 3px 6px
+	);
+}
+
+.bg-barra-guardar {
+	background: repeating-linear-gradient(
+		45deg,
+		var(--clr-green-a30) 0 3px,
+		transparent 3px 6px
+	);
+}
+
+.bg-orcamento-legenda {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+}
+
+.bg-nota {
+	color: var(--clr-gray-a30);
+	padding-top: 0.4rem;
+}
+
+/* --------------------------------------------------- categorias e pessoas */
+
+.bg-arvore {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) max-content;
+}
+
+.bg-arvore-cabecalho,
+.bg-arvore-linha {
+	display: contents;
+}
+
+.bg-arvore-cabecalho > span {
+	background: var(--clr-main-a30);
+	color: var(--clr-black-a0);
+	padding: 0 0.4rem;
+}
+
+.bg-arvore-linha > * {
+	padding: 0.05rem 0.4rem;
+}
+
+.bg-arvore-linha:nth-child(odd) > * {
+	background: var(--clr-black-a10);
+}
+
+.bg-arvore-nome {
+	align-items: center;
+	display: flex;
+	gap: 0.4rem;
+}
+
+/* A barrinha herdada da cor da mãe é o que amarra a subcategoria à família, do
+   mesmo jeito que o original faz com o traço vertical. */
+.bg-arvore-nome.filha {
+	border-left: 2px solid var(--clr-gray-a20);
+	margin-left: 0.6rem;
+	padding-left: 0.6rem;
+}
+
+.bg-arvore-natureza {
+	color: var(--clr-gray-a40);
+}
+
+/* -------------------------------------------------------------- formulário */
+
+.bg-modal-fundo {
+	align-items: center;
+	background: color-mix(in srgb, var(--clr-black-a0) 80%, transparent);
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	position: fixed;
+	z-index: 10;
+}
+
+.bg-modal {
+	background: var(--clr-black-a0);
+	min-width: min(26rem, 90vw);
+}
+
+.bg-modal .bg-painel-titulo {
+	color: var(--clr-main-a40);
+}
+
+.bg-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.bg-form-linha {
+	align-items: center;
+	display: grid;
+	gap: 0.6rem;
+	grid-template-columns: max-content 1fr;
+}
+
+.bg-form-rotulo {
+	color: var(--clr-gray-a40);
+}
+
+.bg-form-campo {
+	background: var(--clr-black-a10);
+	border: 1px solid var(--clr-gray-a20);
+	color: var(--clr-white);
+	font: inherit;
+	padding: 0.2rem 0.4rem;
+}
+
+.bg-form-campo:focus {
+	border-color: var(--clr-main-a30);
+	outline: none;
+}
+
+.bg-form-acoes {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: flex-end;
+	padding-top: 0.3rem;
+}
+
+.bg-botao {
+	background: var(--clr-main-a30);
+	border: 1px solid var(--clr-main-a30);
+	color: var(--clr-black-a0);
+	cursor: pointer;
+	font: inherit;
+	padding: 0.2rem 0.8rem;
+}
+
+.bg-botao.fantasma {
+	background: none;
+	border-color: var(--clr-gray-a20);
+	color: var(--clr-gray-a40);
+}
+
+/* ------------------------------------------------------------------ rodapé */
+
+/* O botão do rádio sai de cena enquanto o bagels está aberto: é um atalho pra
+   outra página, e aqui ele só atrapalharia o rodapé de teclas. Fora do bagels
+   ele continua na /setup/ normalmente.
+
+   A engrenagem FICA, e de propósito: ela troca o tema, e o TUI inteiro acompanha
+   o tema — dá pra trocar com a tela aberta e ver mudando.
+
+   O seletor vence o #radio-botao do <style> que o radio-botao.js injeta porque
+   soma uma classe ao id; não adianta tentar por ordem de folha, já que aquele
+   <style> entra no <head> em tempo de execução. */
+body.bagels-aberto #radio-botao {
+	display: none;
+}
+
+/* O recuo à esquerda é o que impede a primeira tecla do rodapé de nascer
+   escondida atrás da engrenagem, que é fixa no canto inferior esquerdo e
+   continua por cima daqui (z-index 997). Dá conta só dela, já que o botão do
+   rádio sai pela regra acima. */
+.bg-rodape {
+	background: var(--clr-black-a10);
+	display: flex;
+	flex-shrink: 0;
+	flex-wrap: wrap;
+	gap: 0 1rem;
+	margin-top: auto;
+	padding: 0.2rem 0.5rem 0.2rem 4.5rem;
+}
+
+.bg-tecla-item {
+	color: var(--clr-gray-a40);
+	display: flex;
+	gap: 0.35rem;
+}
+
+.bg-tecla {
+	color: var(--clr-main-a40);
+	font: inherit;
+}
+
+/* ---------------------------------------------------------------- estreito */
+
+/* Duas colunas não cabem: vira uma pilha rolável, e o TUI deixa de ser tela
+   cheia pra ser uma lista comprida. O original simplesmente não roda num
+   celular, então aqui ele se desmonta em vez de encolher até ilegível. */
+@media (max-width: 900px) {
+	.bg-tui {
+		overflow: auto;
+	}
+
+	.bg-corpo,
+	.bg-dupla {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.bg-registros,
+	.bg-categorias {
+		flex: none;
+	}
+
+	.bg-painel-corpo {
+		overflow: visible;
+	}
+}

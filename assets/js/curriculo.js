@@ -32,12 +32,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	const URL_FUNCAO =
 		"https://kjdydlmwfmoksubebnot.supabase.co/functions/v1/curriculo";
 
+	// Edge Function dormindo demora pra acordar, mas não uma eternidade. Sem um
+	// prazo, uma requisição pendurada deixava a caixa em "verifying
+	// credentials..." com o botão travado pra sempre — sem erro e sem como
+	// tentar de novo a não ser recarregando.
+	const TEMPO_LIMITE = 15000;
+
 	async function verificarSenha(senha) {
-		const r = await fetch(URL_FUNCAO, {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({ senha }),
-		});
+		const controlador = new AbortController();
+		const prazo = setTimeout(() => controlador.abort(), TEMPO_LIMITE);
+
+		let r;
+		try {
+			r = await fetch(URL_FUNCAO, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ senha }),
+				signal: controlador.signal,
+			});
+		} finally {
+			clearTimeout(prazo);
+		}
 
 		// 401 (senha errada) e 429 (tentativas demais) chegam aqui iguais, de
 		// propósito: quem está tentando adivinhar não ganha a informação de que
@@ -226,17 +241,34 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (texto) estadoTexto.textContent = texto;
 	}
 
-	function mostrarErro(tentativa) {
-		definirEstado("is-erro", "access denied");
-		linhaErro.textContent = `[ ERROR ] auth failure — attempt ${tentativa}`;
-		linhaErro.hidden = false;
+	// O texto entra direto, sem mexer em `hidden`: a linha é um role="status" e
+	// precisa ficar na árvore de acessibilidade o tempo todo pra a mudança ser
+	// anunciada. Vazia, ela some pelo .linha-erro:empty do curriculo.css.
+	function escrever(texto) {
+		linhaErro.textContent = texto;
+	}
 
+	function tremer() {
 		// A classe precisa sair pra animação poder rodar de novo na tentativa
 		// seguinte; sem isso o tremor só acontece uma vez.
 		caixa.classList.add("senha-errada");
 		setTimeout(() => caixa.classList.remove("senha-errada"), 400);
+	}
 
+	function mostrarErro(tentativa) {
+		definirEstado("is-erro", "access denied");
+		escrever(`[ ERROR ] auth failure — attempt ${tentativa}`);
+		tremer();
 		campo.select();
+	}
+
+	// Rede fora, função dormindo ou prazo estourado é outra coisa: não é senha
+	// errada, não entra na contagem de tentativas e merece dizer o que houve,
+	// senão a pessoa fica tentando a senha certa achando que errou.
+	function mostrarFalhaDeRede() {
+		definirEstado("is-erro", "no response");
+		escrever("[ ERROR ] server unreachable — try again");
+		tremer();
 	}
 
 	// --- currículo liberado ---------------------------------------------------
@@ -376,6 +408,55 @@ document.addEventListener("DOMContentLoaded", () => {
 		}, 1000 - (Date.now() % 1000));
 	}
 
+	// A folha é uma página A4 e tem que continuar sendo uma: ela não reflui em
+	// tela estreita. Em vez de encolher com CSS, a página passa a declarar a
+	// largura da própria folha no viewport — o celular abre o currículo inteiro
+	// visível, já "dado zoom out", e o gesto de pinça continua funcionando pra
+	// ler de perto. É o que um leitor de PDF faz, e é o comportamento que a
+	// página quer.
+	//
+	// Não dá pra fazer isso em CSS: `zoom` e `scale()` querem um número, e
+	// `calc(100vw / 826)` resulta num comprimento — a declaração é descartada.
+	// Era esse o bug original: a folha nunca encolheu, só vazava pro lado.
+	//
+	// No desktop não tem efeito nenhum: navegador de mesa ignora esta meta.
+	const FOLGA = 32;
+
+	// Ligar um <link disabled> NÃO aplica a folha de estilo na mesma tarefa: o
+	// navegador só então busca o arquivo. Medir ali devolvia a largura da janela
+	// em vez dos 930px da folha, e a meta saía com um número errado. Então
+	// espera a folha estar de fato valendo antes de medir.
+	function folhaAplicada() {
+		for (const link of document.styleSheets) {
+			if (!(link.href || "").includes("curriculo-folha.css")) continue;
+			try {
+				return !link.disabled && link.cssRules.length > 0;
+			} catch {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	function ajustarViewport(folha) {
+		const meta = document.querySelector('meta[name="viewport"]');
+		if (!meta || !folha) return;
+
+		let tentativas = 0;
+		(function medir() {
+			const largura = folha.offsetWidth;
+			if (folhaAplicada() && largura) {
+				meta.setAttribute("content", "width=" + (largura + FOLGA));
+				return;
+			}
+			// Teto pra não ficar um rAF rodando pra sempre se algo der errado: o
+			// pior caso é a meta ficar como estava, e aí o celular mostra o
+			// currículo em tamanho real com rolagem lateral, que é o que já
+			// acontecia antes.
+			if (tentativas++ < 60) requestAnimationFrame(medir);
+		})();
+	}
+
 	function renderizarCurriculo(dados, pdfUrl) {
 		artigo.textContent = "";
 		if (!dados) return;
@@ -460,7 +541,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// className inteiro, não classList.remove: leva junto o crt, o
 		// fade-enabled e o portao-ativo sem precisar listar cada um.
-		document.body.className = "curriculo-aberto";
+		//
+		// `permite-contexto` é o escape que o no-inspect.js já oferece: dentro de
+		// um elemento com essa classe o menu de contexto volta a funcionar. Aqui
+		// ele precisa voltar — esta é justamente a página onde alguém quer copiar
+		// um e-mail ou um telefone, e bloquear o botão direito nela só atrapalha
+		// (o próprio no-inspect.js diz que é obstáculo pro curioso, não segurança).
+		document.body.className = "curriculo-aberto permite-contexto";
 	}
 
 	async function liberar(resposta) {
@@ -480,6 +567,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		vestirFolha();
 		renderizarCurriculo(resposta.dados, resposta.pdfUrl);
 		artigo.hidden = false;
+		// Só agora: antes disto o <article> está hidden e a folha não tem largura.
+		ajustarViewport(artigo.querySelector(".curriculo-folha"));
 	}
 
 	// --- envio ----------------------------------------------------------------
@@ -494,16 +583,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		ocupado = true;
 		botao.disabled = true;
-		linhaErro.hidden = true;
+		escrever("");
 		definirEstado("is-checking", "verifying credentials...");
 
 		let resposta;
 		try {
 			resposta = await verificarSenha(senha);
 		} catch (erro) {
-			// Rede fora, função dormindo, CORS: pro visitante é tudo a mesma coisa.
+			// Rede fora, função dormindo, CORS, prazo estourado: nada disso é
+			// resposta de autenticação, então sai por outro caminho.
 			console.error("curriculo: falha na verificação —", erro);
-			resposta = { ok: false };
+			mostrarFalhaDeRede();
+			ocupado = false;
+			botao.disabled = false;
+			return;
 		}
 
 		if (resposta.ok) {

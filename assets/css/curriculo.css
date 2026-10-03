@@ -238,6 +238,13 @@ body.portao-ativo {
 	padding-left: 0.2rem;
 }
 
+/* A linha de erro é um role="status" e precisa existir na árvore o tempo todo
+   pra o leitor de tela anunciar a mudança. Então ela não é mais escondida com
+   `hidden` (que a tira da árvore): fica sempre lá e some por estar vazia. */
+.linha-erro:empty {
+	display: none;
+}
+
 /* Cada passo entra em cena quando o curriculo.js manda; antes disso não ocupa
    espaço, pra caixa crescer junto com a digitação. */
 .oculta {

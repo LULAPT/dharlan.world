@@ -148,20 +148,24 @@ export function carregarNavbar() {
     text-decoration: none !important;
   }
 
-  /* Botão Doar */
-  #header-expandida a.btn-doar,
-  #header-compacta a.btn-doar,
-  #header-mobile a.btn-doar {
+  /* Item em destaque do menu: rosa em vez do branco dos outros. Era exclusivo
+     do antigo botão Doar, que saiu do ar; hoje quem quiser o destaque põe
+     "destaque: true" no objeto "links" lá embaixo.
+     Sem crase neste comentário: todo este CSS é uma template string do JS, e
+     uma crase aqui fecha a string e derruba a navbar inteira. */
+  #header-expandida a.btn-destaque,
+  #header-compacta a.btn-destaque,
+  #header-mobile a.btn-destaque {
     color: var(--clr-main-a30);
     text-decoration: none;
   }
 
-  #header-expandida a.btn-doar:hover,
-  #header-compacta a.btn-doar:hover,
-  #header-mobile a.btn-doar:hover,
-  #header-expandida a.btn-doar:focus,
-  #header-compacta a.btn-doar:focus,
-  #header-mobile a.btn-doar:focus {
+  #header-expandida a.btn-destaque:hover,
+  #header-compacta a.btn-destaque:hover,
+  #header-mobile a.btn-destaque:hover,
+  #header-expandida a.btn-destaque:focus,
+  #header-compacta a.btn-destaque:focus,
+  #header-mobile a.btn-destaque:focus {
     color: var(--clr-main-a50);
   }
 
@@ -391,14 +395,17 @@ export function carregarNavbar() {
 				{ label: "Picrew", href: "/picrew/" },
 			],
 		},
-		// doar: { label: "Doar", href: "/doar/" }, // desativado - reativar removendo o comentário
+		// Sem children: a /setup/ é uma página só. Entra depois de Utils por ser
+		// o item mais "ferramenta" do menu. O `destaque` é o rosa que era do
+		// antigo botão Doar.
+		terminal: { label: "Terminal", href: "/setup/", destaque: true },
+		// doar: { label: "Doar", href: "/doar/", destaque: true }, // desativado - reativar removendo o comentário
 	};
 
 	function gerarNavbarLinks(obj) {
 		return Object.values(obj)
 			.map((item) => {
-				const isDoar = item.href === "/doar/";
-				const linkClass = isDoar ? "btn-doar" : "";
+				const linkClass = item.destaque ? "btn-destaque" : "";
 				if (item.children && item.children.length) {
 					const childrenHTML = item.children
 						.map((c) => `<a href="${c.href}">${c.label}</a>`)
@@ -420,8 +427,7 @@ export function carregarNavbar() {
 	function gerarNavbarMobile(obj) {
 		return Object.values(obj)
 			.map((item) => {
-				const isDoar = item.href === "/doar/";
-				const itemClass = isDoar ? "btn-doar" : "";
+				const itemClass = item.destaque ? "btn-destaque" : "";
 				if (item.children && item.children.length) {
 					const childrenHTML = item.children
 						.map((c) => `<li><a href="${c.href}">${c.label}</a></li>`)

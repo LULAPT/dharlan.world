@@ -272,10 +272,16 @@ body.curriculo-aberto {
 		padding: 0 16px;
 	}
 
-	.curriculo-folha {
-		transform: scale(calc(100vw / 826));
-		transform-origin: top center;
-	}
+	/* Aqui não encolhe mais nada. Quem resolve o celular é o curriculo.js,
+	   escrevendo a largura da folha na meta viewport: a página abre inteira
+	   visível e a pinça do dedo faz o zoom. Em CSS não dava — `zoom` e
+	   `scale()` querem um número, e `calc(100vw / 826)` resulta num
+	   comprimento, então a declaração era simplesmente descartada. Era esse o
+	   bug: a folha nunca encolheu, só vazava pro lado da tela.
+
+	   Com a meta ajustada, este @media passa a valer só pra janela estreita de
+	   desktop — no celular o viewport declarado é o da folha, bem maior que
+	   858px. */
 }
 
 /* --- impressão ------------------------------------------------------------ */

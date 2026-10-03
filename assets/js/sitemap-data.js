@@ -78,6 +78,7 @@ export const sitemap = [
           },
         ],
       },
+      { href: "/setup/", label: "/setup" },
       // { href: "/doar/", label: "/doar" }, // desativado - reativar removendo o comentário
       { href: "/changelog/", label: "/changelog" },
       { href: "/not_found/", label: "/404" },

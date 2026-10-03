@@ -17,6 +17,9 @@
 		     página em si é todo do setup.css. -->
 		<link rel="stylesheet" href="/assets/css/style.css" />
 		<link rel="stylesheet" href="/assets/css/setup.css" />
+		<!-- Só a tela cheia do bagels usa esta; fica separada do setup.css porque
+		     é um aplicativo inteiro, não um detalhe da página. -->
+		<link rel="stylesheet" href="/assets/css/bagels.css" />
 
 		<!-- Fontes Externas -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,6 +40,17 @@
 			<!-- Vazio de propósito: quem escreve o prompt, digita o `fastfetch` e
 			     imprime a saída é o setup.js, a partir do setup-specs.json. -->
 			<div id="setup-terminal"></div>
+
+			<!-- Enfeite, como a gunnm da /sobre/: mesmo esquema de dither rosa e a
+			     mesma classe .tilt do animations.css. Fica presa no canto inferior
+			     direito, atrás do texto, e some no celular (regra no setup.css). -->
+			<img
+				id="setup-gunnm"
+				class="img-clr-main tilt"
+				src="/assets/img/gunnm-up-flag-dither.png"
+				alt=""
+				aria-hidden="true"
+			/>
 		</div>
 
 		<script type="module" src="/assets/js/main.js"></script>

@@ -50,7 +50,10 @@
  ░██   ░██  ░██   ░██ ░██░██ ░██        ░██
   ░██████   ░██    ░██░██░██ ░██  ░███████ <span id="titulo-cursor">_</span></pre
 				>
-				<h1 class="acessivel-so-leitor">Résumé — restricted access</h1>
+				<!-- A arte ASCII acima desenha "Skills" e é aria-hidden; este h1 é o
+				     que dá à página um cabeçalho e um nome pra quem usa leitor de
+				     tela. O texto é o mesmo que o desenho diz. -->
+				<h1 class="acessivel-so-leitor">Skills</h1>
 
 				<div id="portao-divisor" aria-hidden="true"></div>
 
@@ -117,7 +120,11 @@
 							<button type="submit" id="btn-entrar">Submit</button>
 						</div>
 
-						<p class="linha linha-erro" id="linha-erro" hidden></p>
+						<!-- role="status" pra a falha de senha ser anunciada; sem `hidden`,
+						     porque elemento escondido sai da árvore de acessibilidade e a
+						     mudança não seria lida. Vazia ela não ocupa espaço (ver o
+						     .linha-erro:empty no curriculo.css). -->
+						<p class="linha linha-erro" id="linha-erro" role="status"></p>
 					</form>
 
 					<pre id="portao-arte" aria-hidden="true">
