@@ -10,6 +10,6 @@ export function initAnalytics() {
 
 	const script = document.createElement("script");
 	script.defer = true;
-	script.src = "/_vercel/insights/script.js";
+	script.src = "https://cdn.vercel-insights.com/v1/script.js";
 	document.head.appendChild(script);
 }
