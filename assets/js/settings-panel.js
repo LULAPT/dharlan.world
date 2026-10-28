@@ -200,7 +200,7 @@ export async function initSettingsPanel() {
 	crtCheckbox.checked = localStorage.getItem("switchCRT") !== "false";
 	const currentTheme = localStorage.getItem("current-theme") || "dark";
 	themeSelect.value = currentTheme;
-	festiveCheckbox.checked = localStorage.getItem("festiveEffects") !== "false";
+	festiveCheckbox.checked = localStorage.getItem("festiveEffects") !== "true";
 	nsfwBlurCheckbox.checked = localStorage.getItem("nsfwBlur") === "true";
 
 	// Eventos usando as funções dos scripts
