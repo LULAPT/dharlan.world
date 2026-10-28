@@ -24,6 +24,11 @@ function areFestiveEffectsEnabled() {
 	return localStorage.getItem("festiveEffects") !== "false";
 }
 
+// Padrão: efeitos festivos desligados. Só grava se o visitante nunca escolheu.
+if (localStorage.getItem("festiveEffects") === null) {
+	localStorage.setItem("festiveEffects", "false");
+}
+
 // Exportar função para uso externo se necessário
 window.areFestiveEffectsEnabled = areFestiveEffectsEnabled;
 
