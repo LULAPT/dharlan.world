@@ -21,7 +21,7 @@ function isDate(month1to12, day) {
 }
 
 function areFestiveEffectsEnabled() {
-	return localStorage.getItem("festiveEffects") !== "true";
+	return localStorage.getItem("festiveEffects") !== "false";
 }
 
 // Exportar função para uso externo se necessário
