@@ -278,10 +278,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.removeEventListener("click", onCliqueAtalho, true);
 	}
 
-	function runVerification() {
+	// aoMarcar roda dentro do próprio evento do checkbox, ou seja, ainda no
+	// gesto do usuário — é onde o celular destrava os áudios (ver
+	// destravarAudios).
+	function runVerification(aoMarcar) {
 		return new Promise((resolve) => {
 			function onChange() {
 				verifyCheckbox.removeEventListener("change", onChange);
+				if (aoMarcar) aoMarcar();
 				verifyCheck.classList.add("is-checking");
 
 				wait(900 + Math.random() * 400)
@@ -303,10 +307,230 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
+	// Nome que o popup do celular mostra. O data-plataforma do <html> (script
+	// no <head> da index) já desfez o caso difícil, o iPad que se diz Mac;
+	// aqui só se dá nome. O resto é por userAgent mesmo — é enfeite, errar
+	// num aparelho exótico não quebra nada.
+	function nomeDoSistema() {
+		const ua = navigator.userAgent;
+		if (document.documentElement.getAttribute("data-plataforma") === "ios") {
+			return /iPad|Macintosh/.test(ua) ? "iPadOS" : "iOS";
+		}
+		if (/Android/i.test(ua)) return "Android";
+		if (/Windows/i.test(ua)) return "Windows";
+		if (/Macintosh/i.test(ua)) return "macOS";
+		if (/Linux|X11/i.test(ua)) return "Linux";
+		return "unknown";
+	}
+
+	// No celular o terminal começa sozinho, uns 4s depois do toque no checkbox
+	// (círculo + popup), e o Safari/iOS só deixa um <audio> tocar se ele já
+	// tiver dado play dentro de um gesto. Então, ainda no toque, cada áudio do
+	// boot dá um play mudo e para na hora: fica destravado pro play de
+	// verdade lá na frente. O AudioContext da digitação nasce e é retomado
+	// aqui pelo mesmo motivo.
+	function destravarAudios() {
+		for (const audio of [pcBootAudio, typingAudio, keyPressAudio]) {
+			try {
+				audio.muted = true;
+				const voltar = () => {
+					audio.pause();
+					audio.currentTime = 0;
+					audio.muted = false;
+				};
+				const promessa = audio.play();
+				if (promessa) promessa.then(voltar, () => (audio.muted = false));
+				else voltar();
+			} catch (e) {
+				audio.muted = false;
+			}
+		}
+		getTypingGainNode();
+		if (audioCtx && audioCtx.state === "suspended") {
+			audioCtx.resume().catch(() => {});
+		}
+	}
+
+	// iOS ganha a maçã, o resto o robô — o data-plataforma vem do script no
+	// <head> da index. Resolve null se a imagem não vier: o popup sai sem
+	// logo, mas sai.
+	function carregarLogo() {
+		const ios =
+			document.documentElement.getAttribute("data-plataforma") === "ios";
+		return new Promise((resolve) => {
+			const img = new Image();
+			img.onload = () => resolve(img);
+			img.onerror = () => resolve(null);
+			img.src = ios ? "/assets/img/ioslogo.png" : "/assets/img/androidlogo.png";
+		});
+	}
+
+	const BAYER_8X8 = [
+		[0, 32, 8, 40, 2, 34, 10, 42],
+		[48, 16, 56, 24, 50, 18, 58, 26],
+		[12, 44, 4, 36, 14, 46, 6, 38],
+		[60, 28, 52, 20, 62, 30, 54, 22],
+		[3, 35, 11, 43, 1, 33, 9, 41],
+		[51, 19, 59, 27, 49, 17, 57, 25],
+		[15, 47, 7, 39, 13, 45, 5, 37],
+		[63, 31, 55, 23, 61, 29, 53, 21],
+	];
+
+	// Desenha o logo em dither Bayer 8x8 e o faz "materializar": a cada passo
+	// o limiar sobe e mais pontos da matriz acendem, até a imagem inteira.
+	// O PNG é branco sobre transparente, então quem diz onde há logo é o
+	// alfa; por cima vai um degradê de cima pra baixo, pra o dither ter o que
+	// pontilhar (sem ele, branco chapado viraria bloco sólido).
+	//
+	// A cor sai do `color` do canvas no CSS (variável do tema) e entra com
+	// source-in: o navegador resolve a cor, seja qual for a sintaxe dela, e
+	// o JS não precisa saber nada de lch().
+	async function desenharLogo(canvas, img) {
+		const N = 64;
+		canvas.width = N;
+		canvas.height = N;
+		const ctx = canvas.getContext("2d");
+		if (!ctx) return;
+
+		// Os PNGs têm margens transparentes diferentes (o robô sobra num
+		// quadro bem maior que ele, a maçã quase o enche), então desenhados
+		// inteiros o robô saía pequeno do lado da maçã. Recorta-se a caixa do
+		// que não é transparente e ela é encaixada sempre na mesma fração do
+		// canvas: os dois logos ficam do mesmo tamanho, seja qual for o PNG.
+		const W = img.naturalWidth;
+		const H = img.naturalHeight;
+		const medidor = document.createElement("canvas");
+		medidor.width = W;
+		medidor.height = H;
+		const mctx = medidor.getContext("2d", { willReadFrequently: true });
+		mctx.drawImage(img, 0, 0);
+		const original = mctx.getImageData(0, 0, W, H).data;
+		let x0 = W, y0 = H, x1 = -1, y1 = -1;
+		for (let y = 0; y < H; y++) {
+			for (let x = 0; x < W; x++) {
+				if (original[(y * W + x) * 4 + 3] > 20) {
+					if (x < x0) x0 = x;
+					if (x > x1) x1 = x;
+					if (y < y0) y0 = y;
+					if (y > y1) y1 = y;
+				}
+			}
+		}
+		if (x1 < 0) return; // PNG todo transparente: nada a desenhar
+		const cw = x1 - x0 + 1;
+		const ch = y1 - y0 + 1;
+		const OCUPA = 0.86; // fração do canvas que o lado maior do logo ocupa
+		const escala = (N * OCUPA) / Math.max(cw, ch);
+		const dw = cw * escala;
+		const dh = ch * escala;
+
+		const rascunho = document.createElement("canvas");
+		rascunho.width = N;
+		rascunho.height = N;
+		const rctx = rascunho.getContext("2d", { willReadFrequently: true });
+		rctx.drawImage(img, x0, y0, cw, ch, (N - dw) / 2, (N - dh) / 2, dw, dh);
+		const alfa = rctx.getImageData(0, 0, N, N).data;
+
+		const brilho = new Float32Array(N * N);
+		for (let y = 0; y < N; y++) {
+			for (let x = 0; x < N; x++) {
+				brilho[y * N + x] =
+					(alfa[(y * N + x) * 4 + 3] / 255) * (1 - 0.55 * (y / N));
+			}
+		}
+
+		const cor = getComputedStyle(canvas).color;
+
+		function quadro(progresso) {
+			const dados = ctx.createImageData(N, N);
+			for (let y = 0; y < N; y++) {
+				for (let x = 0; x < N; x++) {
+					if (brilho[y * N + x] * progresso * 64 > BAYER_8X8[y % 8][x % 8]) {
+						const i = (y * N + x) * 4;
+						dados.data[i] = dados.data[i + 1] = dados.data[i + 2] = 255;
+						dados.data[i + 3] = 255;
+					}
+				}
+			}
+			ctx.globalCompositeOperation = "source-over";
+			ctx.clearRect(0, 0, N, N);
+			ctx.putImageData(dados, 0, 0);
+			ctx.globalCompositeOperation = "source-in";
+			ctx.fillStyle = cor;
+			ctx.fillRect(0, 0, N, N);
+			ctx.globalCompositeOperation = "source-over";
+		}
+
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			quadro(1);
+			return;
+		}
+		// setTimeout e não rAF: o iOS congela o rAF com a aba em segundo plano,
+		// e o boot não pode ficar parado esperando a volta.
+		const PASSOS = 12;
+		for (let i = 1; i <= PASSOS; i++) {
+			quadro(i / PASSOS);
+			await wait(45);
+		}
+	}
+
+	// Só no celular, entre o captcha e o terminal: círculo girando no meio da
+	// tela, depois o popup com o logo e o nome do sistema, que fica uns 2,5s
+	// e passa sozinho pro terminal. O som do boot continua funcionando no
+	// iOS porque os áudios foram destravados no toque do checkbox.
+	async function preBootCelular(logo) {
+		const pre = document.getElementById("boot-pre");
+		if (!pre) return;
+		const canvas = document.getElementById("boot-pre-logo");
+		const nomeEl = document.getElementById("boot-pre-os");
+		const nome = nomeDoSistema();
+
+		// O boot-pre-ativo já veio do start(), escondido atrás do captcha.
+		pre.classList.add("boot-pre-ativo");
+		await wait(1600);
+
+		const abriu = Date.now();
+		pre.classList.add("boot-pre-com-popup");
+		await wait(240); // a janela abrindo, ver boot-pre-abre no CSS
+
+		const img = logo ? await logo : null;
+		if (img && canvas) {
+			try {
+				await desenharLogo(canvas, img);
+			} catch (e) {
+				/* logo é enfeite: sem canvas, o popup segue só com o texto */
+			}
+		}
+
+		nomeEl.textContent = "";
+		pre.classList.add("boot-pre-texto");
+		await wait(150);
+		for (const letra of nome) {
+			nomeEl.textContent += letra;
+			await wait(70);
+		}
+
+		await wait(Math.max(0, 2500 - (Date.now() - abriu)));
+
+		// O terminal começa por baixo enquanto o popup apaga por cima.
+		pre.classList.add("boot-pre-saindo");
+		setTimeout(() => pre.remove(), 600);
+	}
+
 	async function start() {
 		// O clique real no checkbox conta como gesto do usuário, o que
 		// libera o autoplay do áudio de digitação mais adiante.
 		if (humanVerify && verifyCheckbox && verifyCheck) {
+			// No celular a tela do círculo já fica montada atrás do captcha
+			// (z-index entre ele e o terminal), pra o fade do captcha revelar o
+			// círculo e não um pedaço do terminal.
+			const celular = ehCelular();
+			// O logo começa a baixar já, pra estar pronto quando o popup abrir.
+			let logo = null;
+			if (celular) {
+				document.getElementById("boot-pre")?.classList.add("boot-pre-ativo");
+				logo = carregarLogo();
+			}
 			// definirRayId/ativarBorderGlow vêm do verify-box.js, carregado
 			// antes deste arquivo — a /curriculo/ usa as mesmas duas.
 			window.definirRayId(document.getElementById("verify-ray-id"));
@@ -316,9 +540,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			const desligarDither = window.iniciarDitherBg
 				? window.iniciarDitherBg(humanVerify)
 				: null;
-			await runVerification();
+			await runVerification(celular ? destravarAudios : null);
 			if (desligarGlow) desligarGlow();
 			if (desligarDither) desligarDither();
+			if (celular) await preBootCelular(logo);
 		}
 		await bootSequence();
 	}

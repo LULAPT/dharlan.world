@@ -140,14 +140,6 @@ body.boot-active #boot-terminal .scanline {
 	display: none;
 }
 
-/* iOS ganha a bússola, o resto ganha o robô. O atributo vem do script no
-   <head> da index; sem ele (JS desligado) sobra o robô, que é o caso
-   comum. */
-:root[data-plataforma="ios"] #boot-arte-android,
-:root:not([data-plataforma="ios"]) #boot-arte-ios {
-	display: none;
-}
-
 @keyframes boot-scanline {
 	0% {
 		transform: translateY(-100%);
@@ -203,7 +195,7 @@ body.boot-active #boot-terminal .scanline {
 /* ---------------------------------------------------------------------
    Pele mobile: o boot deixa de ser uma caixa no meio da tela e vira a
    sessão de terminal de um celular — histórico de comandos já rodados,
-   relógio, a arte do sistema e a régua de cores do fastfetch. O boot de
+   relógio, bateria e rede. O boot de
    verdade continua embaixo de tudo, no #boot-output.
 
    É só desenho: o boot-terminal.js não sabe que nada disto existe, escreve
@@ -213,8 +205,7 @@ body.boot-active #boot-terminal .scanline {
    seletor: rosa sobre quase-preto no escuro (o padrão), e branco nos temas
    claros sem nenhuma regra a mais — lá o --clr-black-a0 já é quase branco
    e o --clr-white é escuro, então o desenho inteiro inverte sozinho.
-   Mexer nas cinco variáveis abaixo repinta a tela inteira, inclusive a
-   régua de cores.
+   Mexer nas quatro variáveis abaixo repinta a tela inteira.
 
    Os tamanhos saem de vw E vh (min() entre os dois) porque a tela toda
    precisa caber sem rolagem: o vw sozinho estoura em aparelho baixo e
@@ -232,7 +223,7 @@ body.boot-active #boot-terminal .scanline {
 
 /* Isto vale pro tablet também, e é regra antiga: a ascii art do dharlan não
    cabe direito abaixo de 1024px. No celular quem faz esse papel é a arte do
-   sistema, lá no histórico. */
+   sistema, no popup do #boot-pre. */
 @media (max-width: 1024px) {
 	#boot-ascii {
 		display: none;
@@ -243,7 +234,6 @@ body.boot-active #boot-terminal .scanline {
 	#boot-terminal {
 		--boot-fundo: var(--clr-black-a0);
 		--boot-destaque: var(--clr-main-a40);
-		--boot-arte-cor: var(--clr-main-a30);
 		/* O meio-tom das respostas da máquina: o tom do tema puxado pra cor do
 		   texto, que no escuro clareia e no claro escurece — o mesmo papel que
 		   o pêssego fazia sobre o laranja. */
@@ -339,102 +329,168 @@ body.boot-active #boot-terminal .scanline {
 	.boot-relogio-data {
 		color: var(--boot-texto);
 	}
+}
 
-	/* Arte à esquerda, tabela à direita — a mesma divisão do neofetch. */
-	#boot-fetch {
-		align-items: center;
-		display: flex;
-		gap: 0.9rem;
-		justify-content: center;
-		margin: 0.3em 0;
-	}
+/* ---------------------------------------------------------------------
+   Entre o captcha e o terminal, só no celular: um círculo girando no meio
+   da tela e depois um popup com o sistema do aparelho. Nasce escondido e
+   quem liga é o boot-terminal.js, que só faz isso em ≤600px — por isso
+   nada aqui precisa de @media.
 
-	/* Ascii de verdade (as do neofetch), então herda a VT323 do terminal e
-	   desenha certo sem depender de fonte de símbolos do sistema — era o
-	   braille que entortava, porque cada aparelho o resolvia numa fonte
-	   diferente, com largura diferente por caractere.
+   Fica ENTRE o #human-verify (950) e o #boot-terminal (900), com fundo
+   opaco, e o JS o liga já durante o captcha: assim o fade de saída do
+   captcha revela o círculo, e não o terminal com o histórico à mostra —
+   que é o que aparecia quando ele só ligava depois. Abaixo da engrenagem
+   (997), que nessa fase ainda abre o painel, como no captcha.
+   --------------------------------------------------------------------- */
 
-	   As duas têm ~32 colunas, daí um tamanho só pras duas. O line-height
-	   abaixo de 1 é de propósito: a VT323 tem muito espaço morto acima e
-	   abaixo do glifo, e sem isso o desenho sai esticado na vertical. */
-	.boot-arte {
-		color: var(--boot-arte-cor);
-		display: block;
-		font-size: min(2.9vw, 1.45vh);
-		letter-spacing: 0;
-		line-height: 0.92;
-		margin: 0;
-		text-shadow: 0 0 12px
-			color-mix(in srgb, var(--boot-destaque) 55%, transparent);
-		white-space: pre;
-	}
+#boot-pre {
+	align-items: center;
+	background: var(--clr-black-a0);
+	color: var(--clr-white);
+	display: none;
+	font-family: "VT323", monospace;
+	/* Mesmo motivo do #boot-terminal: o dvh acompanha a barra do navegador,
+	   e o inset: 0 sozinho deixava o centro meio palmo pra baixo. */
+	height: 100dvh;
+	inset: 0;
+	justify-content: center;
+	position: fixed;
+	transition: opacity 0.5s ease;
+	z-index: 940;
+}
 
-	#boot-fetch-info {
-		column-gap: 0.6rem;
-		color: var(--boot-suave);
-		display: grid;
-		font-size: min(3.2vw, 1.6vh);
-		grid-template-columns: auto auto;
-	}
+#boot-pre.boot-pre-ativo {
+	display: flex;
+}
 
-	.boot-fetch-chave {
-		color: var(--boot-destaque);
-		font-weight: bold;
-	}
+#boot-pre.boot-pre-saindo {
+	opacity: 0;
+	pointer-events: none;
+}
 
-	/* A primeira linha da tabela é o "dharlan@root" com o traço embaixo, como
-	   o fetch imprime. O traço é border, não uma linha de hífens, pra não
-	   depender da largura da fonte. */
-	#boot-fetch-info .boot-fetch-chave:first-child {
-		border-bottom: 1px solid
-			color-mix(in srgb, var(--boot-destaque) 60%, transparent);
-		grid-column: 1 / -1;
-		margin-bottom: 0.2em;
-		padding-bottom: 0.1em;
-	}
+.boot-pre-spinner {
+	animation: verify-spin 0.8s linear infinite;
+	border: 3px solid color-mix(in srgb, var(--clr-main-a40) 18%, transparent);
+	border-radius: 50%;
+	border-top-color: var(--clr-main-a40);
+	height: 44px;
+	width: 44px;
+}
 
-	#boot-fetch-titulo {
-		display: none;
-	}
+.boot-pre-popup {
+	background: var(--clr-black-a0);
+	border: var(--borda-padrao);
+	box-shadow: 0 0 20px color-mix(in srgb, var(--clr-main-a30) 25%, transparent);
+	display: none;
+	text-align: center;
+	width: min(84vw, 300px);
+}
 
-	#boot-paleta {
-		display: flex;
-		justify-content: center;
-		margin: 0.2em 0 0;
-	}
+#boot-pre.boot-pre-com-popup .boot-pre-spinner {
+	display: none;
+}
 
-	#boot-paleta span {
-		height: min(2.6vw, 1.4vh);
-		width: min(7vw, 3.6vh);
-	}
+/* steps() em vez de ease: abre aos trancos, como janela de sistema velho. */
+#boot-pre.boot-pre-com-popup .boot-pre-popup {
+	animation: boot-pre-abre 0.24s steps(4) both;
+	display: block;
+}
 
-	/* A rampa que o fastfetch imprime, montada a partir do tema: do fundo até
-	   a cor do texto, passando pelos três tons da cor principal. */
-	#boot-paleta span:nth-child(1) {
-		background: color-mix(in srgb, var(--clr-main-a30) 25%, var(--boot-fundo));
-	}
-	#boot-paleta span:nth-child(2) {
-		background: color-mix(in srgb, var(--clr-main-a30) 50%, var(--boot-fundo));
-	}
-	#boot-paleta span:nth-child(3) {
-		background: color-mix(in srgb, var(--clr-main-a30) 75%, var(--boot-fundo));
-	}
-	#boot-paleta span:nth-child(4) {
-		background: var(--clr-main-a30);
-	}
-	#boot-paleta span:nth-child(5) {
-		background: var(--clr-main-a40);
-	}
-	#boot-paleta span:nth-child(6) {
-		background: var(--clr-main-a50);
-	}
-	#boot-paleta span:nth-child(7) {
-		background: color-mix(in srgb, var(--clr-main-a50) 45%, var(--boot-texto));
-	}
-	#boot-paleta span:nth-child(8) {
-		background: var(--boot-texto);
-	}
+.boot-pre-barra {
+	background: var(--clr-main-a40);
+	color: var(--clr-black-a0);
+	font-size: 1rem;
+	padding: 0.15rem 0.6rem;
+	text-align: left;
+}
 
+.boot-pre-corpo {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	padding: 1.2rem 1rem 1.3rem;
+}
+
+/* O logo é desenhado pelo boot-terminal.js num canvas de 64x64, já em
+   dither Bayer, e esticado aqui pro dobro com pixelated: cada ponto do
+   dither vira um bloco de 2px, serrilhado como o resto do site. A cor
+   não está no canvas: o JS lê o `color` daqui e pinta com ela, por isso o
+   logo acompanha o tema. */
+#boot-pre-logo {
+	color: var(--clr-main-a40);
+	filter: drop-shadow(
+		0 0 8px color-mix(in srgb, var(--clr-main-a40) 45%, transparent)
+	);
+	height: 128px;
+	image-rendering: pixelated;
+	margin-bottom: 0.6rem;
+	width: 128px;
+}
+
+/* O texto só entra depois que o logo terminou de aparecer — quem põe a
+   classe é o JS. Antes disso fica o espaço reservado, pra janela não
+   mudar de tamanho no meio da animação. */
+.boot-pre-rotulo,
+#boot-pre-os {
+	visibility: hidden;
+}
+
+#boot-pre.boot-pre-texto .boot-pre-rotulo,
+#boot-pre.boot-pre-texto #boot-pre-os {
+	animation: boot-pre-pisca 0.3s steps(3) both;
+	visibility: visible;
+}
+
+/* Apagado pela cor e não por opacity: a animação de piscar termina em
+   opacity 1 e ficaria por cima. */
+.boot-pre-rotulo {
+	color: color-mix(in srgb, var(--clr-white) 60%, transparent);
+	font-size: 1rem;
+	letter-spacing: 0.05em;
+}
+
+#boot-pre-os {
+	color: var(--clr-main-a40);
+	font-size: 2rem;
+	font-weight: normal;
+	line-height: 1;
+	/* Vazio enquanto o nome é digitado; sem isso a janela crescia letra a
+	   letra. */
+	min-height: 1em;
+}
+
+@keyframes boot-pre-abre {
+	from {
+		opacity: 0;
+		transform: scale(0.85);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* Liga e desliga duas vezes antes de firmar, como texto de CRT acendendo. */
+@keyframes boot-pre-pisca {
+	0%,
+	50% {
+		opacity: 0;
+	}
+	25%,
+	75%,
+	100% {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#boot-pre.boot-pre-com-popup .boot-pre-popup,
+	#boot-pre.boot-pre-texto .boot-pre-rotulo,
+	#boot-pre.boot-pre-texto #boot-pre-os {
+		animation: none;
+	}
 }
 
 /* ---------------------------------------------------------------------

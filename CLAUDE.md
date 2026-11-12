@@ -233,23 +233,29 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
   mudar uma exige mudar a outra.
 - **A pele mobile do boot** (≤600px, em [boot-terminal.css](assets/css/boot-terminal.css))
   troca a caixa centralizada pela sessão de terminal de um celular: histórico de
-  comandos já rodados (relógio, bateria, rede), arte do sistema e a régua de
-  cores do fastfetch. Esse histórico é **marcação estática** da
-  [index.html](index.html) — o boot de verdade continua sendo o do
-  [boot-terminal.js](assets/js/boot-terminal.js), que escreve embaixo dele, no
-  `#boot-output`, com os mesmos áudios e na mesma ordem. O JS não sabe que a
-  pele existe.
+  comandos já rodados (relógio, bateria, rede). Esse histórico é **marcação
+  estática** da [index.html](index.html) — o boot de verdade continua sendo o
+  do [boot-terminal.js](assets/js/boot-terminal.js), que escreve embaixo dele,
+  no `#boot-output`, com os mesmos áudios e na mesma ordem.
+- **No celular há uma etapa entre o captcha e o terminal** (`#boot-pre`): um
+  círculo girando no centro e depois um popup com o logo e o nome do sistema
+  (Android/iOS), que fica ~2,5s e passa sozinho pro terminal. Como o terminal
+  começa longe do toque no checkbox, os áudios do boot são **destravados no
+  próprio toque** (play mudo + pause, no `destravarAudios`) — senão o
+  Safari/iOS recusaria o som. O `#boot-pre` fica com z-index entre o captcha
+  e o terminal e é ligado já durante o captcha, pra o fade do captcha revelar
+  o círculo e não um pedaço do terminal.
 - A paleta dessa pele sai das variáveis de tema, como o resto do site: rosa
   sobre quase-preto no escuro e branco nos temas claros, sem regra extra — lá
   o `--clr-black-a0` já é quase branco e o `--clr-white` é escuro, então o
-  desenho inverte sozinho. Quem repinta a tela inteira (régua de cores
-  inclusive) são as cinco variáveis `--boot-*` no topo do bloco mobile.
-- A arte do fetch tem duas versões, as do neofetch (robô do Android / maçã da
-  Apple); quem escolhe é o `data-plataforma` que um script no `<head>` da index
-  põe no `<html>`, e o CSS esconde a outra. São ascii puro de propósito: a
-  primeira versão era braille e entortava, porque cada aparelho resolvia esses
-  glifos numa fonte de símbolos diferente. Ascii cai na VT323 do terminal e
-  desenha igual em todo lugar.
+  desenho inverte sozinho. Quem repinta o terminal inteiro são as quatro
+  variáveis `--boot-*` no topo do bloco mobile.
+- O logo do popup é o [androidlogo.png](assets/img/androidlogo.png) ou o
+  [ioslogo.png](assets/img/ioslogo.png) (brancos sobre transparente); quem
+  escolhe é o `data-plataforma` que um script no `<head>` da index põe no
+  `<html>`. O JS recorta a margem transparente de cada PNG (as duas são bem
+  diferentes), desenha num canvas 64x64 em dither Bayer na cor do tema e o
+  faz materializar ponto a ponto. Trocar o PNG não exige mexer em tamanho.
 - **São dois breakpoints diferentes, de propósito.** A pele mobile é `≤600px`
   (largura de celular); tablet, de 601px a 1024px, fica com o boot antigo, a
   caixa centralizada. Já o `isMobile` do [boot-terminal.js](assets/js/boot-terminal.js)

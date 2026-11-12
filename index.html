@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<script src="/assets/js/theme-init.js"></script>
 		<script>
-			// Decide qual arte o boot do mobile mostra (ver boot-terminal.css).
+			// Decide qual logo o popup do boot mobile mostra (ver boot-terminal.js).
 			// No iOS todo navegador é WebKit por baixo, então o que importa é o
 			// aparelho e não a marca do app — Chrome/Firefox no iPhone também
 			// ganham a bússola. O iPadOS 13+ se diz "Macintosh" no userAgent; o
@@ -60,6 +60,23 @@
 			</div>
 		</div>
 
+		<!-- Antes do terminal, só no celular (≤600px): um círculo girando no meio
+		     da tela e depois um popup com o sistema do aparelho. Quem mostra e
+		     esconde é o boot-terminal.js, que também desenha o logo do sistema
+		     (assets/img/androidlogo.png ou ioslogo.png) com dither no canvas.
+		     Fora do celular isto nunca aparece. -->
+		<div id="boot-pre">
+			<div class="boot-pre-spinner" role="status" aria-label="loading"></div>
+			<div class="boot-pre-popup" role="dialog" aria-labelledby="boot-pre-os">
+				<div class="boot-pre-barra">system.info</div>
+				<div class="boot-pre-corpo">
+					<canvas id="boot-pre-logo" aria-hidden="true"></canvas>
+					<span class="boot-pre-rotulo">system detected</span>
+					<strong id="boot-pre-os">--</strong>
+				</div>
+			</div>
+		</div>
+
 		<div id="boot-terminal">
 			<div class="crt">
 				<div class="scanline"></div>
@@ -97,83 +114,14 @@
 
 						<div class="boot-linha boot-cmd"><span class="boot-prompt">dharlan@root:~$</span> ./netinfo.sh</div>
 						<div class="boot-linha boot-saida">Wi-Fi: ON // dharlan.world [81 Mb/s].:</div>
-
-						<div class="boot-linha boot-cmd"><span class="boot-prompt">dharlan@root:~$</span> neofetch --animate</div>
-						<!-- As artes são as do neofetch, ascii puro: desenham na VT323 do
-						     próprio terminal, sem depender de fonte de símbolo do sistema.
-						     Qual das duas aparece depende do data-plataforma que o script do
-						     <head> põe no <html> — iOS ganha a maçã, o resto ganha o robô. -->
-						<div id="boot-fetch">
-							<pre id="boot-arte-android" class="boot-arte" aria-hidden="true">
-       -o           o-
-         +hydNNNNdyh+
-       +mMMMMMMMMMMMMm+
-     `dMMm:NMMMMMMN:mMMd`
-      hMMMMMMMMMMMMMMMMMMh
-  ..  yyyyyyyyyyyyyyyyyyyy  ..
-.mMMm`MMMMMMMMMMMMMMMMMMMM`mMMm.
-:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
-:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
-:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
-:MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
--MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM-
- +yy+ MMMMMMMMMMMMMMMMMMMM +yy+
-      mMMMMMMMMMMMMMMMMMMm
-      `/++MMMMh++hMMMM++/`
-          MMMMo  oMMMM
-          MMMMo  oMMMM
-          oNMm-  -mMNs
-</pre>
-							<pre id="boot-arte-ios" class="boot-arte" aria-hidden="true">
-                    'c.
-                 ,xNMM.
-               .OMMMMo
-               OMMM0,
-     .;loddo:' loolloddol;.
-   cKMMMMMMMMMMNWMMMMMMMMMM0:
- .KMMMMMMMMMMMMMMMMMMMMMMMWd.
- XMMMMMMMMMMMMMMMMMMMMMMMX.
-;MMMMMMMMMMMMMMMMMMMMMMMM:
-:MMMMMMMMMMMMMMMMMMMMMMMM:
-.MMMMMMMMMMMMMMMMMMMMMMMMX.
- kMMMMMMMMMMMMMMMMMMMMMMMMWd.
- .XMMMMMMMMMMMMMMMMMMMMMMMMMMk
-  .XMMMMMMMMMMMMMMMMMMMMMMMMK.
-    kMMMMMMMMMMMMMMMMMMMMMMd
-     ;KMMMMMMMWXXWMMMMMMMk.
-       .cooc,.    .,coo:.
-</pre>
-							<div id="boot-fetch-info">
-								<span class="boot-fetch-chave">dharlan@root</span><span id="boot-fetch-titulo"></span>
-								<span class="boot-fetch-chave">OS</span><span>dharlan.world</span>
-								<span class="boot-fetch-chave">Host</span><span>vercel edge</span>
-								<span class="boot-fetch-chave">Kernel</span><span>boot.sh 1.0</span>
-								<span class="boot-fetch-chave">Shell</span><span>vanilla js</span>
-								<span class="boot-fetch-chave">WM</span><span>old web</span>
-								<span class="boot-fetch-chave">Tela</span><span id="boot-fetch-tela">--</span>
-								<span class="boot-fetch-chave">Tema</span><span id="boot-fetch-tema">--</span>
-							</div>
-						</div>
-						<!-- Régua de cores do fastfetch: aqueles quadradinhos que ele imprime
-						     embaixo da arte. Puro enfeite. -->
-						<div id="boot-paleta">
-							<span></span>
-							<span></span>
-							<span></span>
-							<span></span>
-							<span></span>
-							<span></span>
-							<span></span>
-							<span></span>
-						</div>
 					</div>
 					<div id="boot-output"></div>
 				</div>
 			</div>
 		</div>
 		<script>
-			// Preenche o que o histórico do boot mobile mostra de real: hora, data,
-			// dia do ano, resolução e tema. O resto das linhas é gag fixa no HTML.
+			// Preenche o que o histórico do boot mobile mostra de real: hora, data
+			// e dia do ano. O resto das linhas é gag fixa no HTML.
 			// Roda solto (não espera DOMContentLoaded) porque está depois da
 			// marcação e o boot precisa já nascer com a hora certa.
 			(function () {
@@ -202,12 +150,6 @@
 				const inicioDoAno = new Date(agora.getFullYear(), 0, 0);
 				const dias = Math.floor((agora - inicioDoAno) / 86400000);
 				pegar("boot-dias").textContent = dias + " days have passed";
-
-				pegar("boot-fetch-tela").textContent =
-					screen.width + "x" + screen.height;
-				// theme-init.js já rodou e o dark não seta atributo nenhum.
-				pegar("boot-fetch-tema").textContent =
-					document.documentElement.getAttribute("data-theme") || "dark";
 			})();
 		</script>
 
@@ -216,6 +158,7 @@
 			// o ascii "dharlan" da /home), pula direto sem mostrar de novo.
 			if (sessionStorage.getItem("bootTerminalSeen")) {
 				document.getElementById("human-verify")?.remove();
+				document.getElementById("boot-pre")?.remove();
 				document.getElementById("boot-terminal").remove();
 			}
 		</script>
