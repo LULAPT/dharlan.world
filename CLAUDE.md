@@ -466,7 +466,7 @@ fica só a nav em cima.
 
 ## A `/portfolio/`
 
-Os projetos recentes do dharlan (Combo Lanches, Magal's Cap, Lidera360, as duas
+Os projetos recentes do dharlan (Combo Lanches, Zoo, Magal's Cap, Lidera360, as duas
 APIs e o bia-bio). **Não está no `links` do navbar.js**: a porta é o botão
 `#portfolio-btn` na caixa "o que eu ando fazendo" da [sobre.html](sobre.html).
 Está no [sitemap-data.js](assets/js/sitemap-data.js) como filha da `/sobre/`, e
