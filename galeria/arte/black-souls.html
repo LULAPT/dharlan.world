@@ -102,25 +102,81 @@
 			}
 
 			/* ----------------------------------------------
-			 * Cenário
+			 * Cenário — mesmo esquema da /2kki/: um WebP animado de fundo
+			 * (feito do vídeo, a 15 fps), inteiro na tela, flutuando de leve.
+			 * `contain` e não `cover`: o vídeo já tem as faixas pretas dos
+			 * lados, e o cover cortaria as ilustrações.
 			 * ---------------------------------------------- */
 			#bg {
+				animation: floating 6s ease-in-out infinite;
 				background-color: var(--clr-secundaria);
 				background-position: center;
 				background-repeat: no-repeat;
-				background-size: cover;
+				background-size: contain;
+				filter: contrast(1.1) saturate(1.1);
 				height: 100%;
 				left: 0;
 				opacity: 0;
 				position: fixed;
 				top: 0;
-				transition: opacity 2s ease;
+				transition: opacity 3s ease;
 				width: 100%;
 				z-index: 0;
 			}
 
 			#bg.visible {
 				opacity: 1;
+			}
+
+			@keyframes floating {
+				0%,
+				100% {
+					transform: translateY(0px);
+				}
+				50% {
+					transform: translateY(-3px);
+				}
+			}
+
+			/* A facada: aos 12s do vídeo há um corte seco pro preto e o som de
+			   faca. A tela inteira (cenário e controles) dá um tranco ali. Em
+			   steps, pra tremer seco, sem deslizar — no ritmo do resto do site. */
+			body.facada {
+				animation: facada 0.55s steps(1, end);
+			}
+
+			@keyframes facada {
+				0% {
+					transform: translate(-9px, 4px);
+				}
+				10% {
+					transform: translate(8px, -6px);
+				}
+				20% {
+					transform: translate(-7px, -3px);
+				}
+				30% {
+					transform: translate(6px, 5px);
+				}
+				40% {
+					transform: translate(-5px, 2px);
+				}
+				50% {
+					transform: translate(4px, -4px);
+				}
+				60% {
+					transform: translate(-3px, 3px);
+				}
+				70% {
+					transform: translate(2px, -2px);
+				}
+				80% {
+					transform: translate(-1px, 1px);
+				}
+				90%,
+				100% {
+					transform: translate(0, 0);
+				}
 			}
 
 			/* Enquanto não há imagem de cenário, isto marca a área e deixa claro
@@ -162,13 +218,15 @@
 			/* ----------------------------------------------
 			 * Controles
 			 * ---------------------------------------------- */
+			/* Em cima, como na /2kki/: o canto de baixo é da engrenagem e do
+			   botão do rádio, que o main.js cria e que cobriam o "Voltar". */
 			#controls {
 				align-items: center;
-				bottom: 20px;
 				display: flex;
 				gap: 8px;
 				left: 20px;
 				position: fixed;
+				top: 20px;
 				z-index: 10;
 			}
 
@@ -202,21 +260,54 @@
 				width: 16px;
 			}
 
-			#faixa {
-				color: var(--clr-primaria);
-				font-size: 0.9em;
-				margin-left: 8px;
-				opacity: 0.6;
-				max-width: 40vw;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
+			/* Volume: trilho fino e um quadradinho, no desenho dos botões. */
+			/* Mesmo fundo e borda dos botões: sem isso o trilho some por cima
+			   da ilustração. */
+			#volume {
+				-webkit-appearance: none;
+				appearance: none;
+				background-color: var(--clr-secundaria);
+				border: 1px solid #222;
+				box-sizing: border-box;
+				cursor: pointer;
+				height: 30px;
+				margin: 0;
+				padding: 0 10px;
+				width: 120px;
 			}
 
-			@media (max-width: 700px) {
-				#faixa {
-					display: none;
-				}
+			#volume::-webkit-slider-runnable-track {
+				background: rgba(232, 226, 230, 0.35);
+				height: 2px;
+			}
+
+			#volume::-moz-range-track {
+				background: rgba(232, 226, 230, 0.35);
+				height: 2px;
+			}
+
+			#volume::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				background: var(--clr-primaria);
+				border: none;
+				border-radius: 0;
+				height: 12px;
+				margin-top: -5px;
+				width: 8px;
+			}
+
+			#volume::-moz-range-thumb {
+				background: var(--clr-primaria);
+				border: none;
+				border-radius: 0;
+				height: 12px;
+				width: 8px;
+			}
+
+			#volume:focus-visible {
+				outline: 1px solid var(--clr-primaria);
+				outline-offset: 2px;
 			}
 		</style>
 	</head>
@@ -235,27 +326,11 @@
 			<button id="back-button" onclick="window.location.href='/galeria/arte/'">
 				Voltar
 			</button>
-
-			<button class="square-btn" onclick="faixaAnterior()" title="Anterior">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-					<path
-						d="M224.93-224.93v-510.14h83v510.14h-83Zm510.14-24L376.35-480l358.72-231.07v462.14Z"
-					/>
-				</svg>
-			</button>
-			<button class="square-btn" onclick="proximaFaixa()" title="Próxima">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-					<path
-						d="M652.07-224.93v-510.14h83v510.14h-83Zm-427.14-24v-462.14L583.65-480 224.93-248.93Z"
-					/>
-				</svg>
-			</button>
 			<button
 				id="mute-music"
 				class="square-btn"
 				onclick="alternarMudo()"
-				title="Silenciar música"
-				data-smt-title="Silenciar música"
+				title="Silenciar som"
 			>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
 					<path
@@ -263,8 +338,15 @@
 					/>
 				</svg>
 			</button>
-
-			<span id="faixa"></span>
+			<input
+				id="volume"
+				type="range"
+				min="0"
+				max="100"
+				value="50"
+				aria-label="Volume"
+				title="Volume: 50%"
+			/>
 		</div>
 
 		<div id="bg"></div>
@@ -274,8 +356,6 @@
 		</div>
 		<div id="vinheta"></div>
 
-		<div id="player"></div>
-
 		<script>
 			// ---------------------------------------------------------------
 			// Ajustes — é aqui que a página é montada
@@ -283,31 +363,41 @@
 
 			// Imagem de fundo do cenário. Deixe vazio enquanto não houver uma;
 			// a página mostra o aviso de placeholder no lugar.
-			// Ex.: "/assets/img/black-souls/floresta.png"
-			var CENARIO = "";
+			//
+			// É um vídeo do jogo (BlackSouls.mp4, fora do repo: o .gitignore ignora
+			// *.mp4) virado WebP animado no ffmpeg: até 87,8s, 15 fps, 960x540,
+			// libwebp_anim quality 60, compression_level 6 e **loop 1**. O loop
+			// 1 é o que faz ele tocar uma vez só e parar no último quadro — a
+			// frase em vermelho no preto, nítida de 87,5s a 88s (o vídeo
+			// original segue até 88,9s, com a frase sumindo; foi cortado antes
+			// disso de propósito). Recomeça só com F5.
+			var CENARIO = "/assets/img/black-souls.webp";
 
-			// IDs de vídeos do YouTube com a trilha. Mesmo esquema da /2kki/:
-			// nada é hospedado aqui, só referenciado. Enquanto estiver vazio a
-			// página roda em silêncio e os controles de música ficam ocultos.
-			var TRILHA = [];
+			// O roteiro, com os tempos do próprio vídeo, em ms desde que o
+			// WebP começa a tocar. Se o WebP for refeito, confira:
+			// 0s → 12,3s: a cena da Alice, com a música calma.
+			// 12,0s: corte seco pro preto. 12,3s: o som da faca — a tela treme
+			//        e a música da Alice morre junto.
+			// 16,0s: o slideshow começa (o vídeo fica preto e mudo até lá) e
+			//        entra o tema do jogo, que segue em loop depois que o
+			//        vídeo para no fim.
+			var FACADA_MS = 12300;
+			var TEMA_MS = 16000;
+
+			// Black Souls II OST (Alice Scene / Game Theme), regravadas em 128
+			// kbps no ffmpeg — o original era 320. O som da faca é recortado do
+			// vídeo (12,25s a 13,15s): o WebP não tem áudio. Vazio = sem.
+			var MUSICA_ALICE = "/assets/wav/black-souls-alice.mp3";
+			var MUSICA_TEMA = "/assets/wav/black-souls-tema.mp3";
+			var FACADA_SOM = "/assets/wav/facada-black-souls.mp3";
+			var VOLUME_MUSICA = 0.45;
 
 			// ---------------------------------------------------------------
 
-			var embaralhada = [];
-			var indiceAtual = 0;
-			var player = null;
 			var mudo = false;
-
-			function embaralhar(lista) {
-				var arr = lista.slice();
-				for (var i = arr.length - 1; i > 0; i--) {
-					var j = Math.floor(Math.random() * (i + 1));
-					var t = arr[i];
-					arr[i] = arr[j];
-					arr[j] = t;
-				}
-				return arr;
-			}
+			var reduzirMovimento = window.matchMedia(
+				"(prefers-reduced-motion: reduce)"
+			).matches;
 
 			function dormir(ms) {
 				return new Promise(function (resolve) {
@@ -315,110 +405,254 @@
 				});
 			}
 
+			// ---- cenário ---------------------------------------------------
+			// O WebP começa a baixar já no preloader, mas só entra no #bg no
+			// clique: um GIF/WebP animado começa a tocar quando é pintado pela
+			// primeira vez, e é esse instante que serve de zero pro roteiro.
+			// Se entrasse no #bg agora, ele já estaria rodando por baixo do
+			// preloader (e, com loop 1, poderia até já ter acabado).
+			var cenarioPronto = Promise.resolve();
+
 			function aplicarCenario() {
-				var bg = document.getElementById("bg");
 				var aviso = document.getElementById("bg-aviso");
-				if (CENARIO) {
-					bg.style.backgroundImage = 'url("' + CENARIO + '")';
-					if (aviso) aviso.remove();
-				}
+				if (!CENARIO) return;
+				if (aviso) aviso.remove();
+				var img = new Image();
+				img.src = CENARIO;
+				cenarioPronto = img.decode().catch(function () {});
 			}
 
-			// Sem trilha definida, os botões de música não fazem sentido.
-			function ajustarControles() {
-				if (TRILHA.length) return;
-				["mute-music", "faixa"].forEach(function (id) {
-					var el = document.getElementById(id);
-					if (el) el.style.display = "none";
-				});
-				document.querySelectorAll("#controls .square-btn").forEach(function (b) {
-					if (b.id !== "mute-music") b.style.display = "none";
-				});
-			}
+			// ---- áudio -----------------------------------------------------
+			// As músicas são <audio> passando por um GainNode do Web Audio. O
+			// gain é o que permite o fade e o mudo: no iOS o `volume` de um
+			// <audio> é só leitura. Tudo é criado e destravado dentro do
+			// clique — o tema só toca 16s depois, e o Safari/iOS recusaria um
+			// play() tão longe do gesto (mesmo motivo do soco da /setup/ e dos
+			// áudios do boot da /index/).
+			var audioCtx = null;
+			var mestre = null; // ganho geral, é ele que o botão de mudo zera
+			var faixas = {}; // alice / tema: { el, ganho }
+			var somFacada = null;
 
-			document
-				.getElementById("play-button")
-				.addEventListener("click", async function () {
-					document.getElementById("preloader").style.display = "none";
-
-					if (TRILHA.length) {
-						var tag = document.createElement("script");
-						tag.src = "https://www.youtube.com/iframe_api";
-						var primeiro = document.getElementsByTagName("script")[0];
-						primeiro.parentNode.insertBefore(tag, primeiro);
+			function criarFaixa(src, emLoop) {
+				var el = new Audio(src);
+				el.preload = "auto";
+				el.loop = emLoop;
+				var faixa = { el: el, ganho: null };
+				if (audioCtx) {
+					try {
+						faixa.ganho = audioCtx.createGain();
+						faixa.ganho.gain.value = 0;
+						audioCtx.createMediaElementSource(el).connect(faixa.ganho);
+						faixa.ganho.connect(mestre);
+					} catch (e) {
+						faixa.ganho = null;
 					}
-
-					await dormir(1200);
-					document.getElementById("bg").classList.add("visible");
-				});
-
-			function onYouTubeIframeAPIReady() {
-				if (!TRILHA.length) return;
-				embaralhada = embaralhar(TRILHA);
-				indiceAtual = 0;
-				player = new YT.Player("player", {
-					height: "0",
-					width: "0",
-					videoId: embaralhada[indiceAtual],
-					playerVars: { autoplay: 1, mute: 0, controls: 0 },
-					events: {
-						onReady: function (e) {
-							e.target.setVolume(35);
-							mostrarFaixa();
-						},
-						onStateChange: function (e) {
-							// Acabou a faixa: emenda a próxima.
-							if (e.data === YT.PlayerState.ENDED) proximaFaixa();
-						},
-					},
-				});
+				}
+				// Destrava: play e pause ainda dentro do gesto do clique.
+				var p = el.play();
+				if (p && p.then) {
+					p.then(function () {
+						el.pause();
+						el.currentTime = 0;
+					}).catch(function () {});
+				}
+				return faixa;
 			}
 
-			function mostrarFaixa() {
-				var el = document.getElementById("faixa");
-				if (!el || !player || !player.getVideoData) return;
+			function prepararAudio() {
 				try {
-					var d = player.getVideoData();
-					el.textContent = d && d.title ? d.title : "";
+					audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+					mestre = audioCtx.createGain();
+					mestre.gain.value = ganhoGeral();
+					mestre.connect(audioCtx.destination);
 				} catch (e) {
-					/* o título nem sempre está disponível de imediato */
+					audioCtx = null;
+				}
+				if (MUSICA_ALICE) faixas.alice = criarFaixa(MUSICA_ALICE, false);
+				if (MUSICA_TEMA) faixas.tema = criarFaixa(MUSICA_TEMA, true);
+
+				if (audioCtx && FACADA_SOM) {
+					fetch(FACADA_SOM)
+						.then(function (r) {
+							return r.arrayBuffer();
+						})
+						.then(function (buf) {
+							return audioCtx.decodeAudioData(buf);
+						})
+						.then(function (decodificado) {
+							somFacada = decodificado;
+						})
+						.catch(function () {});
 				}
 			}
 
-			function trocarPara(indice) {
-				if (!player || !embaralhada.length) return;
-				indiceAtual = (indice + embaralhada.length) % embaralhada.length;
-				player.loadVideoById(embaralhada[indiceAtual]);
-				setTimeout(mostrarFaixa, 800);
+			// Leva o ganho de uma faixa até `alvo` em `ms`. Sem Web Audio, cai
+			// no volume do <audio>, sem fade.
+			function rampa(faixa, alvo, ms) {
+				if (faixa.ganho) {
+					var g = faixa.ganho.gain;
+					var agora = audioCtx.currentTime;
+					g.cancelScheduledValues(agora);
+					g.setValueAtTime(g.value, agora);
+					g.linearRampToValueAtTime(alvo, agora + ms / 1000);
+				} else {
+					faixa.el.volume = alvo * ganhoGeral();
+				}
 			}
 
-			function proximaFaixa() {
-				trocarPara(indiceAtual + 1);
+			function tocar(nome) {
+				var faixa = faixas[nome];
+				if (!faixa) return;
+				try {
+					faixa.el.currentTime = 0;
+				} catch (e) {}
+				rampa(faixa, VOLUME_MUSICA, 300);
+				var p = faixa.el.play();
+				if (p && p.catch) p.catch(function () {});
 			}
 
-			function faixaAnterior() {
-				trocarPara(indiceAtual - 1);
+			function parar(nome, ms) {
+				var faixa = faixas[nome];
+				if (!faixa) return;
+				rampa(faixa, 0, ms);
+				setTimeout(function () {
+					faixa.el.pause();
+				}, ms + 50);
+			}
+
+			function tocarFacada() {
+				if (!audioCtx || !somFacada) return;
+				try {
+					var fonte = audioCtx.createBufferSource();
+					fonte.buffer = somFacada;
+					fonte.connect(mestre);
+					fonte.start();
+				} catch (e) {}
+			}
+
+			// ---- volume -----------------------------------------------------
+			// O controle vai de 0 a 100 e começa na metade (os sons eram altos
+			// demais). O ganho é o quadrado do controle: o ouvido percebe
+			// volume em escala logarítmica, e linear o meio do trilho mal
+			// baixaria nada — assim a metade dá 0.25 (~−12 dB), que já soa
+			// como "metade". Vale pra música e facada juntas: as duas passam
+			// pelo `mestre`.
+			var volume = 0.5;
+
+			function ganhoGeral() {
+				return mudo ? 0 : volume * volume;
+			}
+
+			function aplicarGanho() {
+				if (mestre) {
+					// Rampa curta: mudar o ganho de uma vez estala.
+					mestre.gain.setTargetAtTime(ganhoGeral(), audioCtx.currentTime, 0.02);
+				} else {
+					// Sem Web Audio: no volume de cada <audio>, onde ele existe.
+					Object.keys(faixas).forEach(function (k) {
+						faixas[k].el.muted = mudo;
+						if (!faixas[k].el.paused) faixas[k].el.volume = VOLUME_MUSICA * volume * volume;
+					});
+				}
+			}
+
+			function pintarMudo() {
+				var btn = document.getElementById("mute-music");
+				btn.style.backgroundColor = mudo ? "var(--clr-disabled)" : "";
+				// Tooltip do site: o texto mora no data-smt-title (ver CLAUDE.md).
+				btn.dataset.smtTitle = mudo ? "Ativar som" : "Silenciar som";
 			}
 
 			function alternarMudo() {
-				if (!player) return;
-				var btn = document.getElementById("mute-music");
 				mudo = !mudo;
-				if (mudo) {
-					player.mute();
-					btn.style.backgroundColor = "var(--clr-disabled)";
-					btn.title = "Ativar música";
-					btn.setAttribute("data-smt-title", "Ativar música");
-				} else {
-					player.unMute();
-					btn.style.backgroundColor = "";
-					btn.title = "Silenciar música";
-					btn.setAttribute("data-smt-title", "Silenciar música");
-				}
+				aplicarGanho();
+				pintarMudo();
 			}
 
+			var controleVolume = document.getElementById("volume");
+			controleVolume.addEventListener("input", function () {
+				volume = controleVolume.value / 100;
+				// Mexer no volume com o som mudo tira o mudo, como em qualquer
+				// player — senão a pessoa arrasta e não ouve nada.
+				if (mudo && volume > 0) {
+					mudo = false;
+					pintarMudo();
+				}
+				var texto = "Volume: " + controleVolume.value + "%";
+				if (typeof controleVolume.dataset.smtTitle !== "undefined") {
+					controleVolume.dataset.smtTitle = texto;
+				} else {
+					controleVolume.title = texto;
+				}
+				aplicarGanho();
+			});
+
+			// ---- a facada --------------------------------------------------
+			function facada() {
+				// Corte seco, como o do vídeo — 60ms só pra não estalar.
+				parar("alice", 60);
+				tocarFacada();
+				if (reduzirMovimento) return;
+				var body = document.body;
+				body.classList.remove("facada");
+				void body.offsetWidth; // reinicia a animação se ainda estiver nela
+				body.classList.add("facada");
+			}
+
+			document.body.addEventListener("animationend", function (e) {
+				if (e.animationName === "facada") document.body.classList.remove("facada");
+			});
+
+			// ---- o roteiro --------------------------------------------------
+			// Roda uma vez só, como o WebP. Cada passo é marcado a partir do
+			// zero, não do passo anterior, pra os atrasos não se somarem.
+			function rodarRoteiro(zero) {
+				[
+					{ ms: 0, faz: function () { tocar("alice"); } },
+					{ ms: FACADA_MS, faz: facada },
+					{ ms: TEMA_MS, faz: function () { tocar("tema"); } },
+				].forEach(function (passo) {
+					setTimeout(passo.faz, Math.max(0, zero + passo.ms - performance.now()));
+				});
+			}
+
+			// ---- entrada ---------------------------------------------------
+			document
+				.getElementById("play-button")
+				.addEventListener("click", async function () {
+					var botao = this;
+					prepararAudio(); // ainda dentro do gesto do clique
+
+					// Se o WebP ainda não chegou, espera por ele (até 20s) com o
+					// preloader na tela, pra não começar com o fundo vazio.
+					botao.disabled = true;
+					botao.textContent = "...";
+					await Promise.race([cenarioPronto, dormir(20000)]);
+					if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+
+					document.getElementById("preloader").style.display = "none";
+
+					await dormir(1200);
+					var bg = document.getElementById("bg");
+					if (CENARIO) bg.style.backgroundImage = 'url("' + CENARIO + '")';
+					bg.classList.add("visible");
+					// O WebP começa a tocar no quadro em que é pintado: o zero do
+					// roteiro é o próximo quadro.
+					requestAnimationFrame(function () {
+						if (CENARIO) rodarRoteiro(performance.now());
+						else tocar("alice");
+					});
+				});
+
+			// Voltando pelo botão do navegador, o bfcache devolveria a página
+			// parada no fim, sem roteiro e sem som. Recarrega e começa do
+			// preloader, como um F5.
+			window.addEventListener("pageshow", function (e) {
+				if (e.persisted) location.reload();
+			});
+
 			aplicarCenario();
-			ajustarControles();
 		</script>
 	</body>
 </html>

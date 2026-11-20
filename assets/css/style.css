@@ -181,6 +181,16 @@ main.full {
 	pointer-events: none;
 }
 
+/* Links de páginas que só fazem sentido com teclado físico (/digitacao/ e
+   /teclado/). Some em aparelho de toque — o critério é o ponteiro e não a
+   largura, pra não sumir de quem só estreitou a janela no desktop. As páginas
+   continuam no ar e listadas na /sitemap/. */
+@media (hover: none) and (pointer: coarse) {
+	.so-teclado-fisico {
+		display: none !important;
+	}
+}
+
 .button-site {
 	height: 31px;
 	display: flex;

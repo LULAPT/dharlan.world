@@ -394,8 +394,10 @@ export function carregarNavbar() {
 				{ label: "Avatar", href: "/avatar/" },
 				{ label: "Picrew", href: "/picrew/" },
 				// { label: "yt-dlp", href: "/yt-dlp/" }, // desativado até ter servidor próprio - reativar removendo o comentário
-				{ label: "Digitação", href: "/digitacao/" },
-				{ label: "Teclado", href: "/teclado/" },
+				// `teclado`: só com teclado físico — somem do menu em aparelho de
+				// toque (classe .so-teclado-fisico, no style.css). Seguem na /sitemap/.
+				{ label: "Digitação", href: "/digitacao/", teclado: true },
+				{ label: "Teclado", href: "/teclado/", teclado: true },
 			],
 		},
 		// Sem children: a /setup/ é uma página só. Entra depois de Utils por ser
@@ -411,7 +413,7 @@ export function carregarNavbar() {
 				const linkClass = item.destaque ? "btn-destaque" : "";
 				if (item.children && item.children.length) {
 					const childrenHTML = item.children
-						.map((c) => `<a href="${c.href}">${c.label}</a>`)
+						.map((c) => `<a href="${c.href}"${c.teclado ? ' class="so-teclado-fisico"' : ""}>${c.label}</a>`)
 						.join("");
 					return `
           <div class="dropdown"><a href="${
@@ -433,7 +435,7 @@ export function carregarNavbar() {
 				const itemClass = item.destaque ? "btn-destaque" : "";
 				if (item.children && item.children.length) {
 					const childrenHTML = item.children
-						.map((c) => `<li><a href="${c.href}">${c.label}</a></li>`)
+						.map((c) => `<li${c.teclado ? ' class="so-teclado-fisico"' : ""}><a href="${c.href}">${c.label}</a></li>`)
 						.join("");
 					if (item.href) {
 						return `<li><a href="${item.href}" class="${itemClass}">${item.label}</a></li><ul>${childrenHTML}</ul>`;

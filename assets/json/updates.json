@@ -1,5 +1,15 @@
 [
 	{
+		"date": "2026-11-20",
+		"items": [
+			"<a href=\"/galeria/arte/black-souls/\">/black-souls</a> finalizada, no mesmo esquema da <a href=\"/galeria/arte/2kki/\">/2kki</a>: um webp do jogo virou o fundo animado da página",
+			"passar o mouse na bolinha de status da <a href=\"/home/\">/home</a> agora mostra um cartão com meu avatar atual do discord, o @ e o status em tempo real",
+			"<a href=\"/digitacao/\">/digitacao</a> e <a href=\"/teclado/\">/teclado</a> saem do menu no celular, já que sem teclado físico não fazem sentido — continuam na <a href=\"/sitemap/\">/sitemap</a>",
+			"<a href=\"/picrew/char-somehow/\">Char Somehow</a> finalizado e melhorado com cor de olhos, de roupa e acessórios de cabelo seguindo a cor do cabelo, sobrancelhas separáveis da expressão e o botão aleatório agora sorteia tudo.",
+			"1 foto nova na <a href=\"/galeria/fotografia/\">/galeria/fotografia</a> e outra trocada por uma versão com mais qualidade"
+		]
+	},
+	{
 		"date": "2026-10-03",
 		"items": [
 			"página <a href=\"/portfolio/\">/portfolio</a> criada, com os projetos recentes: sites gravados rodando de verdade e os terminais das APIs chamando os servidores ao vivo",

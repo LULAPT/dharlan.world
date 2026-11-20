@@ -21,6 +21,19 @@
 	// Cor escolhida por grupo: { "color-hair": "#a0522d" | null }
 	const cores = {};
 
+	// Sobrancelhas: no acervo original elas vêm desenhadas dentro da
+	// expressão. Foram recortadas (linha 120 pra cima de cada face_front; o
+	// resto ficou em face_front_sem_sobrancelha) e viraram a categoria
+	// "eyebrow" do JSON — eram 4 pares diferentes nas 15 expressões. Com o
+	// liga/desliga desligado, vale o desenho original, expressão e sobrancelha
+	// juntas, e a categoria nova é ignorada. Ligado, a expressão é desenhada
+	// sem sobrancelha e entra a escolhida (ou nenhuma).
+	let sobrancelhaSeparada = false;
+
+	function categoriaAtiva(cat) {
+		return cat.id !== "eyebrow" || sobrancelhaSeparada;
+	}
+
 	const cacheImagem = new Map();
 	const cacheColorido = new Map();
 
@@ -45,6 +58,43 @@
 		["#8a5230", "morena escura"],
 		["#6b3d24", "negra"],
 		["#4a2a1a", "negra retinta"],
+	];
+
+	// Olhos: tons naturais primeiro, depois os de anime.
+	const CORES_OLHOS = [
+		["#5b3a1e", "castanho"],
+		["#8a6a3a", "mel"],
+		["#c98a2b", "âmbar"],
+		["#4f8a3c", "verde"],
+		["#2f9e6e", "esmeralda"],
+		["#2a9d9d", "turquesa"],
+		["#4aa3df", "azul-claro"],
+		["#3b5bdb", "azul"],
+		["#7048e8", "violeta"],
+		["#a64ac9", "roxo"],
+		["#e0559a", "rosa"],
+		["#c92a2a", "vermelho"],
+		["#e8b923", "dourado"],
+		["#868e96", "cinza"],
+	];
+
+	// Roupa: o "azul antigo" do desenho vira qualquer uma destas.
+	const CORES_ROUPA = [
+		["#2b2b33", "preto"],
+		["#8f9499", "cinza"],
+		["#6b4423", "marrom"],
+		["#7a1f2b", "vinho"],
+		["#c92a2a", "vermelho"],
+		["#e8590c", "laranja"],
+		["#e8b923", "amarelo"],
+		["#5f9668", "verde"],
+		["#2f6b4f", "verde-escuro"],
+		["#2a9d9d", "turquesa"],
+		["#4a86b0", "azul"],
+		["#2c3a7a", "azul-marinho"],
+		["#7048e8", "violeta"],
+		["#a64ac9", "roxo"],
+		["#e79ab8", "rosa"],
 	];
 
 	function caminho(dir, arquivo) {
@@ -102,7 +152,20 @@
 	// luminância original — é ela que carrega o sombreado do desenho. A
 	// luminância ainda é deslocada um pouco na direção do alvo, senão uma cor
 	// escura escolhida sairia clara e uma clara sairia escura.
-	function colorizar(img, hex) {
+	//
+	// Opções (todas opcionais):
+	// - soMatiz ([de, até], em graus): recolore só os pixels com matiz nessa
+	//   faixa e deixa o resto como veio. É pra peça que mistura cabelo com
+	//   outra coisa no mesmo arquivo — a orelha de gato tem o pelo no azul do
+	//   cabelo (~233°) e o miolo num lilás (240°) e branco, que não podem mudar.
+	// - pularNeutros: branco, preto e cinza puros ficam como vieram. É o
+	//   brilho do olho e o branco/preto das roupas.
+	// - desloc: quanto a claridade anda na direção do alvo (0 = nada).
+	// - sat: multiplica a saturação do alvo (1 = a cor como escolhida).
+	function colorizar(img, hex, opcoes) {
+		const o = opcoes || {};
+		const soMatiz = o.soMatiz || null;
+		const pularNeutros = !!(o.pularNeutros || soMatiz);
 		const alvo = hexParaHsl(hex);
 		const fora = document.createElement("canvas");
 		fora.width = img.naturalWidth || img.width;
@@ -112,7 +175,8 @@
 
 		const dados = fctx.getImageData(0, 0, fora.width, fora.height);
 		const px = dados.data;
-		const desloc = (alvo.l - 0.5) * 0.6;
+		const desloc = (alvo.l - 0.5) * (o.desloc == null ? 0.6 : o.desloc);
+		const satAlvo = Math.min(1, alvo.s * (o.sat == null ? 1 : o.sat));
 
 		for (let i = 0; i < px.length; i += 4) {
 			if (px[i + 3] === 0) continue; // pixel transparente: nem toca
@@ -124,9 +188,21 @@
 			const min = Math.min(r, g, b);
 			let l = (max + min) / 2;
 
+			// Branco, preto e cinza não têm matiz.
+			if (pularNeutros && max === min) continue;
+
+			if (soMatiz) {
+				const d = max - min;
+				let m;
+				if (max === r) m = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+				else if (max === g) m = ((b - r) / d + 2) * 60;
+				else m = ((r - g) / d + 4) * 60;
+				if (m < soMatiz[0] || m > soMatiz[1]) continue;
+			}
+
 			l = Math.min(1, Math.max(0, l + desloc));
 
-			const s = alvo.s;
+			const s = satAlvo;
 			const h = alvo.h;
 			let nr, ng, nb;
 			if (s === 0) {
@@ -225,14 +301,15 @@
 	}
 
 	// pele: a pasta da camada (head, body_back) quando ela é de pele.
-	async function obterCamada(src, hex, pele) {
+	// opcoes: ver colorizar().
+	async function obterCamada(src, hex, pele, opcoes) {
 		if (!hex) return carregarImagem(src);
-		const chave = src + "|" + (pele ? "pele|" : "") + hex;
+		const chave = src + "|" + (pele ? "pele|" : "") + JSON.stringify(opcoes || {}) + "|" + hex;
 		if (cacheColorido.has(chave)) return cacheColorido.get(chave);
 
 		const p = carregarImagem(src).then(function (img) {
 			if (!img) return null;
-			return pele ? colorizarPele(img, hex, pele) : colorizar(img, hex);
+			return pele ? colorizarPele(img, hex, pele) : colorizar(img, hex, opcoes);
 		});
 		cacheColorido.set(chave, p);
 		return p;
@@ -256,24 +333,78 @@
 		});
 	}
 
+	// Como cada grupo de cor recolore, além do padrão do colorizar().
+	//
+	// Olhos: a camada de cor é a íris, com o brilho em branco puro por cima.
+	// Os "(escuros)" têm a íris quase toda preta e o desenho está nos poucos
+	// tons de azul entre o preto — ali a cor entra só como um tingido (meia
+	// saturação, sem mexer na claridade), senão o olho escuro viraria um olho
+	// colorido comum. Os normais levam a cor cheia e um pouco mais viva.
+	//
+	// Roupa: a camada de cor é o "azul antigo" do desenho. Branco e preto da
+	// roupa (gola, laço, costura) ficam como estão.
+	function opcoesDeCor(grupo, arquivo, item) {
+		if (item.soMatiz) return { soMatiz: item.soMatiz };
+		if (grupo === "color-eye") {
+			return /-escuros-/.test(arquivo)
+				? { pularNeutros: true, desloc: 0, sat: 0.5 }
+				: { pularNeutros: true, desloc: 0.4, sat: 1.2 };
+		}
+		if (grupo === "color-dress") return { pularNeutros: true };
+		return null;
+	}
+
+	// O grupo de cor de uma camada pra peça escolhida: o da camada ou, nos
+	// acessórios, o da própria peça. `semCor` no JSON (maiô branco, vestido de
+	// verão) desliga — a camada existe, mas é branca e lilás, sem o azul
+	// pra trocar.
+	function grupoDaCamada(camada, item) {
+		if (item.semCor) return null;
+		return camada.grupoCor || item.grupoCor || null;
+	}
+
+	// Alguma peça escolhida agora tem camada nesse grupo de cor? Se não, o
+	// painel da cor fica travado: Corpo base, maiô branco e vestido de verão
+	// não têm o que recolorir; olhos fechados e de risquinho não têm íris.
+	function grupoEmUso(grupoId) {
+		return spec.categorias.some(function (cat) {
+			const arquivo = escolha[cat.id];
+			if (!arquivo || !categoriaAtiva(cat)) return false;
+			return cat.camadas.some(function (camada) {
+				const item = camada.itens.find(function (i) {
+					return i.arquivo === arquivo;
+				});
+				return item && grupoDaCamada(camada, item) === grupoId;
+			});
+		});
+	}
+
 	function filaDeDesenho() {
 		const fila = [];
 		spec.categorias.forEach(function (cat) {
 			const arquivo = escolha[cat.id];
-			if (!arquivo) return;
+			if (!arquivo || !categoriaAtiva(cat)) return;
 			cat.camadas.forEach(function (camada) {
-				const tem = camada.itens.some(function (i) {
+				const item = camada.itens.find(function (i) {
 					return i.arquivo === arquivo;
 				});
-				if (!tem) return;
+				if (!item) return;
+				// A camada só é recolorida se a especificação disser a que
+				// grupo de cor ela pertence. É por isso que mudar o cabelo
+				// pega frente e trás de uma vez, sem eu fixar nada aqui.
+				// Nos acessórios a camada não tem grupo (cada peça é de um
+				// jeito), então a cor vem da própria peça: as "(cabelo)" do
+				// JSON — mechas, costeletas, antenas e orelha de gato — levam
+				// grupoCor no item.
+				const grupo = grupoDaCamada(camada, item);
+				// Sobrancelha separada: a expressão vem da pasta sem ela.
+				const dir = (sobrancelhaSeparada && camada.dirSemSobrancelha) || camada.dir;
 				fila.push({
 					ordem: camada.ordem,
-					src: caminho(camada.dir, arquivo),
-					// A camada só é recolorida se a especificação disser a que
-					// grupo de cor ela pertence. É por isso que mudar o cabelo
-					// pega frente e trás de uma vez, sem eu fixar nada aqui.
-					cor: camada.grupoCor ? cores[camada.grupoCor] || null : null,
-					pele: camada.grupoCor === "color-skin" ? camada.dir : null,
+					src: caminho(dir, arquivo),
+					cor: grupo ? cores[grupo] || null : null,
+					pele: grupo === "color-skin" ? camada.dir : null,
+					opcoes: grupo ? opcoesDeCor(grupo, arquivo, item) : null,
 				});
 			});
 		});
@@ -286,7 +417,7 @@
 		const meu = ++desenhoAtual;
 		const fila = filaDeDesenho();
 		const camadas = await Promise.all(fila.map(function (p) {
-			return obterCamada(p.src, p.cor, p.pele);
+			return obterCamada(p.src, p.cor, p.pele, p.opcoes);
 		}));
 		// Outro desenho começou enquanto este carregava: descarta.
 		if (meu !== desenhoAtual) return;
@@ -339,6 +470,7 @@
 			b.className = "amostra";
 			b.style.backgroundColor = hex;
 			b.title = nome;
+			b.dataset.hex = hex; // o sorteio lê daqui (o title vira tooltip)
 			b.addEventListener("click", function () {
 				cores[grupo.id] = hex;
 				marcar(b);
@@ -361,7 +493,33 @@
 		conteudo.appendChild(livre);
 
 		painel.appendChild(conteudo);
+
+		// Aparece quando a peça escolhida não tem o que recolorir (ver
+		// atualizarTravas). A cor escolhida não se perde: volta a valer na
+		// próxima peça que tiver.
+		const aviso = document.createElement("p");
+		aviso.className = "aviso-trava";
+		aviso.textContent = "Esta peça não muda de cor.";
+		painel.appendChild(aviso);
 		return painel;
+	}
+
+	function atualizarTravas() {
+		painels.querySelectorAll(".painel-cor").forEach(function (p) {
+			const travado = !grupoEmUso(p.dataset.grupo);
+			p.classList.toggle("travado", travado);
+			p.querySelectorAll(".conteudo button, .conteudo input").forEach(function (el) {
+				el.disabled = travado;
+			});
+		});
+	}
+
+	// Põe o painel de cor de um grupo logo depois do painel da categoria.
+	function painelDeCor(grupoId, paleta, livreInicial) {
+		const grupo = spec.gruposDeCor.find(function (g) {
+			return g.id === grupoId;
+		});
+		if (grupo) painels.appendChild(montarPainelCor(grupo, paleta, livreInicial));
 	}
 
 	function montarPainels() {
@@ -400,6 +558,7 @@
 				});
 				lista.appendChild(b);
 			});
+			if (cat.id === "eyebrow") prepararPainelSobrancelha(painel, lista, cat);
 			painel.appendChild(lista);
 			painels.appendChild(painel);
 
@@ -408,40 +567,102 @@
 			// o que separava o par frente/trás no meio — era isso que
 			// bagunçava o fluxo dos painéis.
 			if (cat.id === "hair_back") {
-				const grupo = spec.gruposDeCor.find(function (g) {
-					return g.id === "color-hair";
-				});
-				if (grupo) {
-					const paleta = CORES_CABELO.map(function (hex) { return [hex, hex]; });
-					painels.appendChild(montarPainelCor(grupo, paleta, "#8b5a2b"));
-				}
+				const paleta = CORES_CABELO.map(function (hex) { return [hex, hex]; });
+				painelDeCor("color-hair", paleta, "#8b5a2b");
 			}
 
 			// A cor da pele entra logo depois do Rosto, que é onde ela mais
 			// aparece. Ela pinta o rosto e a pele do corpo juntos (as duas
 			// camadas são do grupo color-skin no acervo).
-			if (cat.id === "head") {
-				const grupo = spec.gruposDeCor.find(function (g) {
-					return g.id === "color-skin";
-				});
-				if (grupo) painels.appendChild(montarPainelCor(grupo, CORES_PELE, "#c08559"));
-			}
+			if (cat.id === "head") painelDeCor("color-skin", CORES_PELE, "#c08559");
+
+			// Olhos e roupa: cada cor logo depois da sua categoria.
+			if (cat.id === "eye") painelDeCor("color-eye", CORES_OLHOS, "#4aa3df");
+			if (cat.id === "body") painelDeCor("color-dress", CORES_ROUPA, "#c92a2a");
 		});
+	}
+
+	// O painel de Sobrancelhas: o liga/desliga em cima e um "Nenhuma" no
+	// começo da lista (o botão de valor vazio).
+	function prepararPainelSobrancelha(painel, lista, cat) {
+		const chave = document.createElement("label");
+		chave.className = "chave-separar";
+		const caixa = document.createElement("input");
+		caixa.type = "checkbox";
+		caixa.id = "separar-sobrancelha";
+		caixa.checked = sobrancelhaSeparada;
+		chave.appendChild(caixa);
+		chave.appendChild(document.createTextNode(" Separar da expressão"));
+		painel.appendChild(chave);
+
+		const aviso = document.createElement("p");
+		aviso.className = "aviso-trava";
+		aviso.textContent = "Usando a sobrancelha da própria expressão.";
+		painel.appendChild(aviso);
+
+		const nenhuma = document.createElement("button");
+		nenhuma.type = "button";
+		nenhuma.textContent = "Nenhuma";
+		nenhuma.title = "Só a expressão, sem sobrancelha";
+		nenhuma.dataset.arquivo = "";
+		nenhuma.addEventListener("click", function () {
+			delete escolha[cat.id];
+			sincronizar();
+			desenhar();
+		});
+		lista.insertBefore(nenhuma, lista.firstChild);
+
+		caixa.addEventListener("change", function () {
+			sobrancelhaSeparada = caixa.checked;
+			// Ao separar, começa pela sobrancelha que a expressão já tinha:
+			// o desenho não muda até a pessoa escolher outra.
+			if (sobrancelhaSeparada && escolha[cat.id] === undefined) {
+				escolha[cat.id] = sobrancelhaDaExpressao();
+			}
+			sincronizar();
+			desenhar();
+		});
+	}
+
+	function sobrancelhaDaExpressao() {
+		const face = spec.categorias.find(function (c) { return c.id === "face"; });
+		const arquivo = escolha.face;
+		let achada;
+		if (face && arquivo) {
+			face.camadas.forEach(function (camada) {
+				const item = camada.itens.find(function (i) { return i.arquivo === arquivo; });
+				if (item && item.sobrancelha) achada = item.sobrancelha;
+			});
+		}
+		return achada;
 	}
 
 	function sincronizar() {
 		painels.querySelectorAll(".painel[data-categoria]").forEach(function (p) {
 			const id = p.dataset.categoria;
 			p.querySelectorAll(".lista button").forEach(function (b) {
-				b.classList.toggle("ativo", escolha[id] === b.dataset.arquivo);
+				// `|| ""`: o "Nenhuma" das sobrancelhas tem arquivo vazio e fica
+				// ativo quando não há escolha.
+				b.classList.toggle("ativo", (escolha[id] || "") === b.dataset.arquivo);
 			});
 		});
+		const sobr = painels.querySelector('.painel[data-categoria="eyebrow"]');
+		if (sobr) sobr.classList.toggle("unida", !sobrancelhaSeparada);
+		atualizarTravas();
 	}
 
 	function aleatorio() {
 		spec.categorias.forEach(function (cat) {
 			const itens = itensDaCategoria(cat);
 			if (!itens.length) return;
+			// Sobrancelha só é sorteada quando está separada; aí sai sem
+			// sobrancelha de vez em quando, não quase metade das vezes.
+			if (cat.id === "eyebrow") {
+				if (!sobrancelhaSeparada) return;
+				if (Math.random() < 0.1) delete escolha[cat.id];
+				else escolha[cat.id] = itens[Math.floor(Math.random() * itens.length)][0];
+				return;
+			}
 			// Categoria opcional às vezes fica vazia mesmo, senão sai sempre um
 			// personagem coberto de acessório.
 			if (cat.opcional && Math.random() < 0.45) {
@@ -450,8 +671,26 @@
 				escolha[cat.id] = itens[Math.floor(Math.random() * itens.length)][0];
 			}
 		});
+		sortearCor("color-hair");
+		sortearCor("color-dress");
 		sincronizar();
 		desenhar();
+	}
+
+	// Sorteia entre as amostras da paleta do grupo, contando a "original" (o
+	// azul do desenho) como mais uma. Grava direto em vez de clicar na
+	// amostra: o painel de roupa pode estar travado (Corpo base sorteado), e
+	// botão desabilitado não recebe clique. A cor fica guardada mesmo assim.
+	function sortearCor(grupoId) {
+		const painel = painels.querySelector('.painel-cor[data-grupo="' + grupoId + '"]');
+		if (!painel) return;
+		const amostras = painel.querySelectorAll(".amostra");
+		if (!amostras.length) return;
+		const sorteada = amostras[Math.floor(Math.random() * amostras.length)];
+		cores[grupoId] = sorteada.dataset.hex || null; // a "original" não tem hex
+		amostras.forEach(function (a) {
+			a.classList.toggle("ativo", a === sorteada);
+		});
 	}
 
 	function limpar() {

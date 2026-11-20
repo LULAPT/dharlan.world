@@ -209,7 +209,11 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 - **Last.fm** — usuário `xw4`, via `lastfm-last-played.biancarosa.com.br`
   ([lastfm-status.js](assets/js/lastfm-status.js))
 - **Discord** — user id `682694935631233203`, via `discorduserstatus-2-0.onrender.com`,
-  poll de 1 min ([discord-status.js](assets/js/discord-status.js))
+  poll de 1 min ([discord-status.js](assets/js/discord-status.js)). A mesma
+  resposta traz `avatarUrl` e `username`, que montam o cartão que abre ao
+  passar o mouse na bolinha da home (`#discord-cartao`, CSS no `home.css`).
+  A bolinha **não tem `title`**: senão o tooltip comum do site abre junto
+  com o cartão
 - **nikki.top** — perfil 376, ocupando o lugar do status.cafe (que está quebrado).
   Sem CORS, então passa por proxy: Render próprio primeiro, `allorigins.win` de
   reserva ([statuscafe-custom.js](assets/js/statuscafe-custom.js))
@@ -446,6 +450,12 @@ Duas ferramentas em Utils: teste de digitação no estilo monkeytype (modos
 tempo, palavras, citação e zen, mais os desafios) e testador de teclado no
 estilo kbt. **Sem `<footer>`, de propósito** — são páginas de ferramenta,
 fica só a nav em cima.
+
+- **Somem do menu e da `/utils/` em aparelho de toque** (classe
+  `.so-teclado-fisico` no [style.css](assets/css/style.css), ligada pelo
+  `teclado: true` no `links` do navbar.js). O critério é
+  `(hover: none) and (pointer: coarse)`, não largura. As páginas seguem no ar
+  e na `/sitemap/`, de propósito: sem teclado físico elas não fazem sentido.
 
 - Dividem a **gaveta de ajustes** (som do switch, volume, tema e papel de
   parede): um popup curvo que entra pela direita, aberto pelo botão no fim da

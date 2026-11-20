@@ -223,6 +223,61 @@ body.char-somehow main {
 	width: 24px;
 }
 
+/* Painel de cor travado: a peça escolhida não tem o que recolorir (Corpo
+   base, maiô branco, vestido de verão, olhos sem íris). Ver atualizarTravas()
+   no char-somehow.js. */
+.painel-cor .aviso-trava {
+	display: none;
+	font-size: 0.85em;
+	margin: 0;
+	opacity: 0.7;
+	padding: 0 10px 10px;
+}
+
+.painel-cor.travado .aviso-trava {
+	display: block;
+}
+
+.painel-cor.travado .conteudo {
+	opacity: 0.35;
+	pointer-events: none;
+}
+
+/* ---------------- sobrancelhas ---------------- */
+/* O liga/desliga "Separar da expressão". Desligado (classe .unida), vale a
+   sobrancelha desenhada na própria expressão e a lista fica apagada. */
+.painel .chave-separar {
+	align-items: center;
+	cursor: pointer;
+	display: flex;
+	font-size: 0.9em;
+	gap: 6px;
+	padding: 10px 10px 0;
+}
+
+.painel .chave-separar input {
+	accent-color: var(--clr-main-a40);
+	cursor: pointer;
+	margin: 0;
+}
+
+.painel[data-categoria="eyebrow"] .aviso-trava {
+	display: none;
+	font-size: 0.85em;
+	margin: 0;
+	opacity: 0.7;
+	padding: 6px 10px 0;
+}
+
+.painel[data-categoria="eyebrow"].unida .aviso-trava {
+	display: block;
+}
+
+.painel[data-categoria="eyebrow"].unida .lista {
+	opacity: 0.35;
+	pointer-events: none;
+}
+
 /* ---------------- preview ---------------- */
 #preview {
 	align-self: start;

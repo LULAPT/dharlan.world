@@ -291,79 +291,95 @@
 						{
 							"arquivo": "aflita-boca-aberta.png",
 							"nome": "Aflita (boca aberta)",
-							"ja": "困り(口開き)"
+							"ja": "困り(口開き)",
+							"sobrancelha": "aflita.png"
 						},
 						{
 							"arquivo": "aflita-boca-fechada.png",
 							"nome": "Aflita (boca fechada)",
-							"ja": "困り(口閉じ)"
+							"ja": "困り(口閉じ)",
+							"sobrancelha": "aflita.png"
 						},
 						{
 							"arquivo": "boca-de-gato-aberta.png",
 							"nome": "Boca de gato (aberta)",
-							"ja": "猫口(口開き)"
+							"ja": "猫口(口開き)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "boca-de-gato-fechada.png",
 							"nome": "Boca de gato (fechada)",
-							"ja": "猫口(口閉じ)"
+							"ja": "猫口(口閉じ)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "boca-triangular-aflita.png",
 							"nome": "Boca triangular (aflita)",
-							"ja": "三角口(困り)"
+							"ja": "三角口(困り)",
+							"sobrancelha": "aflita.png"
 						},
 						{
 							"arquivo": "boca-triangular-brava.png",
 							"nome": "Boca triangular (brava)",
-							"ja": "三角口(怒り)"
+							"ja": "三角口(怒り)",
+							"sobrancelha": "brava.png"
 						},
 						{
 							"arquivo": "boca-triangular-neutra.png",
 							"nome": "Boca triangular (neutra)",
-							"ja": "三角口(素)"
+							"ja": "三角口(素)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "brava-boca-aberta.png",
 							"nome": "Brava (boca aberta)",
-							"ja": "怒り(口開き)"
+							"ja": "怒り(口開き)",
+							"sobrancelha": "brava.png"
 						},
 						{
 							"arquivo": "brava-boca-fechada.png",
 							"nome": "Brava (boca fechada)",
-							"ja": "怒り(口閉じ)"
+							"ja": "怒り(口閉じ)",
+							"sobrancelha": "brava.png"
 						},
 						{
 							"arquivo": "envergonhada-boca-aberta.png",
 							"nome": "Envergonhada (boca aberta)",
-							"ja": "照れ(口開き)"
+							"ja": "照れ(口開き)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "envergonhada-boca-fechada.png",
 							"nome": "Envergonhada (boca fechada)",
-							"ja": "照れ(口閉じ)"
+							"ja": "照れ(口閉じ)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "neutra.png",
 							"nome": "Neutra",
-							"ja": "素"
+							"ja": "素",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "sorrindo-boca-aberta.png",
 							"nome": "Sorrindo (boca aberta)",
-							"ja": "笑い(口開き)"
+							"ja": "笑い(口開き)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "sorrindo-boca-fechada.png",
 							"nome": "Sorrindo (boca fechada)",
-							"ja": "笑い(口閉じ)"
+							"ja": "笑い(口閉じ)",
+							"sobrancelha": "neutra.png"
 						},
 						{
 							"arquivo": "surpresa.png",
 							"nome": "Surpresa",
-							"ja": "驚き"
+							"ja": "驚き",
+							"sobrancelha": "surpresa.png"
 						}
-					]
+					],
+					"dirSemSobrancelha": "face_front_sem_sobrancelha"
 				},
 				{
 					"id": "face_back",
@@ -456,6 +472,39 @@
 					"dir": "face_haircolor",
 					"grupoCor": "color-hair",
 					"itens": []
+				}
+			]
+		},
+		{
+			"id": "eyebrow",
+			"nome": "Sobrancelhas",
+			"opcional": true,
+			"multiplo": false,
+			"camadas": [
+				{
+					"id": "eyebrow",
+					"nome": "Sobrancelhas",
+					"ordem": 15.5,
+					"dir": "eyebrow",
+					"grupoCor": null,
+					"itens": [
+						{
+							"arquivo": "neutra.png",
+							"nome": "Neutras"
+						},
+						{
+							"arquivo": "aflita.png",
+							"nome": "Aflitas"
+						},
+						{
+							"arquivo": "brava.png",
+							"nome": "Bravas"
+						},
+						{
+							"arquivo": "surpresa.png",
+							"nome": "Surpresas"
+						}
+					]
 				}
 			]
 		},
@@ -1011,12 +1060,14 @@
 						{
 							"arquivo": "maio-escolar-branco-1.png",
 							"nome": "Maiô escolar (branco) 1",
-							"ja": "スクール水着(白)1"
+							"ja": "スクール水着(白)1",
+							"semCor": true
 						},
 						{
 							"arquivo": "maio-escolar-branco-2.png",
 							"nome": "Maiô escolar (branco) 2",
-							"ja": "スクール水着(白)2"
+							"ja": "スクール水着(白)2",
+							"semCor": true
 						},
 						{
 							"arquivo": "maio-escolar-1.png",
@@ -1071,12 +1122,14 @@
 						{
 							"arquivo": "vestido-de-verao-1.png",
 							"nome": "Vestido de verão 1",
-							"ja": "サマードレス1"
+							"ja": "サマードレス1",
+							"semCor": true
 						},
 						{
 							"arquivo": "vestido-de-verao-2.png",
 							"nome": "Vestido de verão 2",
-							"ja": "サマードレス2"
+							"ja": "サマードレス2",
+							"semCor": true
 						}
 					]
 				},
@@ -1364,12 +1417,14 @@
 						{
 							"arquivo": "antena-fina-cabelo.png",
 							"nome": "Antena fina (cabelo)",
-							"ja": "アホ毛細め(髪)"
+							"ja": "アホ毛細め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "antena-grossa-cabelo.png",
 							"nome": "Antena grossa (cabelo)",
-							"ja": "アホ毛太め(髪)"
+							"ja": "アホ毛太め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "aureola.png",
@@ -1384,12 +1439,14 @@
 						{
 							"arquivo": "fita-de-touca-roupa.png",
 							"nome": "Fita de touca (roupa)",
-							"ja": "ヘッドドレスリボン(服)"
+							"ja": "ヘッドドレスリボン(服)",
+							"grupoCor": "color-dress"
 						},
 						{
 							"arquivo": "mechas-laterais-cabelo.png",
 							"nome": "Mechas laterais (cabelo)",
-							"ja": "触覚(髪)"
+							"ja": "触覚(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "oculos.png",
@@ -1423,22 +1480,26 @@
 						{
 							"arquivo": "costeletas-curtas-cabelo.png",
 							"nome": "Costeletas curtas (cabelo)",
-							"ja": "もみあげ短め(髪)"
+							"ja": "もみあげ短め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-largas-cabelo.png",
 							"nome": "Costeletas largas (cabelo)",
-							"ja": "もみあげ幅広(髪)"
+							"ja": "もみあげ幅広(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-medias-cabelo.png",
 							"nome": "Costeletas médias (cabelo)",
-							"ja": "もみあげちょい長(髪)"
+							"ja": "もみあげちょい長(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-trancadas-cabelo.png",
 							"nome": "Costeletas trançadas (cabelo)",
-							"ja": "もみあげ編み(髪)"
+							"ja": "もみあげ編み(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "orelhas-de-elfo-pele.png",
@@ -1462,22 +1523,26 @@
 						{
 							"arquivo": "costeletas-curtas-cabelo.png",
 							"nome": "Costeletas curtas (cabelo)",
-							"ja": "もみあげ短め(髪)"
+							"ja": "もみあげ短め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-largas-cabelo.png",
 							"nome": "Costeletas largas (cabelo)",
-							"ja": "もみあげ幅広(髪)"
+							"ja": "もみあげ幅広(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-medias-cabelo.png",
 							"nome": "Costeletas médias (cabelo)",
-							"ja": "もみあげちょい長(髪)"
+							"ja": "もみあげちょい長(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-trancadas-cabelo.png",
 							"nome": "Costeletas trançadas (cabelo)",
-							"ja": "もみあげ編み(髪)"
+							"ja": "もみあげ編み(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "orelhas-de-elfo-pele.png",
@@ -1487,7 +1552,9 @@
 						{
 							"arquivo": "orelhas-de-gato-cabelo.png",
 							"nome": "Orelhas de gato (cabelo)",
-							"ja": "猫耳(髪)"
+							"ja": "猫耳(髪)",
+							"grupoCor": "color-hair",
+							"soMatiz": [225, 237]
 						}
 					]
 				},
@@ -1509,12 +1576,14 @@
 						{
 							"arquivo": "antena-fina-cabelo.png",
 							"nome": "Antena fina (cabelo)",
-							"ja": "アホ毛細め(髪)"
+							"ja": "アホ毛細め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "antena-grossa-cabelo.png",
 							"nome": "Antena grossa (cabelo)",
-							"ja": "アホ毛太め(髪)"
+							"ja": "アホ毛太め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "asas-de-anjo.png",
@@ -1539,22 +1608,26 @@
 						{
 							"arquivo": "costeletas-curtas-cabelo.png",
 							"nome": "Costeletas curtas (cabelo)",
-							"ja": "もみあげ短め(髪)"
+							"ja": "もみあげ短め(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-largas-cabelo.png",
 							"nome": "Costeletas largas (cabelo)",
-							"ja": "もみあげ幅広(髪)"
+							"ja": "もみあげ幅広(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-medias-cabelo.png",
 							"nome": "Costeletas médias (cabelo)",
-							"ja": "もみあげちょい長(髪)"
+							"ja": "もみあげちょい長(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "costeletas-trancadas-cabelo.png",
 							"nome": "Costeletas trançadas (cabelo)",
-							"ja": "もみあげ編み(髪)"
+							"ja": "もみあげ編み(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "fita-de-cabelo.png",
@@ -1564,12 +1637,14 @@
 						{
 							"arquivo": "fita-de-touca-roupa.png",
 							"nome": "Fita de touca (roupa)",
-							"ja": "ヘッドドレスリボン(服)"
+							"ja": "ヘッドドレスリボン(服)",
+							"grupoCor": "color-dress"
 						},
 						{
 							"arquivo": "mechas-laterais-cabelo.png",
 							"nome": "Mechas laterais (cabelo)",
-							"ja": "触覚(髪)"
+							"ja": "触覚(髪)",
+							"grupoCor": "color-hair"
 						},
 						{
 							"arquivo": "oculos.png",
@@ -1589,7 +1664,9 @@
 						{
 							"arquivo": "orelhas-de-gato-cabelo.png",
 							"nome": "Orelhas de gato (cabelo)",
-							"ja": "猫耳(髪)"
+							"ja": "猫耳(髪)",
+							"grupoCor": "color-hair",
+							"soMatiz": [225, 237]
 						},
 						{
 							"arquivo": "touca-branca.png",
