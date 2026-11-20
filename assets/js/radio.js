@@ -102,7 +102,7 @@ export function salvarTema(tema) {
 // Ligado por padrão: a graça do modo flutuante é o rádio acompanhar quem sai
 // da /radio/, e ninguém ia adivinhar que precisa apertar antes de navegar. Só
 // fica desligado pra quem desligou de propósito — daí o !== "false" em vez do
-// === "true" (mesmo critério do festiveEffects no main.js).
+// === "true" (mesmo critério do visuaisFestivos no main.js).
 export function estaDestacado() {
 	try {
 		return localStorage.getItem(CHAVE_DESTACADO) !== "false";

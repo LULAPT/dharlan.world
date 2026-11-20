@@ -20,14 +20,20 @@ function isDate(month1to12, day) {
 	return n.getMonth() + 1 === month1to12 && n.getDate() === day;
 }
 
+// Padrão: efeitos festivos LIGADOS — só desliga quem marcar "false" no painel.
+//
+// A chave se chamava `festiveEffects`. Por um tempo o padrão foi desligado e
+// este arquivo gravava "false" pra todo visitante novo, sem ele ter escolhido
+// nada. Quando o padrão voltou a ser ligado, essas pessoas ficariam com o
+// "false" pra sempre — por isso a chave foi renomeada (mesmo caso do
+// radio-destacado → radio-flutuar) e a velha é apagada.
 function areFestiveEffectsEnabled() {
-	return localStorage.getItem("festiveEffects") !== "false";
+	return localStorage.getItem("visuaisFestivos") !== "false";
 }
 
-// Padrão: efeitos festivos desligados. Só grava se o visitante nunca escolheu.
-if (localStorage.getItem("festiveEffects") === null) {
-	localStorage.setItem("festiveEffects", "false");
-}
+try {
+	localStorage.removeItem("festiveEffects");
+} catch (e) {}
 
 // Exportar função para uso externo se necessário
 window.areFestiveEffectsEnabled = areFestiveEffectsEnabled;
@@ -80,54 +86,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (festiveEnabled) {
 		const now = new Date();
 
-		// Dezembro - Natal
+		// Dezembro - Natal: só a neve. A paleta continua a do tema — o verde
+		// que trocava os destaques rosa saiu a pedido do dono.
 		if (now.getMonth() === 11) {
 			import("/assets/js/snow.js")
 				.then(({ snowEffect }) => snowEffect())
 				.catch((err) => console.error("Erro ao carregar snow.js:", err));
-
-			document.documentElement.style.setProperty(
-				"--clr-main-a0",
-				"var(--clr-green-a0)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a10",
-				"var(--clr-green-a10)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a20",
-				"var(--clr-green-a20)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a30",
-				"var(--clr-green-a30)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a40",
-				"var(--clr-green-a40)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a50",
-				"var(--clr-green-a50)"
-			);
-
-			const style = document.createElement("style");
-			style.id = "xmas-style";
-			// Pra deixar as imagens verdes também
-			style.textContent = `
-	      img.img-clr-main, .novo-icone, div#header-expandida::before {
-	        filter: hue-rotate(180deg) saturate(110%) brightness(90%);
-	      }
-	      :root[data-theme="light"] img.img-clr-main, :root[data-theme="light"] .novo-icone, :root[data-theme="light"] div#header-expandida::before {
-	        filter: hue-rotate(180deg) saturate(110%) brightness(110%) contrast(1.3);
-	      }
-	    `;
-			if (!document.getElementById("xmas-style")) {
-				document.head.appendChild(style);
-			}
 		}
 
-		// Semana do Halloween: 25 a 31 de Outubro
+		// Semana do Halloween: 25 a 31 de outubro
 		if (now.getMonth() === 9 && now.getDate() >= 25 && now.getDate() <= 31) {
 			import("/assets/js/halloween.js")
 				.then(({ halloweenEffect }) => {
@@ -138,48 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
 					}
 				})
 				.catch((err) => console.error("Erro ao carregar halloween.js:", err));
-
-			document.documentElement.style.setProperty(
-				"--clr-main-a0",
-				"var(--clr-orange-a0)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a10",
-				"var(--clr-orange-a10)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a20",
-				"var(--clr-orange-a20)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a30",
-				"var(--clr-orange-a30)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a40",
-				"var(--clr-orange-a40)"
-			);
-			document.documentElement.style.setProperty(
-				"--clr-main-a50",
-				"var(--clr-orange-a50)"
-			);
-
-			// tonalidade laranja/roxo para alguns elementos
-			const style = document.createElement("style");
-			style.id = "halloween-style";
-			style.textContent = `
-	      img.img-clr-main, .novo-icone, div#header-expandida::before {
-	        filter: hue-rotate(50deg) saturate(150%) brightness(90%);
-	      }
-	      :root[data-theme="light"] img.img-clr-main, :root[data-theme="light"] .novo-icone, :root[data-theme="light"] div#header-expandida::before {
-	        filter: hue-rotate(50deg) saturate(150%) brightness(110%) contrast(1);
-	      }
-	    `;
-			if (!document.getElementById(style.id)) document.head.appendChild(style);
+			// Só as teias e a aranha do halloween.js: a troca dos destaques
+			// pro laranja saiu, como o verde do Natal.
 		}
 
-		// 26 de maio - executa 1 vez por sessão
-		if (isDate(5, 26)) {
+		// 8 de outubro, aniversário do dharlan — confete, 1 vez por sessão
+		if (isDate(10, 8)) {
 			if (!sessionStorage.getItem("confettiDone")) {
 				import("/assets/js/confetti.js").then((m) => {
 					m.confettiEffect();

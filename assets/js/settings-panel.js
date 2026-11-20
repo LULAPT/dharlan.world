@@ -200,7 +200,8 @@ export async function initSettingsPanel() {
 	crtCheckbox.checked = localStorage.getItem("switchCRT") !== "false";
 	const currentTheme = localStorage.getItem("current-theme") || "dark";
 	themeSelect.value = currentTheme;
-	festiveCheckbox.checked = localStorage.getItem("festiveEffects") !== "false";
+	// Ligado por padrão; a chave era festiveEffects (ver main.js).
+	festiveCheckbox.checked = localStorage.getItem("visuaisFestivos") !== "false";
 	nsfwBlurCheckbox.checked = localStorage.getItem("nsfwBlur") === "true";
 
 	// Eventos usando as funções dos scripts
@@ -213,7 +214,7 @@ export async function initSettingsPanel() {
 		window.setTheme(selectedTheme);
 	});
 	festiveCheckbox.addEventListener("change", () => {
-		localStorage.setItem("festiveEffects", festiveCheckbox.checked);
+		localStorage.setItem("visuaisFestivos", festiveCheckbox.checked);
 		// Recarregar a página para aplicar/remover efeitos festivos
 		window.location.reload();
 	});

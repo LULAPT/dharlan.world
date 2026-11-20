@@ -158,11 +158,15 @@ dele por [sitemap-build.js](assets/js/sitemap-build.js)).
 tooltips, menu mobile, temas, painel de configurações, dither...).
 
 Também controla os **efeitos sazonais**, todos condicionados a
-`localStorage.festiveEffects !== "false"`:
+`localStorage.visuaisFestivos !== "false"` (ligado por padrão):
 
-- Dezembro inteiro → neve + paleta verde
-- 25–31 de outubro → efeito de Halloween + paleta laranja
-- 26 de maio → confete, uma vez por sessão
+- Dezembro inteiro → só neve (a paleta verde saiu; a cor do tema fica)
+- 25–31 de outubro → só teias e aranha (a paleta laranja saiu; a cor do tema fica)
+- 8 de outubro (aniversário do dharlan) → confete, uma vez por sessão
+
+A chave era `festiveEffects`. Enquanto o padrão foi desligado, o main.js
+gravava `"false"` pra todo visitante novo; ao religar o padrão ela foi
+renomeada (mesmo caso do `radio-destacado`) e a velha é apagada no load.
 
 ## Temas e CSS
 
@@ -222,7 +226,7 @@ Tudo client-side, sem chaves de API, e **tudo pode falhar sem quebrar a página*
 
 ## Chaves de localStorage / sessionStorage
 
-`current-theme`, `switchCRT`, `festiveEffects`, `nsfwBlur`, `mplace-chunks`,
+`current-theme`, `switchCRT`, `visuaisFestivos`, `nsfwBlur`, `mplace-chunks`,
 `radio-estado`, `radio-tema`, `radio-flutuar`, `bagels-dados`, `teclas-config`,
 `teclas-papel`, `digitacao-config`, `digitacao-recordes`, `teclado-config`
 (localStorage) · `bootTerminalSeen`, `confettiDone` (sessionStorage).
@@ -406,7 +410,7 @@ Não renomeie ids/classes da marcação do player nem mova as cores pro
 **Modo "flutuar"**: `radio-flutuar` faz o [main.js](assets/js/main.js)
 montar o mini player no canto inferior direito em toda página
 ([radio-mini.js](assets/js/radio-mini.js)). **Vem ligado por padrão** — a
-chave só desliga quando vale `"false"` (mesmo critério do `festiveEffects`),
+chave só desliga quando vale `"false"` (mesmo critério do `visuaisFestivos`),
 senão o rádio não acompanharia quem sai da `/radio/` sem apertar nada antes.
 Ainda assim o import é condicional: sem `radio-estado` salvo (ou seja, quem
 nunca abriu a `/radio/`) ninguém paga por ele nem ganha deck parado no canto.
