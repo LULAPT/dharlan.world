@@ -343,9 +343,9 @@
 				type="range"
 				min="0"
 				max="100"
-				value="50"
+				value="15"
 				aria-label="Volume"
-				title="Volume: 50%"
+				title="Volume: 15%"
 			/>
 		</div>
 
@@ -532,13 +532,14 @@
 			}
 
 			// ---- volume -----------------------------------------------------
-			// O controle vai de 0 a 100 e começa na metade (os sons eram altos
-			// demais). O ganho é o quadrado do controle: o ouvido percebe
-			// volume em escala logarítmica, e linear o meio do trilho mal
-			// baixaria nada — assim a metade dá 0.25 (~−12 dB), que já soa
-			// como "metade". Vale pra música e facada juntas: as duas passam
-			// pelo `mestre`.
-			var volume = 0.5;
+			// O controle vai de 0 a 100 e começa em 15 (os sons eram altos
+			// demais; já começou em 50 e em 25 e ainda estava alto). O ganho é
+			// o quadrado do controle: o ouvido percebe volume em escala
+			// logarítmica, e linear o começo do trilho mal baixaria nada —
+			// assim 15 dá 0.0225 (~−33 dB) e a metade, 0.25 (~−12 dB). Vale pra
+			// música e facada juntas: as duas passam pelo `mestre`. Mudando o
+			// padrão, mude também o value="" do <input id="volume">.
+			var volume = 0.15;
 
 			function ganhoGeral() {
 				return mudo ? 0 : volume * volume;
