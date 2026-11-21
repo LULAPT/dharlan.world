@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html>
+<!-- data-sem-radio: a página tem trilha própria, então o rádio fica
+     bloqueado aqui (ver radio-botao.js e o main.js).
+     data-tema-fixo: o seletor de tema da engrenagem aparece travado, com
+     este nome no lugar dos temas (ver settings-panel.js). -->
+<html data-sem-radio data-tema-fixo="2kki">
 	<head>
 		<meta charset="UTF-8" />
 		<script src="/assets/js/theme-init.js"></script>
@@ -362,6 +366,68 @@
 				border: 1px solid #222;
 				padding: 6px 10px;
 				border-radius: var(--b-radius);
+			}
+
+			/* Engrenagem e rádio (criados pelo main.js) no desenho do GUI desta
+			   página: sem fundo, ícone branco, borda #222 e o hover dos botões
+			   daqui. O `:root` é pra ganhar do <style> que os módulos injetam
+			   depois deste. */
+			:root #settings-gear,
+			:root #radio-botao {
+				background: transparent;
+				border: 1px solid #222;
+				color: var(--clr-primaria);
+				transition: all 0.3s ease;
+			}
+
+			/* Hover neutro, sem o rosa do tema do site (o mesmo clarear dos
+			   .expand-btn daqui). */
+			:root #settings-gear:hover,
+			:root #radio-botao:hover {
+				background-color: rgba(240, 241, 245, 0.08);
+			}
+
+			:root #settings-gear span svg {
+				fill: var(--clr-primaria);
+			}
+
+			/* O painel da engrenagem também no desenho do GUI: sem o rosa do tema
+			   do site nos interruptores e na borda do seletor. */
+			:root #settings-box {
+				background: var(--clr-secundaria);
+				border: 1px solid #222;
+				color: var(--clr-primaria);
+			}
+
+			:root #settings-box label.switch-placeholder .slider {
+				background: #2a2a30;
+				border: 1px solid #333;
+			}
+
+			:root #settings-box label.switch-placeholder input:checked + .slider {
+				background: var(--clr-primaria);
+			}
+
+			:root #settings-box label.switch-placeholder input:checked + .slider::before {
+				background: var(--clr-secundaria);
+			}
+
+			:root #settings-box select,
+			:root #settings-box select option {
+				background: var(--clr-secundaria);
+				border-color: #222;
+				color: var(--clr-primaria);
+			}
+
+			:root #settings-box select:hover,
+			:root #settings-box select:focus {
+				border-color: #444;
+			}
+
+			/* O seletor travado tem regra própria no settings-panel.js, injetada
+			   depois desta folha: precisa de mais peso pra seguir o #222. */
+			:root #settings-box select:disabled {
+				border-color: #222;
 			}
 		</style>
 	</head>

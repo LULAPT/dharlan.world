@@ -164,6 +164,13 @@ export async function initSettingsPanel() {
     border-color: var(--clr-main-a40);
   }
 
+  /* Tema travado (data-tema-fixo): mostra o nome da página, não troca. */
+  #settings-box select:disabled {
+    border: var(--borda-padrao);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
   #settings-box select:focus {
     outline: none;
     border-color: var(--clr-main-a40);
@@ -180,10 +187,14 @@ export async function initSettingsPanel() {
 	const crtContainer = document.getElementById("crt-switch-container");
 	crtContainer.innerHTML = `<input type="checkbox" id="panel-crt-toggle"><span class="slider"></span><span class="switch-label">CRT</span>`;
 	const themeContainer = document.getElementById("theme-switch-container");
-	const themeOptions = themesConfig
-		.map((t) => `<option value="${t.id}">${t.label}</option>`)
-		.join("");
-	themeContainer.innerHTML = `<select id="panel-theme-select">${themeOptions}</select>`;
+	// Páginas com visual próprio (/2kki/, /black-souls/) marcam o <html> com
+	// data-tema-fixo="nome": o seletor aparece, mas travado e mostrando esse
+	// nome no lugar dos temas do site. O tema salvo não é tocado.
+	const temaFixo = document.documentElement.getAttribute("data-tema-fixo");
+	const themeOptions = temaFixo
+		? `<option value="">${temaFixo}</option>`
+		: themesConfig.map((t) => `<option value="${t.id}">${t.label}</option>`).join("");
+	themeContainer.innerHTML = `<select id="panel-theme-select"${temaFixo ? " disabled" : ""}>${themeOptions}</select>`;
 	const festiveContainer = document.getElementById("festive-switch-container");
 	festiveContainer.innerHTML = `<input type="checkbox" id="panel-festive-toggle"><span class="slider"></span><span class="switch-label">Visuais festivos</span>`;
 	const nsfwBlurContainer = document.getElementById(
@@ -199,7 +210,7 @@ export async function initSettingsPanel() {
 	// Estado inicial
 	crtCheckbox.checked = localStorage.getItem("switchCRT") !== "false";
 	const currentTheme = localStorage.getItem("current-theme") || "dark";
-	themeSelect.value = currentTheme;
+	if (!temaFixo) themeSelect.value = currentTheme;
 	// Ligado por padrão; a chave era festiveEffects (ver main.js).
 	festiveCheckbox.checked = localStorage.getItem("visuaisFestivos") !== "false";
 	nsfwBlurCheckbox.checked = localStorage.getItem("nsfwBlur") === "true";

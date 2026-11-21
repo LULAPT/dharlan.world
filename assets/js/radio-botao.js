@@ -59,10 +59,41 @@ const CSS = `
 		transform: scale(1.3);
 	}
 
+	/* Balançada de "não" no clique recusado (páginas com data-sem-radio). O
+	   botão não muda de visual nessas páginas — decisão do dono: quem avisa
+	   é só o clique, com o som e esta balançada. Amplitude pequena: é um "não"
+	   de cabeça, não tremor de erro (mesma do boot-terminal.css). */
+	#radio-botao.radio-negado {
+		animation: radio-nega 0.4s ease-in-out;
+	}
+
+	@keyframes radio-nega {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		20% {
+			transform: translateX(-3px);
+		}
+		45% {
+			transform: translateX(3px);
+		}
+		70% {
+			transform: translateX(-2px);
+		}
+		88% {
+			transform: translateX(1px);
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		#radio-botao svg,
 		#radio-botao .ponto {
 			transition: none;
+		}
+
+		#radio-botao.radio-negado {
+			animation: none;
 		}
 
 		#radio-botao:hover svg,
@@ -112,5 +143,42 @@ export function iniciarBotaoRadio() {
 	botao.setAttribute("aria-label", "Abrir a página do rádio");
 	botao.innerHTML = ICONE;
 
+	// Páginas com trilha própria (data-sem-radio no <html>: /2kki/ e
+	// /black-souls/) recusam o rádio, com o mesmo som e a mesma balançada do
+	// boot da /index/. O botão continua igual, sem X nem apagado: só o
+	// clique é recusado.
+	if (document.documentElement.hasAttribute("data-sem-radio")) {
+		botao.setAttribute("aria-disabled", "true");
+		botao.setAttribute("aria-label", "Rádio desligado nesta página");
+		botao.addEventListener("click", (e) => {
+			e.preventDefault();
+			negar(botao);
+		});
+	}
+
 	document.body.appendChild(botao);
+}
+
+// Som 8-bit de recusa (driken5482, Pixabay — o mesmo do boot). Criado só no
+// primeiro clique negado, pra ninguém baixar o arquivo à toa.
+let audioNegado = null;
+function negar(botao) {
+	try {
+		if (!audioNegado) {
+			audioNegado = new Audio("/assets/wav/driken5482-retro-hurt-1-236672.mp3");
+			audioNegado.volume = 0.12;
+		}
+		audioNegado.currentTime = 0;
+		audioNegado.play().catch(() => {});
+	} catch (e) {
+		/* áudio é enfeite: se o navegador barrar, a balançada já dá o recado */
+	}
+	// Tira, força reflow e repõe a classe pra animação reiniciar em cliques
+	// seguidos.
+	botao.classList.remove("radio-negado");
+	void botao.offsetWidth;
+	botao.classList.add("radio-negado");
+	botao.addEventListener("animationend", () => botao.classList.remove("radio-negado"), {
+		once: true,
+	});
 }

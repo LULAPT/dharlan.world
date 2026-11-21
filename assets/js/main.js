@@ -47,7 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	// mas só monta pra quem já usou o rádio alguma vez — sem radio-estado
 	// salvo não há o que retomar, e toda página pagaria o import à toa pra
 	// mostrar um deck parado no canto de quem nunca abriu a /radio/.
+	//
+	// Páginas com trilha própria (/2kki/, /black-souls/) marcam o <html> com
+	// data-sem-radio: lá o mini player nem monta, pra não tocar por cima.
+	// Saindo delas, ele volta como estava.
 	if (
+		!document.documentElement.hasAttribute("data-sem-radio") &&
 		localStorage.getItem("radio-flutuar") !== "false" &&
 		localStorage.getItem("radio-estado")
 	) {

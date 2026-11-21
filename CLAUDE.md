@@ -448,6 +448,20 @@ esconde chrome do site (o `vestirFolha()` da `/curriculo/`, por exemplo) precisa
 remover `#radio-botao` junto com `#settings-panel` — `<style>` injetado não some
 quando se desligam os `<link>`.
 
+**Páginas com trilha própria bloqueiam o rádio** ([2kki.html](galeria/arte/2kki.html)
+e [black-souls.html](galeria/arte/black-souls.html)): elas marcam o `<html>` com
+`data-sem-radio`. Aí o mini player flutuante nem monta (o `main.js` pula o
+import) e o botão recusa o clique com o mesmo som 8-bit e a balançada do boot.
+O botão **não muda de visual** nessas páginas, sem X nem apagado — decisão do
+dono. Página nova com música própria: é só pôr o atributo.
+
+As mesmas duas páginas também marcam `data-tema-fixo="2kki"` / `"souls"` no
+`<html>`: o seletor de tema da engrenagem aparece **travado**, mostrando esse nome
+no lugar dos temas ([settings-panel.js](assets/js/settings-panel.js)). E cada uma
+restiliza a engrenagem e o botão do rádio no desenho do próprio GUI (sem fundo,
+ícone branco, borda `#222`) no CSS da página, com `:root #settings-gear` pra
+ganhar do `<style>` que os módulos injetam depois.
+
 ## A `/digitacao/` e a `/teclado/`
 
 Duas ferramentas em Utils: teste de digitação no estilo monkeytype (modos
