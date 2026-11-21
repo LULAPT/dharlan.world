@@ -1,0 +1,4 @@
+# Scripts de shell saem sempre com fim de linha Unix (LF), mesmo com o
+# core.autocrlf=true do Windows: com CRLF o bash do Linux quebra ao rodar o
+# arquivo baixado do site (ex.: assets/arquivos/rice-completo.sh).
+*.sh text eol=lf

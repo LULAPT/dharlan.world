@@ -135,6 +135,162 @@
 			</div>
 
 			<div class="anotacoes">
+				<!-- Fixada no topo: guia que eu uso pra instalar o Debian no notebook. -->
+				<section data-tags="tecnologia">
+					<h1>Debian 13 Xfce no notebook (pendrive com Rufus + rice)</h1>
+					<h2>Links úteis</h2>
+					<ul>
+						<li>
+							<a
+								href="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/"
+								target="_blank"
+								>Pasta das ISOs live do Debian (current-live)</a
+							>
+						</li>
+						<li>
+							<a href="https://rufus.ie/pt_BR/" target="_blank">Rufus</a>
+							(a versão portátil serve, não precisa instalar)
+						</li>
+					</ul>
+
+					<h2>A ISO certa</h2>
+					<pre>debian-live-13.7.0-amd64-xfce.iso</pre>
+					<p>
+						live + Xfce, 64 bits, ~3,8 GB. É ela que tem o Xfce que o rice
+						espera. Pendrive de 8 GB pra cima, e tudo nele vai ser apagado.
+					</p>
+					<p>
+						a pasta "current-live" sempre tem só a versão mais nova. Quando sair
+						a 13.8, a 13.7.0 some de lá e vai pro arquivo:
+					</p>
+					<pre>
+https://cdimage.debian.org/cdimage/archive/13.7.0-live/amd64/iso-hybrid/</pre
+					>
+					<p>(ou é só baixar a debian-live-13.x.x-amd64-xfce.iso mais nova)</p>
+
+					<h3>Conferir se a ISO baixou inteira (PowerShell, no Windows):</h3>
+					<pre>Get-FileHash .\debian-live-13.7.0-amd64-xfce.iso</pre>
+					<p>o resultado tem que ser igual a este (SHA256 oficial da 13.7.0):</p>
+					<pre>
+379FCF159FA72A2ED8E3B74F4047DF6061BC65ADF5217E3D194E41A26FDB85E4</pre
+					>
+
+					<hr />
+
+					<h1>Pendrive com o Rufus</h1>
+					<h3>1. Abrir o Rufus com o pendrive espetado.</h3>
+					<h3>2. Dispositivo: o pendrive.</h3>
+					<p>confere o nome e o tamanho, pra não apagar o disco errado.</p>
+					<h3>3. Seleção de boot: SELECIONAR → a ISO do Debian.</h3>
+					<h3>4. Esquema de partição: GPT · Sistema de destino: UEFI (não CSM).</h3>
+					<p>
+						é o certo pra qualquer notebook atual. Só se ele for bem antigo (BIOS
+						legado, sem UEFI): MBR.
+					</p>
+					<h3>5. O resto fica como o Rufus sugerir.</h3>
+					<p>rótulo, sistema de arquivos e tamanho do cluster: não mexer.</p>
+					<h3>6. INICIAR.</h3>
+					<p>
+						vai perguntar o modo de gravação: escolher
+						<b>Gravar no modo Imagem DD</b>. A ISO do Debian é feita pra ser
+						copiada assim, igualzinha; o modo ISO às vezes não dá boot.
+					</p>
+					<h3>7. Confirmar que vai apagar o pendrive e esperar o PRONTO.</h3>
+					<p>depois disso o Windows pode dizer que o pendrive "não está formatado": é normal, não formatar.</p>
+
+					<hr />
+
+					<h1>Boot e instalação</h1>
+					<h3>1. Ligar o notebook apertando a tecla do menu de boot.</h3>
+					<p>
+						geralmente F12, F9, F11 ou Esc (muda com a marca). Escolher o
+						pendrive (o que diz UEFI).
+					</p>
+					<p>
+						o Debian dá boot com o Secure Boot ligado. Só se o pendrive não
+						aparecer ou travar no boot: desligar o Secure Boot na BIOS.
+					</p>
+					<h3>2. Teclado em português no live (se precisar):</h3>
+					<pre>setxkbmap -layout br</pre>
+					<h3>3. Instalar pelo "Install Debian" (área de trabalho ou menu do live).</h3>
+					<p>
+						idioma português do Brasil, teclado ABNT2, fuso America/Sao_Paulo.
+						Criar o usuário com senha.
+					</p>
+					<h3>4. Reiniciar, tirar o pendrive e entrar no Xfce já instalado.</h3>
+					<h3>Se o sudo reclamar que o usuário não está no sudoers:</h3>
+					<pre>su -</pre>
+					<pre>usermod -aG sudo nome_do_usuario</pre>
+					<p>e sair/entrar da sessão.</p>
+
+					<hr />
+
+					<h1>Meu rice (estilo macOS)</h1>
+					<p>
+						<a href="/assets/arquivos/rice-completo.sh" download
+							>↓ baixar rice-completo.sh</a
+						>
+						(32 KB, direto daqui do site)
+					</p>
+					<p>ou direto no terminal do Debian:</p>
+					<pre>
+wget https://www.dharlan.world/assets/arquivos/rice-completo.sh</pre
+					>
+
+					<h3>Rodar (na sessão Xfce, como usuário normal, com internet):</h3>
+					<pre>bash rice-completo.sh</pre>
+					<p>tema claro:</p>
+					<pre>bash rice-completo.sh --light</pre>
+					<p>com wallpaper (em pt-BR a pasta é Imagens, não Pictures):</p>
+					<pre>bash rice-completo.sh ~/Imagens/wallpaper.jpg</pre>
+					<p>
+						demora alguns minutos (compila o tema). Se aparecer aviso de plugin
+						do painel: clicar em <b>Remove</b>, nunca em Quit nem no X.
+					</p>
+
+					<h3>O que ele faz:</h3>
+					<ol>
+						<li>
+							tema macOS (WhiteSur): janelas, ícones, cursor, fonte Inter, painel
+							fino e terminal translúcido
+						</li>
+						<li>área de trabalho só com a Lixeira</li>
+						<li>folga antes do Start e depois do relógio</li>
+						<li>abas no meio e informações fixas na direita</li>
+						<li>espaço entre as abas da taskbar</li>
+						<li>ícones normais nos atalhos do painel</li>
+						<li>botão Start com estrela amarela</li>
+						<li>taskbar preta e opaca quando há janela maximizada ou tela cheia</li>
+						<li>script de CPU/RAM em ~/.local/bin/sysinfo.sh</li>
+					</ol>
+
+					<h3>A única parte manual (CPU/RAM na barra):</h3>
+					<p>
+						botão direito na barra → Painel → Adicionar novos itens → Monitor
+						Genérico. Depois, botão direito nele → Propriedades:
+					</p>
+					<pre>/home/nome_do_usuario/.local/bin/sysinfo.sh</pre>
+					<p>(o caminho completo, o próprio script mostra no fim)</p>
+					<p>
+						rótulo desmarcado, período de 2 segundos. Posicionar depois da lista
+						de janelas em Painel → Preferências do painel → Itens.
+					</p>
+
+					<h3>Desfazer:</h3>
+					<p>painel antigo:</p>
+					<pre>xfce4-panel-profiles load ~/panel-backup-macos.tar.bz2</pre>
+					<p>barra preta/opaca (e depois sair/entrar da sessão):</p>
+					<pre>
+rm ~/.local/bin/panel-autoopaque.sh ~/.config/autostart/panel-autoopaque.desktop</pre
+					>
+					<p>
+						os ícones originais dos atalhos ficam em
+						~/.config/xfce4/panel/launcher-*/*.desktop.bak
+					</p>
+					<p>se o painel sumir:</p>
+					<pre>xfce4-panel &amp;</pre>
+				</section>
+
 				<section data-tags="">
 					<h1>Para ler todos os dias</h1>
 					<ul>
